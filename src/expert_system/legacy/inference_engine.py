@@ -394,3 +394,81 @@ class ExpertSystemEngine:
         if score >= 0.4:
             return "Possible"
         return "Uncertain"
+
+
+# Public API for backward compatibility and tests
+def load_cf_map(kg_rules: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    """Build a symptom→fault certainty factor map from knowledge rules."""
+    cf_map: dict[str, dict[str, float]] = {}
+    for rule in kg_rules:
+        fault_id = rule.get("fault_id")
+        for symptom in rule.get("symptoms", []):
+            symptom_id = symptom.get("symptom_id")
+            if symptom_id and fault_id:
+                cf_map.setdefault(symptom_id, {})[fault_id] = float(symptom.get("cf", 0.5))
+    return cf_map
+
+
+def rank_faults(
+    confirmed_symptoms: list[str],
+    rejected_symptoms: list[str],
+    cf_map: dict[str, dict[str, float]],
+    rules: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """
+    Rank fault hypotheses using MYCIN-style certainty factors.
+    Backward compatibility wrapper around ExpertSystemEngine._rank_faults.
+    """
+    confirmed = set(confirmed_symptoms or [])
+    rejected = set(rejected_symptoms or [])
+    ranked = []
+
+    for rule in rules:
+        fault_id = rule.get("fault_id")
+        if not fault_id:
+            continue
+
+        score = 0.0
+        breakdown = []
+        matched_rules = []
+        for symptom in rule.get("symptoms", []):
+            symptom_id = symptom.get("symptom_id")
+            if not symptom_id:
+                continue
+            cf = float(cf_map.get(symptom_id, {}).get(fault_id, symptom.get("cf", 0.5)))
+            if symptom_id in confirmed:
+                score = ExpertSystemEngine._combine_cf(score, cf)
+                breakdown.append({"symptom": symptom_id, "cf": cf, "direction": "confirmed"})
+                matched_rules.append({**symptom, "symptom_name": symptom_id, "cf": cf})
+            elif symptom_id in rejected:
+                score *= max(0.0, 1 - cf)
+                breakdown.append({"symptom": symptom_id, "cf": cf, "direction": "rejected"})
+
+        if not matched_rules and confirmed and not rule.get("candidate_reason"):
+            continue
+
+        final_cf = round(min(max(score, 0.0), 1.0), 4)
+        ranked.append(
+            {
+                "fault_id": fault_id,
+                "fault_name": rule.get("fault_name", fault_id),
+                "fault_label": rule.get("display_name", rule.get("fault_name", fault_id)),
+                "system": rule.get("system_id") or rule.get("system"),
+                "subsystem": rule.get("subsystem_id") or rule.get("subsystem"),
+                "score": final_cf,
+                "final_cf": final_cf,
+                "cf_breakdown": breakdown,
+                "score_breakdown": {
+                    "cf_confidence": final_cf,
+                    "note": "Certainty Factor confidence score, not Bayesian probability.",
+                },
+                "confidence_label": ExpertSystemEngine._confidence_label(final_cf),
+                "decision": "accepted" if final_cf >= 0.5 else "uncertain",
+                "candidate_reason": rule.get("candidate_reason"),
+                "matched_rules": matched_rules,
+                "repairs": rule.get("repairs", []),
+                "resolution": rule.get("resolution"),
+            }
+        )
+
+    return sorted(ranked, key=lambda item: item["final_cf"], reverse=True)

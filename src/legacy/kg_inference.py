@@ -4,15 +4,9 @@ from pathlib import Path
 from typing import Any
 
 from src.config import PROJECT_ROOT
-from src.expert_system.cf_reasoner import (
-    check_diagnosed,
-    confidence_label,
-    load_cf_map,
-    rank_faults,
-)
-from src.expert_system.inference_engine import ExpertSystemEngine
+from src.expert_system.engine import ExpertSystemEngine, load_cf_map
 from src.expert_system.knowledge_base import KnowledgeBase, extract_rules, load_json
-from src.expert_system.symptom_matcher import MATCH_THRESHOLD, SymptomMatcher
+from src.expert_system.matcher import MATCH_THRESHOLD, SymptomMatcher
 
 
 DEFAULT_ALIAS_PATH = PROJECT_ROOT / "data" / "staging" / "symptom_aliases.json"

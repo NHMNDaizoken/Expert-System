@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status
 
 from backend.services.session_service import SessionService
-from src.expert_system.inference_engine import ExpertSystemEngine
+from src.expert_system.engine import ExpertSystemEngine
 from src.expert_system.knowledge_base import KnowledgeBase
-from src.expert_system.response_policy import apply_response_policy
+from src.expert_system.policy import apply_response_policy
 from src.llm_fallback import diagnose_with_llm
 
 

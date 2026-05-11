@@ -1,4 +1,5 @@
-from src.legacy.kg_inference import check_diagnosed, load_cf_map, rank_faults
+from src.expert_system.engine import load_cf_map, rank_faults
+from src.expert_system.legacy.cf_reasoner import check_diagnosed
 from src.legacy.next_question import get_next_from_tree, select_by_information_gain
 
 

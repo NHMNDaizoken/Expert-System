@@ -5,8 +5,8 @@ from typing import Any
 
 from src.expert_system import knowledge_base
 from src.expert_system.knowledge_base import KnowledgeBase
-from src.expert_system.procedure_reasoner import ProcedureReasoner
-from src.expert_system.working_memory import WorkingMemory
+from src.expert_system.procedure import ProcedureRunner as ProcedureReasoner
+from src.expert_system.engine import WorkingMemory
 
 
 def select_by_information_gain(
