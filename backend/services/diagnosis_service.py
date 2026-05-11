@@ -3,6 +3,7 @@ from fastapi import HTTPException, status
 from backend.services.session_service import SessionService
 from src.expert_system.inference_engine import ExpertSystemEngine
 from src.expert_system.knowledge_base import KnowledgeBase
+from src.expert_system.response_policy import apply_response_policy
 from src.kg_inference import KGInference
 from src.llm_fallback import diagnose_with_llm
 
@@ -109,9 +110,10 @@ class DiagnosisService:
 
         reason = "kg_no_match"
         try:
-            response = enrich_response(ExpertSystemEngine.from_staging().diagnose(user_input, top_k=top_k))
+            response = ExpertSystemEngine.from_staging().diagnose(user_input, top_k=top_k)
+            response = apply_response_policy(response)
+            response = enrich_response(response)
             response["source"] = "staging_files_kg"
-            response = self._force_interview_if_too_early(response, None)
         except Exception as exc:
             response = None
             reason = f"staging_kg_unavailable: {exc}"
@@ -267,7 +269,7 @@ class DiagnosisService:
             session=session,
             top_k=top_k,
         )
-        response = self._force_interview_if_too_early(response, session)
+        response = apply_response_policy(response)
         if should_use_llm_fallback(response):
             response = llm_response(user_input, reason="kg_no_match_after_answer")
 
@@ -312,7 +314,7 @@ class DiagnosisService:
             rejected_symptoms,
             session=session,
         )
-        response = self._force_interview_if_too_early(response, session)
+        response = apply_response_policy(response)
 
         if should_use_llm_fallback(response):
             response = llm_response(

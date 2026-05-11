@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import math
 from typing import Any
 
-from src.expert_system.cf_reasoner import CFReasoner
 from src.expert_system.explanation import ExplanationBuilder
 from src.expert_system.knowledge_base import KnowledgeBase
-from src.expert_system.question_selector import QuestionSelector
+from src.expert_system.models import DiagnosisResponse
+from src.expert_system.procedure_runner import ProcedureRunner
 from src.expert_system.symptom_matcher import SymptomMatcher
 from src.expert_system.working_memory import WorkingMemory
 
@@ -16,8 +17,7 @@ class ExpertSystemEngine:
     def __init__(self, kb: KnowledgeBase | None = None, max_questions: int = 8):
         self.kb = kb or KnowledgeBase.from_staging()
         self.matcher = SymptomMatcher(self.kb.symptom_aliases)
-        self.cf_reasoner = CFReasoner(self.kb.cf_map)
-        self.question_selector = QuestionSelector(self.kb)
+        self.procedure_runner = ProcedureRunner()
         self.explanations = ExplanationBuilder(self.kb)
         self.max_questions = max_questions
 
@@ -55,34 +55,20 @@ class ExpertSystemEngine:
         memory.primary_symptom = self._select_primary_symptom(memory.confirmed_symptoms)
         memory.detected_systems = self._detect_systems(memory.confirmed_symptoms)
         candidate_rules = self._candidate_rules(memory)
-        diagnoses = self._rank(candidate_rules, memory, top_k)
+        diagnoses = self._rank(candidate_rules, memory.confirmed_symptoms, memory.rejected_symptoms, top_k)
         memory.current_hypotheses = diagnoses
         memory.active_fault_id = diagnoses[0]["fault_id"] if diagnoses else None
 
-        next_question = self.question_selector.select(memory, diagnoses) if diagnoses else None
-        terminal = (next_question or {}).get("terminal")
-        max_questions_reached = memory.question_count >= self.max_questions
-        deterministic_match = self._has_deterministic_match(diagnoses, memory.confirmed_symptoms)
-        should_diagnose = self.cf_reasoner.should_diagnose(
-            diagnoses,
-            has_useful_question=bool(next_question and not next_question.get("done")),
-            procedure_terminal=terminal,
-            max_questions_reached=max_questions_reached,
-            confirmed_symptom_count=len(memory.confirmed_symptoms),
-            question_count=memory.question_count,
-            deterministic_match=deterministic_match,
-        )
-        if not diagnoses:
-            status = "no_fault_found"
-        elif should_diagnose:
+        next_question, procedure_terminal = self._select_next_step(memory, diagnoses)
+        if procedure_terminal and procedure_terminal != "DIAGNOSED" and not next_question:
+            next_question = self._select_information_gain_question(memory, diagnoses)
+
+        if procedure_terminal == "DIAGNOSED":
             status = "diagnosed"
+            next_question = None
         else:
             status = "need_more_info"
 
-        if status == "diagnosed":
-            next_question = None
-
-        results = diagnoses if status == "diagnosed" else []
         trace = self.explanations.build(
             user_input=text,
             matched_symptoms=matched_symptoms,
@@ -91,24 +77,25 @@ class ExpertSystemEngine:
             next_question=next_question,
             status=status,
         )
-        response = {
-            "matched_symptoms": matched_symptoms,
-            "diagnoses": diagnoses,
-            "results": results,
-            "current_hypotheses": diagnoses,
-            "candidate_faults": self._candidate_faults_payload(diagnoses),
-            "next_question": next_question,
-            "reasoning_trace": trace,
-            "status": status,
-            "is_final": status == "diagnosed",
-            "tree_level": self._tree_level(status, next_question),
-            "explanation_summary": self.explanations.summary(memory, diagnoses, status),
-            "source": "staging_files_kg",
+        response = DiagnosisResponse(
+            matched_symptoms=matched_symptoms,
+            diagnoses=diagnoses,
+            results=diagnoses if status == "diagnosed" else [],
+            current_hypotheses=diagnoses,
+            candidate_faults=self._candidate_faults_payload(diagnoses),
+            next_question=next_question,
+            reasoning_trace=trace,
+            status=status,
+            is_final=status == "diagnosed",
+            tree_level=self._tree_level(status, next_question),
+            explanation_summary=self.explanations.summary(memory, diagnoses, status),
+            source="staging_files_kg",
+            procedure_terminal=procedure_terminal,
             **memory.to_response_fields(),
-        }
+        )
         if status == "diagnosed" and diagnoses:
             response["resolution"] = diagnoses[0].get("resolution")
-        return response
+        return dict(response)
 
     def _unknown_response(
         self,
@@ -137,6 +124,7 @@ class ExpertSystemEngine:
             "tree_level": "symptom",
             "explanation_summary": "The Knowledge Base could not map the reported symptom.",
             "source": "staging_files_kg",
+            "procedure_terminal": None,
             **memory.to_response_fields(),
         }
 
@@ -175,32 +163,209 @@ class ExpertSystemEngine:
     def _rank(
         self,
         candidate_rules: list[dict[str, Any]],
-        memory: WorkingMemory,
+        confirmed_symptoms: list[str],
+        rejected_symptoms: list[str],
         top_k: int,
     ) -> list[dict[str, Any]]:
-        ranked = self.cf_reasoner.rank(
-            memory.confirmed_symptoms,
-            memory.rejected_symptoms,
-            candidate_rules,
-            top_k,
-        )
+        ranked = self._rank_faults(confirmed_symptoms, rejected_symptoms, candidate_rules)[:top_k]
         for diagnosis in ranked:
             for rule in diagnosis.get("matched_rules", []):
                 symptom_id = rule.get("symptom_id")
                 rule["symptom_label"] = self.kb.label_for_symptom(symptom_id) if symptom_id else None
         return ranked
 
-    def _has_deterministic_match(self, diagnoses: list[dict[str, Any]], confirmed_symptoms: list[str]) -> bool:
+    def _rank_faults(
+        self,
+        confirmed_symptoms: list[str],
+        rejected_symptoms: list[str],
+        rules: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        confirmed = set(confirmed_symptoms or [])
+        rejected = set(rejected_symptoms or [])
+        ranked = []
+
+        for rule in rules:
+            fault_id = rule.get("fault_id")
+            if not fault_id:
+                continue
+
+            score = 0.0
+            breakdown = []
+            matched_rules = []
+            for symptom in rule.get("symptoms", []):
+                symptom_id = symptom.get("symptom_id")
+                if not symptom_id:
+                    continue
+                cf = float(self.kb.cf_map.get(symptom_id, {}).get(fault_id, symptom.get("cf", 0.5)))
+                if symptom_id in confirmed:
+                    score = self._combine_cf(score, cf)
+                    breakdown.append({"symptom": symptom_id, "cf": cf, "direction": "confirmed"})
+                    matched_rules.append({**symptom, "symptom_name": symptom_id, "cf": cf})
+                elif symptom_id in rejected:
+                    score *= max(0.0, 1 - cf)
+                    breakdown.append({"symptom": symptom_id, "cf": cf, "direction": "rejected"})
+
+            if not matched_rules and confirmed and not rule.get("candidate_reason"):
+                continue
+
+            final_cf = round(min(max(score, 0.0), 1.0), 4)
+            ranked.append(
+                {
+                    "fault_id": fault_id,
+                    "fault_name": rule.get("fault_name", fault_id),
+                    "fault_label": rule.get("display_name", rule.get("fault_name", fault_id)),
+                    "system": rule.get("system_id") or rule.get("system"),
+                    "subsystem": rule.get("subsystem_id") or rule.get("subsystem"),
+                    "score": final_cf,
+                    "final_cf": final_cf,
+                    "cf_breakdown": breakdown,
+                    "score_breakdown": {
+                        "cf_confidence": final_cf,
+                        "note": "Certainty Factor confidence score, not Bayesian probability.",
+                    },
+                    "confidence_label": self._confidence_label(final_cf),
+                    "decision": "accepted" if final_cf >= 0.5 else "uncertain",
+                    "candidate_reason": rule.get("candidate_reason"),
+                    "matched_rules": matched_rules,
+                    "repairs": rule.get("repairs", []),
+                    "resolution": rule.get("resolution"),
+                }
+            )
+
+        return sorted(ranked, key=lambda item: item["final_cf"], reverse=True)
+
+    def _select_next_step(
+        self,
+        memory: WorkingMemory,
+        diagnoses: list[dict[str, Any]],
+    ) -> tuple[dict[str, Any] | None, str | None]:
         if not diagnoses:
-            return False
-        top_fault = self.kb.get_fault(diagnoses[0].get("fault_id")) or {}
-        if top_fault.get("deterministic"):
-            return True
-        confirmed = set(confirmed_symptoms)
-        for symptom in top_fault.get("symptoms", []):
-            if symptom.get("symptom_id") in confirmed and symptom.get("deterministic"):
-                return True
-        return False
+            return self._select_information_gain_question(memory, diagnoses), None
+
+        top = diagnoses[0]
+        procedure = self.kb.get_procedure_for_fault(top.get("fault_id"))
+        if procedure:
+            if memory.current_step_id:
+                step = self.procedure_runner.get_next_from_tree(
+                    memory.current_step_id,
+                    memory.last_answer,
+                    procedure,
+                )
+            else:
+                step = self.procedure_runner.entry_step(procedure)
+
+            if step:
+                terminal = step.get("terminal")
+                if terminal == "DIAGNOSED":
+                    return None, terminal
+                if terminal:
+                    return self._select_information_gain_question(memory, diagnoses), terminal
+                return self._procedure_question(step, top), None
+
+        return self._select_information_gain_question(memory, diagnoses), None
+
+    def _select_information_gain_question(
+        self,
+        memory: WorkingMemory,
+        ranked: list[dict[str, Any]],
+    ) -> dict[str, Any] | None:
+        all_symptoms = [
+            symptom.get("symptom_id")
+            for rule in self.kb.rules
+            for symptom in rule.get("symptoms", [])
+            if symptom.get("symptom_id")
+        ]
+        asked = set(memory.confirmed_symptoms) | set(memory.rejected_symptoms)
+        result = self._select_by_information_gain(ranked, asked, all_symptoms, self.kb.cf_map)
+        if not result:
+            return None
+        symptom_id = result["symptom_id"]
+        label = self.kb.label_for_symptom(symptom_id)
+        return {
+            "symptom": symptom_id,
+            "symptom_id": symptom_id,
+            "label": label,
+            "question": f"Do you also notice {label.lower()}?",
+            "step_id": None,
+            "mode": "information_gain",
+            "information_gain": result["information_gain"],
+            "fault_preview": None,
+            "explanation": "Selected as the best unasked symptom to separate competing fault hypotheses.",
+        }
+
+    @staticmethod
+    def _select_by_information_gain(
+        ranked: list[dict[str, Any]],
+        asked: set[str],
+        all_symptoms: list[str],
+        cf_map: dict[str, dict[str, float]],
+    ) -> dict[str, Any] | None:
+        def entropy(distribution: list[dict[str, Any]]) -> float:
+            total = sum(float(item.get("final_cf", item.get("score", 0))) for item in distribution) or 1.0
+            value = 0.0
+            for item in distribution:
+                probability = float(item.get("final_cf", item.get("score", 0))) / total
+                if probability > 0:
+                    value -= probability * math.log2(probability + 1e-9)
+            return value
+
+        current_entropy = entropy(ranked)
+        best_ig = -1.0
+        best_symptom = None
+        for symptom_id in sorted(set(all_symptoms)):
+            if symptom_id in asked:
+                continue
+            yes_ranked = [
+                {
+                    **fault,
+                    "score": float(fault.get("final_cf", fault.get("score", 0)))
+                    * float(cf_map.get(symptom_id, {}).get(fault.get("fault_id"), 0.01)),
+                }
+                for fault in ranked
+            ]
+            no_ranked = [
+                {
+                    **fault,
+                    "score": float(fault.get("final_cf", fault.get("score", 0)))
+                    * (1 - float(cf_map.get(symptom_id, {}).get(fault.get("fault_id"), 0.01))),
+                }
+                for fault in ranked
+            ]
+            total = sum(float(fault.get("final_cf", fault.get("score", 0))) for fault in ranked) or 1.0
+            p_yes = min(max(sum(float(fault.get("score", 0)) for fault in yes_ranked) / total, 0.0), 1.0)
+            p_no = 1 - p_yes
+            ig = current_entropy - (p_yes * entropy(yes_ranked) + p_no * entropy(no_ranked))
+            if ig > best_ig:
+                best_ig = ig
+                best_symptom = symptom_id
+
+        if not best_symptom:
+            return None
+        return {"symptom_id": best_symptom, "information_gain": round(best_ig, 4)}
+
+    def _procedure_question(self, step: dict[str, Any], top: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "question": step.get("question"),
+            "step_id": step.get("step_id"),
+            "mode": "procedure_tree",
+            "results": step.get("results", []),
+            "fault_preview": {
+                "fault_id": top.get("fault_id"),
+                "fault_name": top.get("fault_name"),
+                "score": top.get("score"),
+                "final_cf": top.get("final_cf"),
+            },
+            "explanation": "Selected from the diagnostic procedure for the strongest active hypothesis.",
+        }
+
+    def _tree_level(self, status: str, next_question: dict[str, Any] | None) -> str:
+        if status == "diagnosed":
+            return "confirmation"
+        if next_question and next_question.get("mode") == "procedure_tree":
+            return "procedure"
+        if next_question:
+            return "secondary_symptom"
+        return "fault"
 
     @staticmethod
     def _candidate_faults_payload(diagnoses: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -216,11 +381,16 @@ class ExpertSystemEngine:
             for item in diagnoses
         ]
 
-    def _tree_level(self, status: str, next_question: dict[str, Any] | None) -> str:
-        if status == "diagnosed":
-            return "confirmation"
-        if next_question and next_question.get("mode") == "procedure_tree":
-            return "procedure"
-        if next_question:
-            return "secondary_symptom"
-        return "fault"
+    @staticmethod
+    def _combine_cf(cf_old: float, cf_new: float) -> float:
+        return cf_old + cf_new * (1 - cf_old)
+
+    @staticmethod
+    def _confidence_label(score: float) -> str:
+        if score >= 0.8:
+            return "Very likely"
+        if score >= 0.6:
+            return "Likely"
+        if score >= 0.4:
+            return "Possible"
+        return "Uncertain"

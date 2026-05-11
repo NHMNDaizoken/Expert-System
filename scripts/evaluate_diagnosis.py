@@ -24,7 +24,7 @@ def load_cases(path: Path) -> list[dict[str, Any]]:
 
 def hit_at(predicted: list[str], expected: list[str], k: int) -> bool:
     if not expected:
-        return not predicted
+        return True
     return expected[0] in predicted[:k]
 
 
@@ -35,8 +35,10 @@ def evaluate(cases: list[dict[str, Any]], top_k: int) -> tuple[dict[str, float],
     for case in cases:
         result = engine.diagnose(case["input"], top_k=top_k)
         predicted = [diagnosis["fault_id"] for diagnosis in result["diagnoses"]]
-        expected = case.get("expected_faults", [])
-        expected_prefix = predicted[: len(expected)] == expected
+        expected = case.get("expected_faults", case.get("expected_faults_any_order", []))
+        expected_prefix = True if not expected else predicted[: len(expected)] == expected
+        expected_status = case.get("expected_status")
+        status_match = expected_status is None or result["status"] == expected_status
 
         details.append(
             {
@@ -44,12 +46,14 @@ def evaluate(cases: list[dict[str, Any]], top_k: int) -> tuple[dict[str, float],
                 "description": case.get("description", ""),
                 "input": case["input"],
                 "expected": expected,
+                "expected_status": expected_status,
                 "predicted": predicted,
                 "status": result["status"],
                 "top1": hit_at(predicted, expected, 1),
                 "top3": hit_at(predicted, expected, 3),
                 "top5": hit_at(predicted, expected, 5),
                 "expected_prefix": expected_prefix,
+                "status_match": status_match,
             }
         )
 
@@ -84,8 +88,9 @@ def print_report(metrics: dict[str, float], details: list[dict[str, Any]]) -> No
         print(f"{item['id']} - {item['description']}")
         print(f"  Input:     {item['input']}")
         print(f"  Expected:  {item['expected']}")
+        print(f"  ExpStatus: {item['expected_status']}")
         print(f"  Predicted: {item['predicted']}")
-        print(f"  Status:    {item['status']} | {top_flags}")
+        print(f"  Status:    {item['status']} | Status={'PASS' if item['status_match'] else 'FAIL'} | {top_flags}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -123,7 +128,7 @@ def main() -> int:
     print_report(metrics, details)
     if args.allow_failures:
         return 0
-    return 0 if all(item["top1"] for item in details) else 1
+    return 0 if all(item["top1"] and item["status_match"] for item in details) else 1
 
 
 if __name__ == "__main__":

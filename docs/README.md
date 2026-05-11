@@ -84,11 +84,17 @@ Chạy Neo4j:
 docker compose up -d neo4j
 ```
 
-Import lại Knowledge Graph nếu Neo4j mới/rỗng:
+Nếu muốn rebuild staging rules từ dataset raw:
 
 ```powershell
-python scripts/data_tools.py validate data/staging/kg_rules_from_dataset.json
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/build_knowledge.py
+python scripts/validate_knowledge.py
+```
+
+Nếu chỉ muốn import staging rules vào Neo4j:
+
+```powershell
+python scripts/import_neo4j.py
 ```
 
 Chạy backend:
@@ -146,7 +152,7 @@ docker compose logs -f neo4j
 Nếu Neo4j trong container chưa có dữ liệu:
 
 ```powershell
-docker compose exec backend python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+docker compose exec backend python scripts/import_neo4j.py
 ```
 
 Dừng hệ thống:

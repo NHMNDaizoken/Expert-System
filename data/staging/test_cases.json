@@ -2,110 +2,219 @@
   {
     "id": "TC_001",
     "input": "dim headlights",
-    "expected_faults": [
-      "FLT_WEAK_BATTERY",
-      "FLT_STARTER_MOTOR_FAILURE"
+    "normalized_symptoms": [
+      "SYM_DIM_HEADLIGHTS"
     ],
-    "description": "Single symptom strongly indicating weak battery"
+    "expected_faults": [
+      "FLT_041"
+    ],
+    "description": "Dim headlights should map to charging/battery-related diagnosis in current dataset."
   },
   {
     "id": "TC_002",
-    "input": "clicking noise",
-    "expected_faults": [
-      "FLT_STARTER_MOTOR_FAILURE",
-      "FLT_WEAK_BATTERY",
-      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    "input": "engine does not crank",
+    "normalized_symptoms": [
+      "SYM_ENGINE_DOES_NOT_CRANK"
     ],
-    "description": "Ambiguous clicking symptom across starting and door-lock faults"
+    "expected_faults": [
+      "FLT_045"
+    ],
+    "description": "No-crank primary symptom should rank starter motor fault first."
   },
   {
     "id": "TC_003",
-    "input": "engine does not crank",
-    "expected_faults": [
-      "FLT_STARTER_MOTOR_FAILURE",
-      "FLT_WEAK_BATTERY"
+    "input": "engine cranks slowly",
+    "normalized_symptoms": [
+      "SYM_ENGINE_CRANKS_SLOWLY"
     ],
-    "description": "Single no-crank symptom favoring starter motor"
+    "expected_faults": [
+      "FLT_036"
+    ],
+    "description": "Slow crank should favor battery replacement/weak battery path."
   },
   {
     "id": "TC_004",
-    "input": "door does not lock",
-    "expected_faults": [
-      "FLT_DOOR_LOCK_ACTUATOR_FAILURE",
-      "FLT_KEY_FOB_BATTERY_DEAD"
+    "input": "clicking sound when starting",
+    "normalized_symptoms": [
+      "SYM_CLICKING_SOUND_WHEN_STARTING"
     ],
-    "description": "Single door-lock symptom with actuator ahead of key fob battery"
+    "expected_faults": [
+      "FLT_036"
+    ],
+    "description": "Starting click symptom maps to battery-related fault in current rules."
   },
   {
     "id": "TC_005",
-    "input": "remote key not working",
-    "expected_faults": [
-      "FLT_KEY_FOB_BATTERY_DEAD"
+    "input": "clicking sound when key is turned",
+    "normalized_symptoms": [
+      "SYM_CLICKING_SOUND_WHEN_KEY_IS_TURNED"
     ],
-    "description": "Single remote-key symptom for key fob battery"
+    "expected_faults": [
+      "FLT_045"
+    ],
+    "description": "Key-turn clicking maps to starter motor failure in current rules."
   },
   {
     "id": "TC_006",
-    "input": "clicking noise when starting and dim headlights",
-    "expected_faults": [
-      "FLT_WEAK_BATTERY",
-      "FLT_STARTER_MOTOR_FAILURE",
-      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    "input": "door lock not responding",
+    "normalized_symptoms": [
+      "SYM_DOOR_LOCK_NOT_RESPONDING"
     ],
-    "description": "Multi-symptom weak battery case"
+    "expected_faults": [
+      "FLT_044"
+    ],
+    "description": "Door lock symptom should favor door lock actuator."
   },
   {
     "id": "TC_007",
-    "input": "engine does not crank and dim headlights",
-    "expected_faults": [
-      "FLT_WEAK_BATTERY",
-      "FLT_STARTER_MOTOR_FAILURE"
+    "input": "clicking sound from door",
+    "normalized_symptoms": [
+      "SYM_CLICKING_SOUND_FROM_DOOR"
     ],
-    "description": "No-crank plus dim lights favors battery over starter"
+    "expected_faults": [
+      "FLT_044"
+    ],
+    "description": "Door clicking distinguishes actuator from starting faults."
   },
   {
     "id": "TC_008",
-    "input": "engine does not crank and clicking sound",
-    "expected_faults": [
-      "FLT_STARTER_MOTOR_FAILURE",
-      "FLT_WEAK_BATTERY",
-      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    "input": "engine overheating",
+    "normalized_symptoms": [
+      "SYM_ENGINE_OVERHEATING"
     ],
-    "description": "No-crank plus clicking favors starter motor"
+    "expected_faults": [],
+    "expected_status": "need_more_info",
+    "description": "Overheating is ambiguous and should return cooling-related candidate faults, not final diagnosis."
   },
   {
     "id": "TC_009",
-    "input": "door not locking and key fob not working",
-    "expected_faults": [
-      "FLT_KEY_FOB_BATTERY_DEAD",
-      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    "input": "engine overheating and temperature gauge in red zone",
+    "normalized_symptoms": [
+      "SYM_ENGINE_OVERHEATING",
+      "SYM_TEMPERATURE_GAUGE_IN_RED_ZONE"
     ],
-    "description": "Door-lock and key-fob symptoms favor key fob battery"
+    "expected_faults": [
+      "FLT_020"
+    ],
+    "description": "Overheating plus red temperature gauge should favor engine cooling system."
   },
   {
     "id": "TC_010",
-    "input": "door does not lock and clicking sound from door",
-    "expected_faults": [
-      "FLT_DOOR_LOCK_ACTUATOR_FAILURE",
-      "FLT_STARTER_MOTOR_FAILURE",
-      "FLT_WEAK_BATTERY",
-      "FLT_KEY_FOB_BATTERY_DEAD"
+    "input": "coolant leak near front of engine",
+    "normalized_symptoms": [
+      "SYM_COOLANT_LEAK_NEAR_FRONT_OF_ENGINE"
     ],
-    "description": "Door clicking case distinguishes actuator from starting faults"
+    "expected_faults": [
+      "FLT_025"
+    ],
+    "description": "Coolant leak near front of engine should favor water pump."
   },
   {
     "id": "TC_011",
-    "input": "car will not start",
-    "expected_faults": [
-      "FLT_STARTER_MOTOR_FAILURE",
-      "FLT_WEAK_BATTERY"
+    "input": "brake pulling to one side",
+    "normalized_symptoms": [
+      "SYM_BRAKE_PULLING_TO_ONE_SIDE"
     ],
-    "description": "Alias-only input for no-crank ambiguity"
+    "expected_faults": [
+      "FLT_004"
+    ],
+    "description": "Pulling to one side should favor brake caliper."
   },
   {
     "id": "TC_012",
-    "input": "random banana noise",
+    "input": "spongy brake pedal",
+    "normalized_symptoms": [
+      "SYM_SPONGY_BRAKE_PEDAL"
+    ],
     "expected_faults": [],
-    "description": "Unknown symptom should return no diagnosis"
+    "expected_status": "need_more_info",
+    "description": "Spongy pedal is ambiguous across booster, master cylinder, and shoe/drum candidates."
+  },
+  {
+    "id": "TC_013",
+    "input": "squealing brakes",
+    "normalized_symptoms": [
+      "SYM_SQUEALING_BRAKES"
+    ],
+    "expected_faults": [
+      "FLT_007"
+    ],
+    "description": "Squealing brakes should favor brake pad."
+  },
+  {
+    "id": "TC_014",
+    "input": "brake pedal pulsation and steering wheel vibration",
+    "normalized_symptoms": [
+      "SYM_BRAKE_PEDAL_PULSATION",
+      "SYM_STEERING_WHEEL_VIBRATION"
+    ],
+    "expected_faults": [
+      "FLT_008"
+    ],
+    "description": "Brake pulsation plus steering vibration should favor brake rotor."
+  },
+  {
+    "id": "TC_015",
+    "input": "no cold air from vents",
+    "normalized_symptoms": [
+      "SYM_NO_COLD_AIR_FROM_VENTS"
+    ],
+    "expected_faults": [
+      "FLT_010"
+    ],
+    "description": "No cold air from vents should favor AC compressor."
+  },
+  {
+    "id": "TC_016",
+    "input": "musty odor from vents and reduced airflow from vents",
+    "normalized_symptoms": [
+      "SYM_MUSTY_ODOR_FROM_VENTS",
+      "SYM_REDUCED_AIRFLOW_FROM_VENTS"
+    ],
+    "expected_faults": [
+      "FLT_015"
+    ],
+    "description": "Musty odor plus reduced airflow should favor cabin air filter."
+  },
+  {
+    "id": "TC_017",
+    "input": "transmission slipping",
+    "normalized_symptoms": [
+      "SYM_TRANSMISSION_SLIPPING"
+    ],
+    "expected_faults": [],
+    "expected_status": "need_more_info",
+    "description": "Transmission slipping is ambiguous between transmission-related faults."
+  },
+  {
+    "id": "TC_018",
+    "input": "clutch pedal feels loose and difficulty engaging gears",
+    "normalized_symptoms": [
+      "SYM_CLUTCH_PEDAL_FEELS_LOOSE",
+      "SYM_DIFFICULTY_ENGAGING_GEARS"
+    ],
+    "expected_faults": [
+      "FLT_028"
+    ],
+    "description": "Loose clutch pedal plus difficulty engaging gears should favor clutch cable."
+  },
+  {
+    "id": "TC_019",
+    "input": "engine misfires and poor fuel economy",
+    "normalized_symptoms": [
+      "SYM_ENGINE_MISFIRES",
+      "SYM_POOR_FUEL_ECONOMY"
+    ],
+    "expected_faults": [],
+    "expected_status": "need_more_info",
+    "description": "Misfire plus poor fuel economy should rank overlapping engine/fuel/ignition faults."
+  },
+  {
+    "id": "TC_020",
+    "input": "random banana noise",
+    "normalized_symptoms": [],
+    "expected_faults": [],
+    "expected_status": "unknown_symptom",
+    "description": "Unknown symptom should return no diagnosis and ask for a clearer primary symptom."
   }
 ]

@@ -125,38 +125,30 @@ Password: password123
 
 ### 5.3. Cập nhật dữ liệu vào Knowledge Graph
 
-Nếu chỉ muốn nạp lại rule đã có trong `data/staging`:
+Nếu bạn sửa dataset gốc trong `data/raw/automotive_faults.json` và muốn sinh lại staging rules từ đầu, chạy một lệnh consolidate duy nhất:
 
 ```powershell
-python scripts/data_tools.py validate data/staging/kg_rules_from_dataset.json
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/build_knowledge.py
 ```
 
-Ý nghĩa:
+Lệnh này sẽ:
+- Tính dynamic CF từ dataset raw (`data/raw/automotive_faults.json`)
+- Build procedure tree từ diagnosis steps
+- Sinh ra `data/staging/cf_dynamic.json`, `data/staging/procedure_trees.json`, `data/staging/kg_rules_from_dataset.json`, `data/staging/symptom_aliases.json`, `data/staging/expert_tree.json`
 
-- `validate`: kiểm tra rule có đúng ontology, symptom aliases, CF và repair không.
-- `rebuild`: import ontology, symptom, fault, repair và relationship vào Neo4j.
-- `--clear`: xóa graph cũ trước khi import để tránh dữ liệu bị lẫn.
-
-Nếu bạn sửa dataset gốc trong `data/raw/automotive_faults.json` và muốn sinh lại staging rules từ đầu:
+Sau khi build xong, validate dữ liệu:
 
 ```powershell
-uv run python scripts\compute_cf.py
-uv run python scripts\build_procedure.py
-uv run python scripts\rebuild_kg.py
-python scripts/data_tools.py validate data/staging/kg_rules_from_dataset.json
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/validate_knowledge.py
 ```
 
-Các lệnh hỗ trợ khi kiểm tra dữ liệu:
+Nếu không sửa dataset raw mà chỉ muốn import staging rules vào Neo4j:
 
 ```powershell
-python scripts/data_tools.py inspect
-python scripts/data_tools.py categories
-python scripts/data_tools.py generate-related
+python scripts/import_neo4j.py
 ```
 
-Ghi chú: `scripts/data_tools.py build/approve` là đường build cũ. Khi rebuild từ dataset raw, dùng `compute_cf.py`, `build_procedure.py`, `rebuild_kg.py` để giữ dynamic CF và procedure tree.
+Ghi chú: Các script cũ (`compute_cf.py`, `build_expert_tree.py`, `build_procedure.py`, `rebuild_kg.py`, `data_tools.py`) đã được gom vào `scripts/build_knowledge.py`. File cũ vẫn được lưu trong `scripts/legacy/` nếu cần tham khảo.
 
 ### 5.4. Chạy backend và frontend local
 
@@ -216,7 +208,7 @@ docker compose logs -f neo4j
 Nếu Docker chạy lần đầu và Neo4j còn trống, import dữ liệu vào KG bằng backend container:
 
 ```powershell
-docker compose exec backend python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+docker compose exec backend python scripts/import_neo4j.py
 ```
 
 Sau đó mở:

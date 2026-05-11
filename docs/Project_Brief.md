@@ -81,14 +81,17 @@ frontend/src/components/QuestioningScreen.jsx
 frontend/src/components/DiagnosisResult.jsx
   Hiển thị Final Ranking, parts cần chuẩn bị và repair procedure.
 
-scripts/compute_cf.py
-  Tính dynamic CF từ dataset raw ra data/staging/cf_dynamic.json.
+scripts/build_knowledge.py
+  Consolidate knowledge pipeline: tính dynamic CF, build procedure tree, sinh expert tree, extract alias. Output tất cả staging artifacts. Thay thế compute_cf.py, build_procedure.py, rebuild_kg.py, build_expert_tree.py.
 
-scripts/build_procedure.py
-  Parse diagnosis_steps thành procedure tree yes/no.
+scripts/validate_knowledge.py
+  Validate staging JSON consistency (ontology, rules, symptoms). Thay thế data_tools.py validate + rebuild.
 
-scripts/rebuild_kg.py
-  Gộp dynamic CF + procedure tree + resolution vào kg_rules_from_dataset.json.
+scripts/import_neo4j.py
+  Import staging files vào Neo4j. Thay thế data_tools.py rebuild.
+
+scripts/legacy/
+  Archive của các script cũ: compute_cf.py, build_procedure.py, rebuild_kg.py, build_expert_tree.py, data_tools.py.
 
 data/staging/kg_rules_from_dataset.json
   Rule chẩn đoán chính, giữ field cũ và bổ sung symptoms/procedure/resolution.
@@ -115,14 +118,16 @@ unknown_symptom
   Không match symptom trong KG/rule.
 
 need_more_info
-  Có giả thuyết nhưng cần hỏi thêm. UI chỉ hiện câu hỏi tiếp theo.
+  Có giả thuyết nhưng cần hỏi thêm. Procedure tree chưa đi tới DIAGNOSED. UI chỉ hiện câu hỏi tiếp theo, chưa hiện Final Ranking.
 
 diagnosed
-  Hết câu hỏi phân biệt. UI hiện Final Ranking.
+  Procedure tree đã đi tới DIAGNOSED terminal. UI hiện Final Ranking + resolution.
 
 llm_fallback
   KG không có symptom phù hợp, dùng Gemini hoặc offline fallback.
 ```
+
+Ghi chú: Response gating được áp dụng tại layer `src/expert_system/response_policy.py`. Chỉ khi `procedure_terminal == "DIAGNOSED"` thì `results` mới được trả về. Nếu chưa, `results = []` và `is_final = false`.
 
 Trường response quan trọng:
 

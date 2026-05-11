@@ -1,73 +1,677 @@
 {
+  "meta": {
+    "version": "2.0",
+    "domain": "car_diagnostic",
+    "purpose": "Vehicle system ontology for expert-system diagnostic tree",
+    "root_level": "vehicle_system",
+    "levels": [
+      "system",
+      "subsystem",
+      "component"
+    ]
+  },
   "vehicle_systems": [
     {
+      "id": "SYS_ENGINE",
+      "name": "engine",
+      "display_name": "Engine",
+      "label_vi": "Động cơ",
+      "subsystems": [
+        {
+          "id": "SUB_IGNITION",
+          "name": "ignition_system",
+          "display_name": "Ignition System",
+          "label_vi": "Hệ thống đánh lửa",
+          "components": [
+            {
+              "id": "CMP_SPARK_PLUG",
+              "name": "spark_plug",
+              "display_name": "Spark Plug",
+              "label_vi": "Bugi"
+            },
+            {
+              "id": "CMP_IGNITION_COIL",
+              "name": "ignition_coil",
+              "display_name": "Ignition Coil",
+              "label_vi": "Mobin đánh lửa"
+            },
+            {
+              "id": "CMP_SPARK_PLUG_WIRE",
+              "name": "spark_plug_wire",
+              "display_name": "Spark Plug Wire",
+              "label_vi": "Dây cao áp"
+            }
+          ]
+        },
+        {
+          "id": "SUB_AIR_INTAKE",
+          "name": "air_intake_system",
+          "display_name": "Air Intake System",
+          "label_vi": "Hệ thống nạp khí",
+          "components": [
+            {
+              "id": "CMP_AIR_FILTER",
+              "name": "air_filter",
+              "display_name": "Air Filter",
+              "label_vi": "Lọc gió động cơ"
+            },
+            {
+              "id": "CMP_MAF_SENSOR",
+              "name": "maf_sensor",
+              "display_name": "MAF Sensor",
+              "label_vi": "Cảm biến lưu lượng khí nạp"
+            },
+            {
+              "id": "CMP_THROTTLE_BODY",
+              "name": "throttle_body",
+              "display_name": "Throttle Body",
+              "label_vi": "Bướm ga"
+            }
+          ]
+        },
+        {
+          "id": "SUB_ENGINE_MECHANICAL",
+          "name": "engine_mechanical",
+          "display_name": "Engine Mechanical",
+          "label_vi": "Cơ khí động cơ",
+          "components": [
+            {
+              "id": "CMP_ENGINE_MOUNT",
+              "name": "engine_mount",
+              "display_name": "Engine Mount",
+              "label_vi": "Chân máy"
+            },
+            {
+              "id": "CMP_VALVE_COVER_GASKET",
+              "name": "valve_cover_gasket",
+              "display_name": "Valve Cover Gasket",
+              "label_vi": "Gioăng nắp dàn cò"
+            },
+            {
+              "id": "CMP_OIL_PUMP",
+              "name": "oil_pump",
+              "display_name": "Oil Pump",
+              "label_vi": "Bơm dầu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_BRAKE",
+      "name": "brake",
+      "display_name": "Brake System",
+      "label_vi": "Hệ thống phanh",
+      "subsystems": [
+        {
+          "id": "SUB_HYDRAULIC_BRAKE",
+          "name": "hydraulic_brake",
+          "display_name": "Hydraulic Brake",
+          "label_vi": "Phanh thủy lực",
+          "components": [
+            {
+              "id": "CMP_BRAKE_MASTER_CYLINDER",
+              "name": "brake_master_cylinder",
+              "display_name": "Brake Master Cylinder",
+              "label_vi": "Xi-lanh chính phanh"
+            },
+            {
+              "id": "CMP_BRAKE_HOSE",
+              "name": "brake_hose",
+              "display_name": "Brake Hose",
+              "label_vi": "Ống dầu phanh"
+            },
+            {
+              "id": "CMP_BRAKE_FLUID",
+              "name": "brake_fluid",
+              "display_name": "Brake Fluid",
+              "label_vi": "Dầu phanh"
+            }
+          ]
+        },
+        {
+          "id": "SUB_FRICTION_BRAKE",
+          "name": "friction_brake",
+          "display_name": "Friction Brake",
+          "label_vi": "Cụm ma sát phanh",
+          "components": [
+            {
+              "id": "CMP_BRAKE_PAD",
+              "name": "brake_pad",
+              "display_name": "Brake Pad",
+              "label_vi": "Má phanh"
+            },
+            {
+              "id": "CMP_BRAKE_ROTOR",
+              "name": "brake_rotor",
+              "display_name": "Brake Rotor",
+              "label_vi": "Đĩa phanh"
+            },
+            {
+              "id": "CMP_BRAKE_CALIPER",
+              "name": "brake_caliper",
+              "display_name": "Brake Caliper",
+              "label_vi": "Heo phanh"
+            },
+            {
+              "id": "CMP_BRAKE_SHOE_DRUM",
+              "name": "brake_shoe_drum",
+              "display_name": "Brake Shoe & Drum",
+              "label_vi": "Guốc phanh và trống phanh"
+            }
+          ]
+        },
+        {
+          "id": "SUB_ABS",
+          "name": "abs_system",
+          "display_name": "ABS System",
+          "label_vi": "Hệ thống ABS",
+          "components": [
+            {
+              "id": "CMP_ABS_CONTROL_MODULE",
+              "name": "abs_control_module",
+              "display_name": "ABS Control Module",
+              "label_vi": "Hộp điều khiển ABS"
+            },
+            {
+              "id": "CMP_ABS_WHEEL_SPEED_SENSOR",
+              "name": "abs_wheel_speed_sensor",
+              "display_name": "ABS Wheel Speed Sensor",
+              "label_vi": "Cảm biến tốc độ bánh xe ABS"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SYS_ELECTRICAL",
-      "name": "electrical_system",
+      "name": "electrical",
       "display_name": "Electrical System",
+      "label_vi": "Hệ thống điện",
       "subsystems": [
         {
           "id": "SUB_STARTING",
           "name": "starting_system",
           "display_name": "Starting System",
+          "label_vi": "Hệ thống khởi động",
           "components": [
             {
               "id": "CMP_STARTER_MOTOR",
               "name": "starter_motor",
-              "display_name": "Starter Motor"
+              "display_name": "Starter Motor",
+              "label_vi": "Máy đề"
             },
             {
               "id": "CMP_STARTER_RELAY",
               "name": "starter_relay",
-              "display_name": "Starter Relay"
+              "display_name": "Starter Relay",
+              "label_vi": "Rơ-le đề"
             },
             {
               "id": "CMP_IGNITION_SWITCH",
               "name": "ignition_switch",
-              "display_name": "Ignition Switch"
+              "display_name": "Ignition Switch",
+              "label_vi": "Ổ khóa điện"
             }
           ]
         },
         {
-          "id": "SUB_BATTERY",
-          "name": "battery_system",
-          "display_name": "Battery System",
+          "id": "SUB_CHARGING",
+          "name": "charging_system",
+          "display_name": "Charging System",
+          "label_vi": "Hệ thống sạc",
           "components": [
             {
               "id": "CMP_BATTERY",
               "name": "battery",
-              "display_name": "Battery"
-            },
-            {
-              "id": "CMP_BATTERY_TERMINAL",
-              "name": "battery_terminal",
-              "display_name": "Battery Terminal"
+              "display_name": "Battery",
+              "label_vi": "Ắc quy"
             },
             {
               "id": "CMP_ALTERNATOR",
               "name": "alternator",
-              "display_name": "Alternator"
+              "display_name": "Alternator",
+              "label_vi": "Máy phát điện"
+            },
+            {
+              "id": "CMP_BATTERY_TERMINAL",
+              "name": "battery_terminal",
+              "display_name": "Battery Terminal",
+              "label_vi": "Cọc bình ắc quy"
             }
           ]
         },
         {
-          "id": "SUB_DOOR_LOCK",
-          "name": "door_lock_system",
-          "display_name": "Door Lock System",
+          "id": "SUB_LIGHTING",
+          "name": "lighting_system",
+          "display_name": "Lighting System",
+          "label_vi": "Hệ thống chiếu sáng",
+          "components": [
+            {
+              "id": "CMP_HEADLAMP_BULB",
+              "name": "headlamp_bulb",
+              "display_name": "Headlamp Bulb",
+              "label_vi": "Bóng đèn pha"
+            },
+            {
+              "id": "CMP_HEADLAMP_FUSE",
+              "name": "headlamp_fuse",
+              "display_name": "Headlamp Fuse",
+              "label_vi": "Cầu chì đèn pha"
+            }
+          ]
+        },
+        {
+          "id": "SUB_BODY_ELECTRICAL",
+          "name": "body_electrical",
+          "display_name": "Body Electrical",
+          "label_vi": "Điện thân xe",
           "components": [
             {
               "id": "CMP_DOOR_LOCK_ACTUATOR",
               "name": "door_lock_actuator",
-              "display_name": "Door Lock Actuator"
-            },
-            {
-              "id": "CMP_DOOR_LOCK_SWITCH",
-              "name": "door_lock_switch",
-              "display_name": "Door Lock Switch"
+              "display_name": "Door Lock Actuator",
+              "label_vi": "Mô-tơ khóa cửa"
             },
             {
               "id": "CMP_KEY_FOB",
               "name": "key_fob",
-              "display_name": "Key Fob"
+              "display_name": "Key Fob",
+              "label_vi": "Chìa khóa remote"
+            },
+            {
+              "id": "CMP_WINDOW_MOTOR",
+              "name": "window_motor",
+              "display_name": "Door Window Motor",
+              "label_vi": "Mô-tơ kính cửa"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_TRANSMISSION",
+      "name": "transmission",
+      "display_name": "Transmission / Drivetrain",
+      "label_vi": "Hộp số / Truyền động",
+      "subsystems": [
+        {
+          "id": "SUB_AUTOMATIC_TRANSMISSION",
+          "name": "automatic_transmission",
+          "display_name": "Automatic Transmission",
+          "label_vi": "Hộp số tự động",
+          "components": [
+            {
+              "id": "CMP_TRANSMISSION_FLUID",
+              "name": "transmission_fluid",
+              "display_name": "Transmission Fluid",
+              "label_vi": "Dầu hộp số"
+            },
+            {
+              "id": "CMP_TRANSMISSION",
+              "name": "transmission",
+              "display_name": "Transmission",
+              "label_vi": "Hộp số"
+            }
+          ]
+        },
+        {
+          "id": "SUB_CLUTCH",
+          "name": "clutch_system",
+          "display_name": "Clutch System",
+          "label_vi": "Hệ thống ly hợp",
+          "components": [
+            {
+              "id": "CMP_CLUTCH_CABLE",
+              "name": "clutch_cable",
+              "display_name": "Clutch Cable",
+              "label_vi": "Dây côn"
+            },
+            {
+              "id": "CMP_CLUTCH_SLAVE_CYLINDER",
+              "name": "clutch_slave_cylinder",
+              "display_name": "Clutch Slave Cylinder",
+              "label_vi": "Xi-lanh côn phụ"
+            },
+            {
+              "id": "CMP_CLUTCH_DISC",
+              "name": "clutch_disc",
+              "display_name": "Clutch Disc",
+              "label_vi": "Lá côn"
+            }
+          ]
+        },
+        {
+          "id": "SUB_DRIVELINE",
+          "name": "driveline",
+          "display_name": "Driveline",
+          "label_vi": "Trục truyền động",
+          "components": [
+            {
+              "id": "CMP_UNIVERSAL_JOINT",
+              "name": "universal_joint",
+              "display_name": "Universal Joint",
+              "label_vi": "Khớp chữ thập"
+            },
+            {
+              "id": "CMP_DIFFERENTIAL",
+              "name": "differential",
+              "display_name": "Differential",
+              "label_vi": "Vi sai"
+            },
+            {
+              "id": "CMP_AXLE",
+              "name": "axle",
+              "display_name": "Axle",
+              "label_vi": "Cầu/trục xe"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_COOLING",
+      "name": "cooling_system",
+      "display_name": "Cooling System",
+      "label_vi": "Hệ thống làm mát",
+      "subsystems": [
+        {
+          "id": "SUB_COOLANT_CIRCUIT",
+          "name": "coolant_circuit",
+          "display_name": "Coolant Circuit",
+          "label_vi": "Mạch nước làm mát",
+          "components": [
+            {
+              "id": "CMP_COOLANT",
+              "name": "coolant",
+              "display_name": "Coolant/Antifreeze",
+              "label_vi": "Nước làm mát"
+            },
+            {
+              "id": "CMP_RADIATOR",
+              "name": "radiator",
+              "display_name": "Radiator",
+              "label_vi": "Két nước"
+            },
+            {
+              "id": "CMP_RADIATOR_HOSE",
+              "name": "radiator_hose",
+              "display_name": "Radiator Hose",
+              "label_vi": "Ống nước két nước"
+            },
+            {
+              "id": "CMP_WATER_PUMP",
+              "name": "water_pump",
+              "display_name": "Water Pump",
+              "label_vi": "Bơm nước"
+            }
+          ]
+        },
+        {
+          "id": "SUB_TEMPERATURE_CONTROL",
+          "name": "temperature_control",
+          "display_name": "Temperature Control",
+          "label_vi": "Điều khiển nhiệt độ",
+          "components": [
+            {
+              "id": "CMP_THERMOSTAT",
+              "name": "thermostat",
+              "display_name": "Thermostat",
+              "label_vi": "Van hằng nhiệt"
+            },
+            {
+              "id": "CMP_RADIATOR_FAN",
+              "name": "radiator_fan",
+              "display_name": "Radiator/Cooling Fan",
+              "label_vi": "Quạt két nước"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_FUEL",
+      "name": "fuel_system",
+      "display_name": "Fuel System",
+      "label_vi": "Hệ thống nhiên liệu",
+      "subsystems": [
+        {
+          "id": "SUB_FUEL_DELIVERY",
+          "name": "fuel_delivery",
+          "display_name": "Fuel Delivery",
+          "label_vi": "Cấp nhiên liệu",
+          "components": [
+            {
+              "id": "CMP_FUEL_PUMP",
+              "name": "fuel_pump",
+              "display_name": "Fuel Pump",
+              "label_vi": "Bơm xăng"
+            },
+            {
+              "id": "CMP_FUEL_FILTER",
+              "name": "fuel_filter",
+              "display_name": "Fuel Filter",
+              "label_vi": "Lọc nhiên liệu"
+            },
+            {
+              "id": "CMP_FUEL_INJECTOR",
+              "name": "fuel_injector",
+              "display_name": "Fuel Injector",
+              "label_vi": "Kim phun"
+            }
+          ]
+        },
+        {
+          "id": "SUB_EVAP",
+          "name": "evap_system",
+          "display_name": "EVAP System",
+          "label_vi": "Hệ thống hơi xăng EVAP",
+          "components": [
+            {
+              "id": "CMP_GAS_CAP",
+              "name": "gas_cap",
+              "display_name": "Gas Cap",
+              "label_vi": "Nắp bình xăng"
+            },
+            {
+              "id": "CMP_EVAP_CANISTER",
+              "name": "evap_canister",
+              "display_name": "EVAP Canister",
+              "label_vi": "Bầu than hoạt tính"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_SUSPENSION_STEERING",
+      "name": "suspension_steering",
+      "display_name": "Suspension & Steering",
+      "label_vi": "Treo và lái",
+      "subsystems": [
+        {
+          "id": "SUB_SUSPENSION",
+          "name": "suspension",
+          "display_name": "Suspension",
+          "label_vi": "Hệ thống treo",
+          "components": [
+            {
+              "id": "CMP_SHOCK_ABSORBER",
+              "name": "shock_absorber",
+              "display_name": "Shock Absorber",
+              "label_vi": "Giảm xóc"
+            },
+            {
+              "id": "CMP_STRUT",
+              "name": "strut",
+              "display_name": "Strut",
+              "label_vi": "Phuộc"
+            },
+            {
+              "id": "CMP_CONTROL_ARM",
+              "name": "control_arm",
+              "display_name": "Control Arm",
+              "label_vi": "Càng A"
+            }
+          ]
+        },
+        {
+          "id": "SUB_STEERING",
+          "name": "steering",
+          "display_name": "Steering",
+          "label_vi": "Hệ thống lái",
+          "components": [
+            {
+              "id": "CMP_POWER_STEERING_PUMP",
+              "name": "power_steering_pump",
+              "display_name": "Power Steering Pump",
+              "label_vi": "Bơm trợ lực lái"
+            },
+            {
+              "id": "CMP_STEERING_RACK",
+              "name": "steering_rack",
+              "display_name": "Steering Rack",
+              "label_vi": "Thước lái"
+            }
+          ]
+        },
+        {
+          "id": "SUB_WHEEL_TIRE",
+          "name": "wheel_tire",
+          "display_name": "Wheel & Tire",
+          "label_vi": "Bánh xe và lốp",
+          "components": [
+            {
+              "id": "CMP_TIRE",
+              "name": "tire",
+              "display_name": "Tire",
+              "label_vi": "Lốp xe"
+            },
+            {
+              "id": "CMP_WHEEL_BEARING",
+              "name": "wheel_bearing",
+              "display_name": "Wheel Bearing",
+              "label_vi": "Bạc đạn bánh xe"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_HVAC",
+      "name": "hvac",
+      "display_name": "HVAC / Air Conditioning",
+      "label_vi": "Điều hòa / HVAC",
+      "subsystems": [
+        {
+          "id": "SUB_AC_REFRIGERATION",
+          "name": "ac_refrigeration",
+          "display_name": "AC Refrigeration",
+          "label_vi": "Mạch lạnh điều hòa",
+          "components": [
+            {
+              "id": "CMP_AC_COMPRESSOR",
+              "name": "ac_compressor",
+              "display_name": "AC Compressor",
+              "label_vi": "Lốc lạnh"
+            },
+            {
+              "id": "CMP_AC_CONDENSER",
+              "name": "ac_condenser",
+              "display_name": "AC Condenser",
+              "label_vi": "Giàn nóng"
+            },
+            {
+              "id": "CMP_AC_EVAPORATOR",
+              "name": "ac_evaporator",
+              "display_name": "AC Evaporator",
+              "label_vi": "Giàn lạnh"
+            },
+            {
+              "id": "CMP_AC_REFRIGERANT",
+              "name": "ac_refrigerant",
+              "display_name": "AC Refrigerant",
+              "label_vi": "Gas lạnh"
+            }
+          ]
+        },
+        {
+          "id": "SUB_BLOWER_VENT",
+          "name": "blower_vent",
+          "display_name": "Blower & Ventilation",
+          "label_vi": "Quạt gió và thông gió",
+          "components": [
+            {
+              "id": "CMP_BLOWER_MOTOR",
+              "name": "blower_motor",
+              "display_name": "Heater Blower Motor",
+              "label_vi": "Mô-tơ quạt gió"
+            },
+            {
+              "id": "CMP_BLOWER_RESISTOR",
+              "name": "blower_resistor",
+              "display_name": "Blower Motor Resistor",
+              "label_vi": "Điện trở quạt gió"
+            },
+            {
+              "id": "CMP_CABIN_AIR_FILTER",
+              "name": "cabin_air_filter",
+              "display_name": "Cabin Air Filter",
+              "label_vi": "Lọc gió điều hòa"
+            }
+          ]
+        },
+        {
+          "id": "SUB_HEATER",
+          "name": "heater_system",
+          "display_name": "Heater System",
+          "label_vi": "Hệ thống sưởi",
+          "components": [
+            {
+              "id": "CMP_HEATER_CORE",
+              "name": "heater_core",
+              "display_name": "Heater Core",
+              "label_vi": "Két sưởi"
+            },
+            {
+              "id": "CMP_HEATER_HOSE",
+              "name": "heater_hose",
+              "display_name": "Heater Hose",
+              "label_vi": "Ống nước sưởi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SYS_EXHAUST_EMISSION",
+      "name": "exhaust_emission",
+      "display_name": "Exhaust & Emission",
+      "label_vi": "Xả và khí thải",
+      "subsystems": [
+        {
+          "id": "SUB_EXHAUST",
+          "name": "exhaust_system",
+          "display_name": "Exhaust System",
+          "label_vi": "Hệ thống xả",
+          "components": [
+            {
+              "id": "CMP_CATALYTIC_CONVERTER",
+              "name": "catalytic_converter",
+              "display_name": "Catalytic Converter",
+              "label_vi": "Bộ xúc tác khí thải"
+            },
+            {
+              "id": "CMP_MUFFLER",
+              "name": "muffler",
+              "display_name": "Muffler",
+              "label_vi": "Bầu giảm thanh"
+            },
+            {
+              "id": "CMP_OXYGEN_SENSOR",
+              "name": "oxygen_sensor",
+              "display_name": "Oxygen Sensor",
+              "label_vi": "Cảm biến oxy"
             }
           ]
         }

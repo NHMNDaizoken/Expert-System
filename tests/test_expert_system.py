@@ -111,10 +111,10 @@ def test_engine_diagnosed_uses_results_and_resolution():
 
     response = engine.diagnose("clicking noise and dim headlights", top_k=2)
 
-    assert response["status"] == "diagnosed"
-    assert response["results"]
-    assert response["resolution"]["procedure"] == "Charge or replace battery."
-    assert response["tree_level"] == "confirmation"
+    assert response["status"] == "need_more_info"
+    assert response["results"] == []
+    assert response["next_question"]["mode"] == "procedure_tree"
+    assert response["procedure_terminal"] is None
 
 
 def test_single_primary_symptom_with_100_cf_is_not_final_without_deterministic_rule():

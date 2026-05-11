@@ -92,8 +92,8 @@ Snapshot hiện tại:
 | Symptom aliases | 143 |
 | Dynamic CF symptoms | 143 |
 | Procedure trees | 99 |
-| Evaluation test cases | 12 |
-| Vehicle systems trong ontology | 1 |
+| Evaluation test cases | 20 |
+| Vehicle systems trong ontology | 9 |
 
 Rule mẫu:
 
@@ -167,16 +167,18 @@ Các file liên quan:
 ```text
 data/staging/ontology.json
 data/staging/kg_rules_from_dataset.json
-scripts/data_tools.py
+scripts/build_knowledge.py           Consolidate: tính CF, build procedure, expert tree, alias
+scripts/validate_knowledge.py        Validate staging JSON consistency
+scripts/import_neo4j.py              Import staging vào Neo4j
 backend/services/graph_service.py
 frontend/src/components/GraphCanvas.jsx
 ```
 
-`GraphService` ưu tiên đọc Neo4j. Nếu Neo4j chưa chạy hoặc rỗng, service fallback sang `data/staging` để vẫn demo được graph.
+Lưu ý: Các script cũ (`compute_cf.py`, `build_procedure.py`, `rebuild_kg.py`, `data_tools.py`) được archive trong `scripts/legacy/`.
 
 ## 6. Suy Luận Chạy Như Thế Nào?
 
-File chính: `src/kg_inference.py`
+File chính: `src/kg_inference.py` (engine) + `src/expert_system/response_policy.py` (gating layer)
 
 Luồng xử lý:
 
@@ -193,11 +195,14 @@ score(fault) =
 Sau đó normalize để tổng score của các fault = 1.
 ```
 
-5. `check_diagnosed()` chỉ kết luận khi fault top > 0.70 và cách fault thứ hai > 0.30.
-6. Nếu Neo4j lỗi/rỗng, backend fallback sang JSON rules trong `data/staging`.
-7. Nếu KG vẫn không match symptom mới, backend dùng LLM fallback qua Gemini khi có `GEMINI_API_KEY`; nếu chưa có key thì trả `UNMAPPED_SYMPTOM` để UI không trống và báo cần bổ sung rule.
-8. Nếu còn `next_question`, response có `status = need_more_info`: UI chỉ hiện câu hỏi tiếp theo; ranking tạm thời được giữ trong `current_hypotheses`, không render như kết quả.
-9. Khi đủ ngưỡng chẩn đoán, response có `status = diagnosed` và `is_final = true`: `results` lúc này mới là ranking kết luận, kèm `resolution`.
+5. `check_diagnosed()` chỉ kết luận khi fault top > 0.70 và cách fault thứ hai > 0.30. Engine output `procedure_terminal` vào response.
+6. **Response Policy Layer** (`src/expert_system/response_policy.py`): Áp dụng `apply_response_policy()` tại `backend/services/diagnosis_service.py` để gate finalization:
+   - Nếu `procedure_terminal != "DIAGNOSED"`: set `status = need_more_info`, `results = []`, `is_final = false` (UI chỉ hiện câu hỏi tiếp theo)
+   - Nếu `procedure_terminal == "DIAGNOSED"`: set `status = diagnosed`, `results = [ranking]`, `is_final = true` (UI hiện Final Ranking + resolution)
+
+7. Nếu Neo4j lỗi/rỗng, backend fallback sang JSON rules trong `data/staging`.
+8. Nếu KG vẫn không match symptom mới, backend dùng LLM fallback qua Gemini khi có `GEMINI_API_KEY`; nếu chưa có key thì trả `UNMAPPED_SYMPTOM` để UI không trống và báo cần bổ sung rule.
+9. Ranking tạm thời được giữ trong `current_hypotheses` cho frontend để hiện fault preview khi còn cần xác nhận.
 
 `reasoning_trace` có các phần:
 
