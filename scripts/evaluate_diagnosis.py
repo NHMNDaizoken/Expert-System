@@ -8,7 +8,7 @@ from typing import Any
 
 import _bootstrap  # noqa: F401
 
-from src.kg_inference import KGInference
+from src.legacy.kg_inference import KGInference
 
 
 DEFAULT_CASES_PATH = Path("data/staging/test_cases.json")

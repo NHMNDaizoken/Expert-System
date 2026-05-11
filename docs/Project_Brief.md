@@ -177,12 +177,26 @@ Import lại Neo4j nếu graph rỗng:
 python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
 ```
 
-Build lại staging data từ dataset raw:
+Build lại staging data từ dataset raw (consolidated script):
 
 ```powershell
-uv run python scripts\compute_cf.py
-uv run python scripts\build_procedure.py
-uv run python scripts\rebuild_kg.py
+uv run python scripts/build_knowledge.py --rebuild-from-raw
+uv run python scripts/validate_knowledge.py
+```
+
+Validate staging data:
+
+```powershell
+uv run python scripts/validate_knowledge.py
+```
+
+**Legacy** (không nên dùng nữa):
+
+```powershell
+# Cách cũ - các script riêng lẻ (đã gộp vào build_knowledge.py)
+# uv run python scripts/legacy/compute_cf.py
+# uv run python scripts/legacy/build_procedure.py
+# uv run python scripts/legacy/rebuild_kg.py
 ```
 
 ## Test

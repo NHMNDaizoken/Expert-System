@@ -1,6 +1,6 @@
 import unittest
 
-from src.kg_inference import KGInference, SymptomMatcher, extract_rules
+from src.legacy.kg_inference import KGInference, SymptomMatcher, extract_rules
 
 
 ALIASES = {

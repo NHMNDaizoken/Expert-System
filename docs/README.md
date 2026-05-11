@@ -8,14 +8,15 @@ Tài liệu này là điểm bắt đầu khi cần hiểu, chạy và test hệ
 
 Project là web app hệ chuyên gia chẩn đoán lỗi ô tô. Người dùng nhập triệu chứng, hệ thống chuẩn hóa input, match triệu chứng, suy luận lỗi, hỏi thêm nếu chưa đủ chắc chắn, rồi trả kết quả cuối kèm hướng kiểm tra/sửa chữa.
 
-Luồng chính:
+Luồng chính (sau refactoring):
 
 ```text
 Triệu chứng người dùng
--> SymptomMatcher chuẩn hóa và fuzzy-match alias
--> KGInference tạo giả thuyết lỗi từ rule/Knowledge Graph
+-> ExpertSystemEngine.diagnose() -> SymptomMatcher chuẩn hóa và fuzzy-match alias
+-> Suy luận lỗi từ rule/Knowledge Graph
 -> Dynamic Certainty Factor xếp hạng lỗi
--> NextQuestion chọn câu hỏi yes/no nếu còn mơ hồ
+-> QuestionSelector chọn câu hỏi yes/no nếu còn mơ hồ
+-> ResponsePolicy filter results dựa vào status và procedure_terminal
 -> Backend lưu session hỏi đáp
 -> Frontend hiển thị kết quả cuối và reasoning trace
 ```
@@ -28,14 +29,22 @@ data/staging/cf_dynamic.json              Dynamic CF theo symptom/fault
 data/staging/procedure_trees.json         Cây câu hỏi yes/no theo fault
 data/staging/symptom_aliases.json         Alias để match triệu chứng
 data/staging/ontology.json                Ontology system/subsystem/component
-src/kg_inference.py                       Bộ suy luận chính
-src/next_question.py                      Chọn câu hỏi tiếp theo
+src/expert_system/inference_engine.py     ExpertSystemEngine - bộ suy luận chính
+src/expert_system/symptom_matcher.py      SymptomMatcher - match triệu chứng
+src/expert_system/question_selector.py    QuestionSelector - chọn câu hỏi tiếp theo
+src/expert_system/response_policy.py      apply_response_policy - filter results
 backend/services/diagnosis_service.py     Orchestrator API chẩn đoán
 backend/services/session_service.py       Lưu session hỏi đáp SQLite
 backend/services/graph_service.py         Đọc Neo4j hoặc fallback JSON
 frontend/src/pages/DiagnosticChat.jsx     Luồng UI input -> question -> result
 frontend/src/pages/GraphViewer.jsx        Xem Knowledge Graph
 ```
+
+**Legacy modules** (lưu tại `src/legacy/` cho backward compatibility):
+- `src/legacy/kg_inference.py` - cầu nối cũ
+- `src/legacy/next_question.py` - chọn câu hỏi cũ
+- `src/legacy/cf.py` - tính CF cũ
+- `src/legacy/kg_validator.py` - validate knowledge graph
 
 Đọc thêm:
 
@@ -87,11 +96,17 @@ docker compose up -d neo4j
 Nếu muốn rebuild staging rules từ dataset raw:
 
 ```powershell
-python scripts/build_knowledge.py
+python scripts/build_knowledge.py --rebuild-from-raw
 python scripts/validate_knowledge.py
 ```
 
-Nếu chỉ muốn import staging rules vào Neo4j:
+Nếu chỉ muốn import staging rules vào Neo4j (sử dụng `import_graph.py` - tên mới, hoặc `import_neo4j.py` - tên cũ):
+
+```powershell
+python scripts/import_graph.py
+```
+
+Hoặc sử dụng tên cũ:
 
 ```powershell
 python scripts/import_neo4j.py
@@ -217,22 +232,21 @@ Invoke-RestMethod http://localhost:8000/api/diagnose `
 
 ## 6. Build Lại Data/Rule
 
-Khi sửa `data/raw/automotive_faults.json`, build lại staging data:
+Khi sửa `data/raw/automotive_faults.json`, build lại staging data bằng consolidated script:
 
 ```powershell
-python scripts/compute_cf.py
-python scripts/build_procedure.py
-python scripts/rebuild_kg.py
-python scripts/data_tools.py validate data/staging/kg_rules_from_dataset.json
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/build_knowledge.py --rebuild-from-raw
+python scripts/validate_knowledge.py
 ```
 
-Các lệnh xem dữ liệu:
+**Trước refactoring** (cách cũ - lưu ở `scripts/legacy/` nếu cần):
 
 ```powershell
-python scripts/data_tools.py inspect
-python scripts/data_tools.py categories
-python scripts/data_tools.py generate-related
+# Không nên dùng nữa - đã gộp vào build_knowledge.py
+# python scripts/legacy/compute_cf.py
+# python scripts/legacy/build_procedure.py
+# python scripts/legacy/rebuild_kg.py
+```
 ```
 
 ## 7. File Thừa Có Thể Xóa

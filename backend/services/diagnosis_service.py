@@ -4,7 +4,6 @@ from backend.services.session_service import SessionService
 from src.expert_system.inference_engine import ExpertSystemEngine
 from src.expert_system.knowledge_base import KnowledgeBase
 from src.expert_system.response_policy import apply_response_policy
-from src.kg_inference import KGInference
 from src.llm_fallback import diagnose_with_llm
 
 
@@ -242,12 +241,12 @@ class DiagnosisService:
         last_question = session.get("last_question") or {}
 
         if symptom:
-            probe = KGInference.from_files()
+            engine = ExpertSystemEngine.from_staging()
             try:
-                for match in probe.matcher.match(symptom):
+                for match in engine.matcher.match(symptom):
                     confirmed_symptoms.add(match["symptom_id"])
-            finally:
-                probe.close()
+            except Exception:
+                pass  # symptom matching failure is non-critical
 
         if step_answer is not None:
             if last_question.get("mode") == "information_gain" and last_question.get("symptom_id"):

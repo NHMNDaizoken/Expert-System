@@ -38,16 +38,21 @@ docs/Expert_System_Map.md
 
 Đọc `Project_Brief.md` trước nếu cần handoff nhanh cho người khác. Đọc `Expert_System_Map.md` nếu cần đi sâu vào flow hệ chuyên gia, data, API và graph.
 
-Tóm tắt nhanh:
+Tóm tắt nhanh (sau refactoring):
 
 - Luật chẩn đoán: `data/staging/kg_rules_from_dataset.json`.
 - Dynamic CF: `data/staging/cf_dynamic.json`.
 - Procedure tree: `data/staging/procedure_trees.json`.
-- Quan hệ graph: `data/staging/ontology.json`, `scripts/data_tools.py`, `backend/services/graph_service.py`.
-- Bộ suy luận đang chạy: `src/kg_inference.py`.
-- Chọn câu hỏi tiếp theo: `src/next_question.py`.
+- Quan hệ graph: `data/staging/ontology.json`, `backend/services/graph_service.py`.
+- **Bộ suy luận chính**: `src/expert_system/inference_engine.py` (ExpertSystemEngine).
+- **Matcher triệu chứng**: `src/expert_system/symptom_matcher.py` (SymptomMatcher).
+- **Chọn câu hỏi**: `src/expert_system/question_selector.py` (QuestionSelector).
+- **Response filtering**: `src/expert_system/response_policy.py` (apply_response_policy).
 - API hỏi-đáp: `backend/services/diagnosis_service.py`, `backend/services/session_service.py`.
 - UI show luật/quan hệ/trace: `frontend/src/pages/GraphViewer.jsx`, `frontend/src/components/ReasoningTrace.jsx`.
+
+**Legacy modules** (không dùng nữa, lưu ở `src/legacy/` cho backward compatibility):
+- `src/legacy/kg_inference.py`, `src/legacy/next_question.py`, `src/legacy/cf.py`, `src/legacy/kg_validator.py`
 
 ## 4. Yêu Cầu
 

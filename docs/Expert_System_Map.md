@@ -388,20 +388,28 @@ docker compose exec backend python scripts/data_tools.py rebuild data/staging/kg
 
 ## 11. Lệnh Data, Dev Và Test
 
-Data/graph:
+Build staging data (consolidated scripts):
 
 ```powershell
-python scripts/data_tools.py inspect
-python scripts/data_tools.py categories
-python scripts/data_tools.py validate data/staging/kg_rules_from_dataset.json
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
-python scripts/data_tools.py generate-related
-uv run python scripts\compute_cf.py
-uv run python scripts\build_procedure.py
-uv run python scripts\rebuild_kg.py
+# Build all staging artifacts from data/raw/automotive_faults.json
+uv run python scripts/build_knowledge.py --rebuild-from-raw
+
+# Validate staging artifacts
+uv run python scripts/validate_knowledge.py
+
+# Import into Neo4j
+uv run python scripts/import_graph.py
 ```
 
-`data_tools.py build/approve` là đường build cũ; rebuild mới nên dùng 3 script `compute_cf.py`, `build_procedure.py`, `rebuild_kg.py` để tránh quay lại CF cố định.
+**Legacy** (do not use - scripts consolidated into build_knowledge.py):
+
+```powershell
+# Old individual build scripts (replaced by build_knowledge.py)
+# uv run python scripts/legacy/compute_cf.py
+# uv run python scripts/legacy/build_procedure.py
+# uv run python scripts/legacy/rebuild_kg.py
+# uv run python scripts/legacy/data_tools.py
+```
 
 Dev check:
 

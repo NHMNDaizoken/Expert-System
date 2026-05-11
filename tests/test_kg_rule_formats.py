@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.kg_validator import validate_all
+from src.legacy.kg_validator import validate_all
 
 
 ROOT = Path(__file__).resolve().parents[1]
