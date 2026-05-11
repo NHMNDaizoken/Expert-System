@@ -1,0 +1,493 @@
+{
+  "_meta": {
+    "total_records": 99,
+    "total_symptoms": 143,
+    "total_faults": 99,
+    "generated_at": "2026-05-11T09:44:11.204411+00:00",
+    "low_cf_threshold": 0.15
+  },
+  "symptoms": {
+    "SYM_ABS_LIGHT_STAYS_ON": {
+      "FLT_002": 1.0
+    },
+    "SYM_ABS_WARNING_LIGHT_ON": {
+      "FLT_001": 1.0
+    },
+    "SYM_AC_NOT_COOLING_AT_IDLE": {
+      "FLT_023": 1.0
+    },
+    "SYM_AC_SYSTEM_NOT_COOLING": {
+      "FLT_011": 1.0
+    },
+    "SYM_AC_SYSTEM_NOT_WORKING": {
+      "FLT_014": 1.0
+    },
+    "SYM_AXLE_NOISE_WHILE_TURNING": {
+      "FLT_031": 1.0
+    },
+    "SYM_BATTERY_WARNING_LIGHT_ON": {
+      "FLT_037": 0.5,
+      "FLT_072": 0.5
+    },
+    "SYM_BLACK_SMOKE_FROM_EXHAUST": {
+      "FLT_059": 0.3333,
+      "FLT_076": 0.3333,
+      "FLT_083": 0.3333
+    },
+    "SYM_BLUE_SMOKE_FROM_EXHAUST": {
+      "FLT_067": 1.0
+    },
+    "SYM_BRAKE_DRAGGING": {
+      "FLT_004": 0.5,
+      "FLT_009": 0.5
+    },
+    "SYM_BRAKE_FLUID_LEAK": {
+      "FLT_005": 1.0
+    },
+    "SYM_BRAKE_FLUID_LEAKS": {
+      "FLT_006": 1.0
+    },
+    "SYM_BRAKE_PEDAL_PULSATION": {
+      "FLT_001": 0.3333,
+      "FLT_007": 0.3333,
+      "FLT_008": 0.3333
+    },
+    "SYM_BRAKE_PULLING_TO_ONE_SIDE": {
+      "FLT_004": 1.0
+    },
+    "SYM_BRAKE_WARNING_LIGHT_ON": {
+      "FLT_087": 1.0
+    },
+    "SYM_BURNING_OIL_SMELL_FROM_ENGINE_BAY": {
+      "FLT_069": 1.0
+    },
+    "SYM_CHECK_ENGINE_LIGHT_ON": {
+      "FLT_038": 0.1429,
+      "FLT_048": 0.1429,
+      "FLT_049": 0.1429,
+      "FLT_050": 0.1429,
+      "FLT_053": 0.1429,
+      "FLT_055": 0.1429,
+      "FLT_056": 0.1429
+    },
+    "SYM_CLICKING_OR_POPPING_NOISE_WHEN_TURNING": {
+      "FLT_099": 1.0
+    },
+    "SYM_CLICKING_SOUND_FROM_DOOR": {
+      "FLT_044": 1.0
+    },
+    "SYM_CLICKING_SOUND_WHEN_KEY_IS_TURNED": {
+      "FLT_045": 1.0
+    },
+    "SYM_CLICKING_SOUND_WHEN_STARTING": {
+      "FLT_036": 1.0
+    },
+    "SYM_CLUNKING_NOISE_WHEN_ACCELERATING": {
+      "FLT_061": 1.0
+    },
+    "SYM_CLUNKING_NOISE_WHEN_SHIFTING": {
+      "FLT_034": 1.0
+    },
+    "SYM_CLUTCH_PEDAL_FEELS_LOOSE": {
+      "FLT_028": 1.0
+    },
+    "SYM_CLUTCH_PEDAL_FEELS_SPONGY": {
+      "FLT_029": 1.0
+    },
+    "SYM_CLUTCH_SLIPPING": {
+      "FLT_092": 1.0
+    },
+    "SYM_COOLANT_LEAK": {
+      "FLT_090": 1.0
+    },
+    "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE": {
+      "FLT_018": 1.0
+    },
+    "SYM_COOLANT_LEAK_NEAR_FRONT_OF_ENGINE": {
+      "FLT_025": 1.0
+    },
+    "SYM_COOLANT_LEAK_UNDER_VEHICLE": {
+      "FLT_024": 1.0
+    },
+    "SYM_COOLANT_ODOR_IN_CABIN": {
+      "FLT_019": 0.5,
+      "FLT_022": 0.5
+    },
+    "SYM_DECREASED_ENGINE_PERFORMANCE": {
+      "FLT_076": 1.0
+    },
+    "SYM_DELAYED_SHIFTING": {
+      "FLT_095": 1.0
+    },
+    "SYM_DELAY_IN_GEAR_ENGAGEMENT": {
+      "FLT_033": 1.0
+    },
+    "SYM_DIFFICULTY_ENGAGING_GEARS": {
+      "FLT_028": 1.0
+    },
+    "SYM_DIFFICULTY_SHIFTING_GEARS": {
+      "FLT_026": 1.0
+    },
+    "SYM_DIFFICULTY_STARTING_ENGINE": {
+      "FLT_042": 1.0
+    },
+    "SYM_DIM_HEADLIGHT": {
+      "FLT_041": 1.0
+    },
+    "SYM_DIM_HEADLIGHTS": {
+      "FLT_037": 1.0
+    },
+    "SYM_DOOR_LOCK_NOT_RESPONDING": {
+      "FLT_044": 1.0
+    },
+    "SYM_DRIVELINE_VIBRATION": {
+      "FLT_034": 1.0
+    },
+    "SYM_ENGINE_CRANKS_SLOWLY": {
+      "FLT_036": 1.0
+    },
+    "SYM_ENGINE_DOES_NOT_CRANK": {
+      "FLT_045": 1.0
+    },
+    "SYM_ENGINE_HESITATES_ON_ACCELERATION": {
+      "FLT_086": 1.0
+    },
+    "SYM_ENGINE_KNOCKING_NOISE": {
+      "FLT_066": 1.0
+    },
+    "SYM_ENGINE_KNOCKING_PINGING": {
+      "FLT_054": 1.0
+    },
+    "SYM_ENGINE_MISFIRES": {
+      "FLT_042": 0.1111,
+      "FLT_043": 0.1111,
+      "FLT_059": 0.1111,
+      "FLT_062": 0.1111,
+      "FLT_063": 0.1111,
+      "FLT_065": 0.1111,
+      "FLT_068": 0.1111,
+      "FLT_077": 0.1111,
+      "FLT_082": 0.1111
+    },
+    "SYM_ENGINE_OVERHEATING": {
+      "FLT_018": 0.1429,
+      "FLT_020": 0.1429,
+      "FLT_023": 0.1429,
+      "FLT_025": 0.1429,
+      "FLT_070": 0.1429,
+      "FLT_088": 0.1429,
+      "FLT_090": 0.1429
+    },
+    "SYM_ENGINE_PERFORMANCE_ISSUES": {
+      "FLT_073": 1.0
+    },
+    "SYM_ENGINE_SPUTTERS_AT_HIGH_SPEEDS": {
+      "FLT_084": 1.0
+    },
+    "SYM_ENGINE_STALLS": {
+      "FLT_083": 1.0
+    },
+    "SYM_ENGINE_STALLS_AT_HIGH_SPEEDS": {
+      "FLT_079": 1.0
+    },
+    "SYM_ENGINE_VIBRATION": {
+      "FLT_057": 1.0
+    },
+    "SYM_ENGINE_WON_T_START": {
+      "FLT_068": 1.0
+    },
+    "SYM_ERRATIC_IDLE_SPEED": {
+      "FLT_064": 1.0
+    },
+    "SYM_ERRATIC_SHIFTING": {
+      "FLT_096": 1.0
+    },
+    "SYM_ERRATIC_SPEEDOMETER": {
+      "FLT_002": 1.0
+    },
+    "SYM_EXCESSIVE_ENGINE_MOVEMENT": {
+      "FLT_061": 1.0
+    },
+    "SYM_EXHAUST_SMELL_IN_CABIN": {
+      "FLT_051": 1.0
+    },
+    "SYM_FLUID_LEAK_NEAR_CLUTCH_PEDAL": {
+      "FLT_029": 1.0
+    },
+    "SYM_FUEL_ODOR_FROM_VEHICLE": {
+      "FLT_050": 1.0
+    },
+    "SYM_FUEL_ODOR_INSIDE_VEHICLE": {
+      "FLT_085": 1.0
+    },
+    "SYM_GAS_CAP_WARNING_LIGHT": {
+      "FLT_053": 1.0
+    },
+    "SYM_GEARS_SLIPPING": {
+      "FLT_094": 1.0
+    },
+    "SYM_GLOW_PLUG_INDICATOR_LIGHT_STAYS_ON": {
+      "FLT_060": 1.0
+    },
+    "SYM_GRINDING_NOISE_FROM_WHEELS": {
+      "FLT_097": 1.0
+    },
+    "SYM_HARD_BRAKE_PEDAL": {
+      "FLT_003": 1.0
+    },
+    "SYM_HARD_STARTING_IN_COLD_WEATHER": {
+      "FLT_060": 1.0
+    },
+    "SYM_HEADLIGHT_NOT_WORKING": {
+      "FLT_041": 1.0
+    },
+    "SYM_HVAC_FAN_ONLY_WORKS_ON_CERTAIN_SETTINGS": {
+      "FLT_017": 1.0
+    },
+    "SYM_HVAC_FAN_SPEED_ERRATIC": {
+      "FLT_017": 1.0
+    },
+    "SYM_LOSS_OF_ENGINE_POWER": {
+      "FLT_067": 1.0
+    },
+    "SYM_LOSS_OF_POWER": {
+      "FLT_058": 0.5,
+      "FLT_084": 0.5
+    },
+    "SYM_LOUD_ENGINE_NOISE": {
+      "FLT_078": 1.0
+    },
+    "SYM_LOUD_EXHAUST_NOISE": {
+      "FLT_051": 0.5,
+      "FLT_052": 0.5
+    },
+    "SYM_LOUD_NOISE_FROM_HVAC_SYSTEM": {
+      "FLT_016": 1.0
+    },
+    "SYM_LOUD_NOISE_FROM_REAR_AXLE": {
+      "FLT_032": 1.0
+    },
+    "SYM_LOUD_NOISE_WHEN_AC_IS_ON": {
+      "FLT_010": 1.0
+    },
+    "SYM_LOW_AC_SYSTEM_PRESSURE": {
+      "FLT_013": 1.0
+    },
+    "SYM_LOW_COOLANT_WARNING_LIGHT": {
+      "FLT_088": 1.0
+    },
+    "SYM_LOW_OIL_PRESSURE_WARNING_LIGHT": {
+      "FLT_066": 0.5,
+      "FLT_078": 0.5
+    },
+    "SYM_LOW_TIRE_PRESSURE": {
+      "FLT_098": 1.0
+    },
+    "SYM_LOW_VOLTAGE": {
+      "FLT_072": 1.0
+    },
+    "SYM_MUSTY_ODOR_FROM_VENTS": {
+      "FLT_012": 0.5,
+      "FLT_015": 0.5
+    },
+    "SYM_NOISE_FROM_DRIVETRAIN_WHILE_TURNING": {
+      "FLT_027": 0.5,
+      "FLT_035": 0.5
+    },
+    "SYM_NOISE_WHEN_TURNING_STEERING_WHEEL": {
+      "FLT_074": 1.0
+    },
+    "SYM_NO_AIR_FROM_VENTS": {
+      "FLT_016": 1.0
+    },
+    "SYM_NO_COLD_AIR_FROM_VENTS": {
+      "FLT_010": 1.0
+    },
+    "SYM_NO_HEAT_FROM_VENTS": {
+      "FLT_021": 1.0
+    },
+    "SYM_NO_SOUND_WHEN_HORN_BUTTON_PRESSED": {
+      "FLT_071": 1.0
+    },
+    "SYM_NO_WASHER_FLUID_SPRAY": {
+      "FLT_046": 0.5,
+      "FLT_091": 0.5
+    },
+    "SYM_OIL_LEAKS": {
+      "FLT_080": 1.0
+    },
+    "SYM_OIL_LEAK_AROUND_VALVE_COVER": {
+      "FLT_069": 1.0
+    },
+    "SYM_POOR_ACCELERATION": {
+      "FLT_079": 0.5,
+      "FLT_081": 0.5
+    },
+    "SYM_POOR_ENGINE_PERFORMANCE": {
+      "FLT_038": 1.0
+    },
+    "SYM_POOR_FUEL_ECONOMY": {
+      "FLT_043": 0.1667,
+      "FLT_054": 0.1667,
+      "FLT_056": 0.1667,
+      "FLT_063": 0.1667,
+      "FLT_077": 0.1667,
+      "FLT_082": 0.1667
+    },
+    "SYM_REDUCED_AIRFLOW_FROM_VENTS": {
+      "FLT_015": 1.0
+    },
+    "SYM_ROTTEN_EGG_SMELL_FROM_EXHAUST": {
+      "FLT_049": 1.0
+    },
+    "SYM_ROUGH_IDLE": {
+      "FLT_048": 0.1667,
+      "FLT_055": 0.1667,
+      "FLT_057": 0.1667,
+      "FLT_062": 0.1667,
+      "FLT_065": 0.1667,
+      "FLT_080": 0.1667
+    },
+    "SYM_SHUDDERING_DURING_ACCELERATION": {
+      "FLT_093": 1.0
+    },
+    "SYM_SLIPPING_GEARS": {
+      "FLT_093": 1.0
+    },
+    "SYM_SOFT_BRAKE_PEDAL": {
+      "FLT_005": 0.5,
+      "FLT_087": 0.5
+    },
+    "SYM_SOFT_CLUTCH_PEDAL": {
+      "FLT_092": 1.0
+    },
+    "SYM_SPONGY_BRAKE_PEDAL": {
+      "FLT_003": 0.3333,
+      "FLT_006": 0.3333,
+      "FLT_009": 0.3333
+    },
+    "SYM_SQUEALING_BRAKES": {
+      "FLT_007": 1.0
+    },
+    "SYM_SQUEALING_NOISE_FROM_ENGINE_BAY": {
+      "FLT_070": 0.5,
+      "FLT_073": 0.5
+    },
+    "SYM_STALLING_AT_IDLE": {
+      "FLT_064": 0.3333,
+      "FLT_081": 0.3333,
+      "FLT_086": 0.3333
+    },
+    "SYM_STEERING_WHEEL_VIBRATION": {
+      "FLT_008": 1.0
+    },
+    "SYM_STIFF_STEERING_WHEEL": {
+      "FLT_089": 1.0
+    },
+    "SYM_SWEET_SMELL_IN_CABIN": {
+      "FLT_021": 1.0
+    },
+    "SYM_TEMPERATURE_GAUGE_IN_RED_ZONE": {
+      "FLT_020": 1.0
+    },
+    "SYM_TPMS_WARNING_LIGHT_ON": {
+      "FLT_098": 1.0
+    },
+    "SYM_TRANSMISSION_OVERHEATING": {
+      "FLT_094": 1.0
+    },
+    "SYM_TRANSMISSION_SLIPPING": {
+      "FLT_033": 0.5,
+      "FLT_095": 0.5
+    },
+    "SYM_TRANSMISSION_WON_T_SHIFT_GEARS": {
+      "FLT_096": 1.0
+    },
+    "SYM_TURBO_LAG": {
+      "FLT_058": 1.0
+    },
+    "SYM_UNEVEN_TIRE_WEAR": {
+      "FLT_075": 0.5,
+      "FLT_097": 0.5
+    },
+    "SYM_UNUSUAL_NOISE_FROM_AC_SYSTEM": {
+      "FLT_014": 1.0
+    },
+    "SYM_VEHICLE_BINDING_DURING_TURNS": {
+      "FLT_035": 1.0
+    },
+    "SYM_VEHICLE_BINDING_ON_TURNS": {
+      "FLT_027": 1.0
+    },
+    "SYM_VEHICLE_BOUNCES_OVER_BUMPS": {
+      "FLT_032": 1.0
+    },
+    "SYM_VEHICLE_LEANS_TO_ONE_SIDE": {
+      "FLT_031": 1.0
+    },
+    "SYM_VEHICLE_VIBRATION_AT_HIGH_SPEEDS": {
+      "FLT_030": 1.0
+    },
+    "SYM_VIBRATION_WHILE_DRIVING": {
+      "FLT_075": 1.0
+    },
+    "SYM_VISIBLE_COOLANT_LEAK_UNDER_VEHICLE": {
+      "FLT_022": 1.0
+    },
+    "SYM_VISIBLE_COOLANT_PUDDLE_UNDER_VEHICLE": {
+      "FLT_019": 1.0
+    },
+    "SYM_VISIBLE_EXHAUST_LEAKS": {
+      "FLT_052": 1.0
+    },
+    "SYM_VISIBLE_FUEL_LEAK_UNDER_VEHICLE": {
+      "FLT_085": 1.0
+    },
+    "SYM_VISIBLE_WEAR_CRACKS_ON_HOSES": {
+      "FLT_024": 1.0
+    },
+    "SYM_WARM_AIR_FROM_AC_VENTS": {
+      "FLT_011": 1.0
+    },
+    "SYM_WARM_AIR_FROM_VENTS": {
+      "FLT_013": 1.0
+    },
+    "SYM_WEAK_AIRFLOW_FROM_VENTS": {
+      "FLT_012": 1.0
+    },
+    "SYM_WEAK_WASHER_FLUID_SPRAY": {
+      "FLT_046": 0.5,
+      "FLT_091": 0.5
+    },
+    "SYM_WHEEL_WOBBLING": {
+      "FLT_099": 1.0
+    },
+    "SYM_WHINING_NOISE_FROM_DRIVETRAIN": {
+      "FLT_026": 1.0
+    },
+    "SYM_WHINING_NOISE_FROM_REAR_END": {
+      "FLT_030": 1.0
+    },
+    "SYM_WHINING_NOISE_WHEN_TURNING": {
+      "FLT_089": 1.0
+    },
+    "SYM_WINDOW_DOES_NOT_MOVE": {
+      "FLT_039": 1.0
+    },
+    "SYM_WINDOW_MOVES_INTERMITTENTLY": {
+      "FLT_039": 1.0
+    },
+    "SYM_WINDOW_OFF_TRACK": {
+      "FLT_040": 1.0
+    },
+    "SYM_WINDOW_STUCK_IN_ONE_POSITION": {
+      "FLT_040": 1.0
+    },
+    "SYM_WIPERS_NOT_WORKING": {
+      "FLT_047": 1.0
+    },
+    "SYM_WIPERS_OPERATE_INTERMITTENTLY": {
+      "FLT_047": 1.0
+    }
+  }
+}

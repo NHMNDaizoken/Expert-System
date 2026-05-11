@@ -1,0 +1,24 @@
+{
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    ".pytest_cache": true,
+    ".uv-cache": true,
+    ".venv": true,
+    ".venv-win": true,
+    "frontend/node_modules": true,
+    "frontend/dist": true,
+    "data/app.sqlite3": true
+  },
+  "search.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    ".pytest_cache": true,
+    ".uv-cache": true,
+    ".venv": true,
+    ".venv-win": true,
+    "frontend/node_modules": true,
+    "frontend/dist": true,
+    "data/app.sqlite3": true
+  }
+}

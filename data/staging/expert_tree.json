@@ -1,0 +1,1303 @@
+{
+  "meta": {
+    "purpose": "Primary symptoms identify systems and candidate fault sets; only deterministic symptoms may directly diagnose."
+  },
+  "primary_symptoms": {
+    "SYM_ABS_WARNING_LIGHT_ON": {
+      "symptom_id": "SYM_ABS_WARNING_LIGHT_ON",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_001",
+        "FLT_002",
+        "FLT_003",
+        "FLT_004",
+        "FLT_005",
+        "FLT_006",
+        "FLT_007",
+        "FLT_008",
+        "FLT_009"
+      ],
+      "deterministic": false
+    },
+    "SYM_ABS_LIGHT_STAYS_ON": {
+      "symptom_id": "SYM_ABS_LIGHT_STAYS_ON",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_002",
+        "FLT_001",
+        "FLT_003",
+        "FLT_004",
+        "FLT_005",
+        "FLT_006",
+        "FLT_007",
+        "FLT_008",
+        "FLT_009"
+      ],
+      "deterministic": false
+    },
+    "SYM_SPONGY_BRAKE_PEDAL": {
+      "symptom_id": "SYM_SPONGY_BRAKE_PEDAL",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_003",
+        "FLT_006",
+        "FLT_009",
+        "FLT_001",
+        "FLT_002",
+        "FLT_004",
+        "FLT_005",
+        "FLT_007",
+        "FLT_008"
+      ],
+      "deterministic": false
+    },
+    "SYM_BRAKE_PULLING_TO_ONE_SIDE": {
+      "symptom_id": "SYM_BRAKE_PULLING_TO_ONE_SIDE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_004",
+        "FLT_001",
+        "FLT_002",
+        "FLT_003",
+        "FLT_005",
+        "FLT_006",
+        "FLT_007",
+        "FLT_008",
+        "FLT_009"
+      ],
+      "deterministic": false
+    },
+    "SYM_BRAKE_FLUID_LEAK": {
+      "symptom_id": "SYM_BRAKE_FLUID_LEAK",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_005",
+        "FLT_001",
+        "FLT_002",
+        "FLT_003",
+        "FLT_004",
+        "FLT_006",
+        "FLT_007",
+        "FLT_008",
+        "FLT_009"
+      ],
+      "deterministic": false
+    },
+    "SYM_SQUEALING_BRAKES": {
+      "symptom_id": "SYM_SQUEALING_BRAKES",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_007",
+        "FLT_001",
+        "FLT_002",
+        "FLT_003",
+        "FLT_004",
+        "FLT_005",
+        "FLT_006",
+        "FLT_008",
+        "FLT_009"
+      ],
+      "deterministic": false
+    },
+    "SYM_BRAKE_PEDAL_PULSATION": {
+      "symptom_id": "SYM_BRAKE_PEDAL_PULSATION",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_001",
+        "FLT_007",
+        "FLT_008",
+        "FLT_002",
+        "FLT_003",
+        "FLT_004",
+        "FLT_005",
+        "FLT_006",
+        "FLT_009"
+      ],
+      "deterministic": false
+    },
+    "SYM_NO_COLD_AIR_FROM_VENTS": {
+      "symptom_id": "SYM_NO_COLD_AIR_FROM_VENTS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_010",
+        "FLT_011",
+        "FLT_012",
+        "FLT_013",
+        "FLT_014",
+        "FLT_015",
+        "FLT_016",
+        "FLT_017"
+      ],
+      "deterministic": false
+    },
+    "SYM_WARM_AIR_FROM_AC_VENTS": {
+      "symptom_id": "SYM_WARM_AIR_FROM_AC_VENTS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_011",
+        "FLT_010",
+        "FLT_012",
+        "FLT_013",
+        "FLT_014",
+        "FLT_015",
+        "FLT_016",
+        "FLT_017"
+      ],
+      "deterministic": false
+    },
+    "SYM_MUSTY_ODOR_FROM_VENTS": {
+      "symptom_id": "SYM_MUSTY_ODOR_FROM_VENTS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_012",
+        "FLT_015",
+        "FLT_010",
+        "FLT_011",
+        "FLT_013",
+        "FLT_014",
+        "FLT_016",
+        "FLT_017"
+      ],
+      "deterministic": false
+    },
+    "SYM_WARM_AIR_FROM_VENTS": {
+      "symptom_id": "SYM_WARM_AIR_FROM_VENTS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_013",
+        "FLT_010",
+        "FLT_011",
+        "FLT_012",
+        "FLT_014",
+        "FLT_015",
+        "FLT_016",
+        "FLT_017"
+      ],
+      "deterministic": false
+    },
+    "SYM_AC_SYSTEM_NOT_WORKING": {
+      "symptom_id": "SYM_AC_SYSTEM_NOT_WORKING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_014",
+        "FLT_010",
+        "FLT_011",
+        "FLT_012",
+        "FLT_013",
+        "FLT_015",
+        "FLT_016",
+        "FLT_017"
+      ],
+      "deterministic": false
+    },
+    "SYM_NO_AIR_FROM_VENTS": {
+      "symptom_id": "SYM_NO_AIR_FROM_VENTS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_016",
+        "FLT_010",
+        "FLT_011",
+        "FLT_012",
+        "FLT_013",
+        "FLT_014",
+        "FLT_015",
+        "FLT_017"
+      ],
+      "deterministic": false
+    },
+    "SYM_HVAC_FAN_SPEED_ERRATIC": {
+      "symptom_id": "SYM_HVAC_FAN_SPEED_ERRATIC",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_017",
+        "FLT_010",
+        "FLT_011",
+        "FLT_012",
+        "FLT_013",
+        "FLT_014",
+        "FLT_015",
+        "FLT_016"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_OVERHEATING": {
+      "symptom_id": "SYM_ENGINE_OVERHEATING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_018",
+        "FLT_020",
+        "FLT_023",
+        "FLT_025",
+        "FLT_070",
+        "FLT_088",
+        "FLT_090",
+        "FLT_019",
+        "FLT_021",
+        "FLT_022",
+        "FLT_024",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_073",
+        "FLT_087",
+        "FLT_089",
+        "FLT_091"
+      ],
+      "deterministic": false
+    },
+    "SYM_VISIBLE_COOLANT_PUDDLE_UNDER_VEHICLE": {
+      "symptom_id": "SYM_VISIBLE_COOLANT_PUDDLE_UNDER_VEHICLE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_019",
+        "FLT_018",
+        "FLT_020",
+        "FLT_021",
+        "FLT_022",
+        "FLT_023",
+        "FLT_024",
+        "FLT_025"
+      ],
+      "deterministic": false
+    },
+    "SYM_NO_HEAT_FROM_VENTS": {
+      "symptom_id": "SYM_NO_HEAT_FROM_VENTS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_021",
+        "FLT_018",
+        "FLT_019",
+        "FLT_020",
+        "FLT_022",
+        "FLT_023",
+        "FLT_024",
+        "FLT_025"
+      ],
+      "deterministic": false
+    },
+    "SYM_COOLANT_ODOR_IN_CABIN": {
+      "symptom_id": "SYM_COOLANT_ODOR_IN_CABIN",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_019",
+        "FLT_022",
+        "FLT_018",
+        "FLT_020",
+        "FLT_021",
+        "FLT_023",
+        "FLT_024",
+        "FLT_025"
+      ],
+      "deterministic": false
+    },
+    "SYM_COOLANT_LEAK_UNDER_VEHICLE": {
+      "symptom_id": "SYM_COOLANT_LEAK_UNDER_VEHICLE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_024",
+        "FLT_018",
+        "FLT_019",
+        "FLT_020",
+        "FLT_021",
+        "FLT_022",
+        "FLT_023",
+        "FLT_025"
+      ],
+      "deterministic": false
+    },
+    "SYM_WHINING_NOISE_FROM_DRIVETRAIN": {
+      "symptom_id": "SYM_WHINING_NOISE_FROM_DRIVETRAIN",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_VEHICLE_BINDING_ON_TURNS": {
+      "symptom_id": "SYM_VEHICLE_BINDING_ON_TURNS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_027",
+        "FLT_026",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_CLUTCH_PEDAL_FEELS_LOOSE": {
+      "symptom_id": "SYM_CLUTCH_PEDAL_FEELS_LOOSE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_028",
+        "FLT_026",
+        "FLT_027",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_CLUTCH_PEDAL_FEELS_SPONGY": {
+      "symptom_id": "SYM_CLUTCH_PEDAL_FEELS_SPONGY",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_029",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_WHINING_NOISE_FROM_REAR_END": {
+      "symptom_id": "SYM_WHINING_NOISE_FROM_REAR_END",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_030",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_AXLE_NOISE_WHILE_TURNING": {
+      "symptom_id": "SYM_AXLE_NOISE_WHILE_TURNING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_031",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_VEHICLE_BOUNCES_OVER_BUMPS": {
+      "symptom_id": "SYM_VEHICLE_BOUNCES_OVER_BUMPS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_032",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_TRANSMISSION_SLIPPING": {
+      "symptom_id": "SYM_TRANSMISSION_SLIPPING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_033",
+        "FLT_095",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_034",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_DRIVELINE_VIBRATION": {
+      "symptom_id": "SYM_DRIVELINE_VIBRATION",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_034",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_035",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_VEHICLE_BINDING_DURING_TURNS": {
+      "symptom_id": "SYM_VEHICLE_BINDING_DURING_TURNS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_035",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_075"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_CRANKS_SLOWLY": {
+      "symptom_id": "SYM_ENGINE_CRANKS_SLOWLY",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_BATTERY_WARNING_LIGHT_ON": {
+      "symptom_id": "SYM_BATTERY_WARNING_LIGHT_ON",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_037",
+        "FLT_072",
+        "FLT_036",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071"
+      ],
+      "deterministic": false
+    },
+    "SYM_CHECK_ENGINE_LIGHT_ON": {
+      "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_038",
+        "FLT_048",
+        "FLT_049",
+        "FLT_050",
+        "FLT_053",
+        "FLT_055",
+        "FLT_056",
+        "FLT_036",
+        "FLT_037",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072",
+        "FLT_051",
+        "FLT_052",
+        "FLT_054"
+      ],
+      "deterministic": false
+    },
+    "SYM_WINDOW_DOES_NOT_MOVE": {
+      "symptom_id": "SYM_WINDOW_DOES_NOT_MOVE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_039",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_WINDOW_OFF_TRACK": {
+      "symptom_id": "SYM_WINDOW_OFF_TRACK",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_040",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_HEADLIGHT_NOT_WORKING": {
+      "symptom_id": "SYM_HEADLIGHT_NOT_WORKING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_041",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_MISFIRES": {
+      "symptom_id": "SYM_ENGINE_MISFIRES",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_042",
+        "FLT_043",
+        "FLT_059",
+        "FLT_062",
+        "FLT_063",
+        "FLT_065",
+        "FLT_068",
+        "FLT_077",
+        "FLT_082",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072",
+        "FLT_057",
+        "FLT_058",
+        "FLT_060",
+        "FLT_061",
+        "FLT_064",
+        "FLT_066",
+        "FLT_067",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073",
+        "FLT_076",
+        "FLT_078",
+        "FLT_079",
+        "FLT_080",
+        "FLT_081",
+        "FLT_083",
+        "FLT_084",
+        "FLT_085",
+        "FLT_086"
+      ],
+      "deterministic": false
+    },
+    "SYM_DOOR_LOCK_NOT_RESPONDING": {
+      "symptom_id": "SYM_DOOR_LOCK_NOT_RESPONDING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_044",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_DOES_NOT_CRANK": {
+      "symptom_id": "SYM_ENGINE_DOES_NOT_CRANK",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_045",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_046",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_NO_WASHER_FLUID_SPRAY": {
+      "symptom_id": "SYM_NO_WASHER_FLUID_SPRAY",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_046",
+        "FLT_091",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_047",
+        "FLT_071",
+        "FLT_072",
+        "FLT_087",
+        "FLT_088",
+        "FLT_089",
+        "FLT_090"
+      ],
+      "deterministic": false
+    },
+    "SYM_WIPERS_NOT_WORKING": {
+      "symptom_id": "SYM_WIPERS_NOT_WORKING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_047",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_071",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_ROTTEN_EGG_SMELL_FROM_EXHAUST": {
+      "symptom_id": "SYM_ROTTEN_EGG_SMELL_FROM_EXHAUST",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_049",
+        "FLT_048",
+        "FLT_050",
+        "FLT_051",
+        "FLT_052",
+        "FLT_053",
+        "FLT_054",
+        "FLT_055",
+        "FLT_056"
+      ],
+      "deterministic": false
+    },
+    "SYM_FUEL_ODOR_FROM_VEHICLE": {
+      "symptom_id": "SYM_FUEL_ODOR_FROM_VEHICLE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_050",
+        "FLT_048",
+        "FLT_049",
+        "FLT_051",
+        "FLT_052",
+        "FLT_053",
+        "FLT_054",
+        "FLT_055",
+        "FLT_056"
+      ],
+      "deterministic": false
+    },
+    "SYM_LOUD_EXHAUST_NOISE": {
+      "symptom_id": "SYM_LOUD_EXHAUST_NOISE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_051",
+        "FLT_052",
+        "FLT_048",
+        "FLT_049",
+        "FLT_050",
+        "FLT_053",
+        "FLT_054",
+        "FLT_055",
+        "FLT_056"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_KNOCKING_PINGING": {
+      "symptom_id": "SYM_ENGINE_KNOCKING_PINGING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_054",
+        "FLT_048",
+        "FLT_049",
+        "FLT_050",
+        "FLT_051",
+        "FLT_052",
+        "FLT_053",
+        "FLT_055",
+        "FLT_056"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_VIBRATION": {
+      "symptom_id": "SYM_ENGINE_VIBRATION",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_LOSS_OF_POWER": {
+      "symptom_id": "SYM_LOSS_OF_POWER",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_058",
+        "FLT_084",
+        "FLT_057",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_HARD_STARTING_IN_COLD_WEATHER": {
+      "symptom_id": "SYM_HARD_STARTING_IN_COLD_WEATHER",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_060",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_EXCESSIVE_ENGINE_MOVEMENT": {
+      "symptom_id": "SYM_EXCESSIVE_ENGINE_MOVEMENT",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_061",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_ERRATIC_IDLE_SPEED": {
+      "symptom_id": "SYM_ERRATIC_IDLE_SPEED",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_064",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_LOW_OIL_PRESSURE_WARNING_LIGHT": {
+      "symptom_id": "SYM_LOW_OIL_PRESSURE_WARNING_LIGHT",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_066",
+        "FLT_078",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073",
+        "FLT_076",
+        "FLT_077",
+        "FLT_079",
+        "FLT_080",
+        "FLT_081"
+      ],
+      "deterministic": false
+    },
+    "SYM_BLUE_SMOKE_FROM_EXHAUST": {
+      "symptom_id": "SYM_BLUE_SMOKE_FROM_EXHAUST",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_067",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_OIL_LEAK_AROUND_VALVE_COVER": {
+      "symptom_id": "SYM_OIL_LEAK_AROUND_VALVE_COVER",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_069",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_070",
+        "FLT_073"
+      ],
+      "deterministic": false
+    },
+    "SYM_NO_SOUND_WHEN_HORN_BUTTON_PRESSED": {
+      "symptom_id": "SYM_NO_SOUND_WHEN_HORN_BUTTON_PRESSED",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_071",
+        "FLT_036",
+        "FLT_037",
+        "FLT_038",
+        "FLT_039",
+        "FLT_040",
+        "FLT_041",
+        "FLT_042",
+        "FLT_043",
+        "FLT_044",
+        "FLT_045",
+        "FLT_046",
+        "FLT_047",
+        "FLT_072"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_PERFORMANCE_ISSUES": {
+      "symptom_id": "SYM_ENGINE_PERFORMANCE_ISSUES",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_073",
+        "FLT_057",
+        "FLT_058",
+        "FLT_059",
+        "FLT_060",
+        "FLT_061",
+        "FLT_062",
+        "FLT_063",
+        "FLT_064",
+        "FLT_065",
+        "FLT_066",
+        "FLT_067",
+        "FLT_068",
+        "FLT_069",
+        "FLT_070"
+      ],
+      "deterministic": false
+    },
+    "SYM_NOISE_WHEN_TURNING_STEERING_WHEEL": {
+      "symptom_id": "SYM_NOISE_WHEN_TURNING_STEERING_WHEEL",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_074"
+      ],
+      "deterministic": false
+    },
+    "SYM_UNEVEN_TIRE_WEAR": {
+      "symptom_id": "SYM_UNEVEN_TIRE_WEAR",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_075",
+        "FLT_097",
+        "FLT_026",
+        "FLT_027",
+        "FLT_028",
+        "FLT_029",
+        "FLT_030",
+        "FLT_031",
+        "FLT_032",
+        "FLT_033",
+        "FLT_034",
+        "FLT_035"
+      ],
+      "deterministic": false
+    },
+    "SYM_DECREASED_ENGINE_PERFORMANCE": {
+      "symptom_id": "SYM_DECREASED_ENGINE_PERFORMANCE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_076",
+        "FLT_077",
+        "FLT_078",
+        "FLT_079",
+        "FLT_080",
+        "FLT_081"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_STALLS_AT_HIGH_SPEEDS": {
+      "symptom_id": "SYM_ENGINE_STALLS_AT_HIGH_SPEEDS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_079",
+        "FLT_076",
+        "FLT_077",
+        "FLT_078",
+        "FLT_080",
+        "FLT_081"
+      ],
+      "deterministic": false
+    },
+    "SYM_OIL_LEAKS": {
+      "symptom_id": "SYM_OIL_LEAKS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_080",
+        "FLT_076",
+        "FLT_077",
+        "FLT_078",
+        "FLT_079",
+        "FLT_081"
+      ],
+      "deterministic": false
+    },
+    "SYM_POOR_ACCELERATION": {
+      "symptom_id": "SYM_POOR_ACCELERATION",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_079",
+        "FLT_081",
+        "FLT_076",
+        "FLT_077",
+        "FLT_078",
+        "FLT_080"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_STALLS": {
+      "symptom_id": "SYM_ENGINE_STALLS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_083",
+        "FLT_082",
+        "FLT_084",
+        "FLT_085",
+        "FLT_086"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_SPUTTERS_AT_HIGH_SPEEDS": {
+      "symptom_id": "SYM_ENGINE_SPUTTERS_AT_HIGH_SPEEDS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_084",
+        "FLT_082",
+        "FLT_083",
+        "FLT_085",
+        "FLT_086"
+      ],
+      "deterministic": false
+    },
+    "SYM_FUEL_ODOR_INSIDE_VEHICLE": {
+      "symptom_id": "SYM_FUEL_ODOR_INSIDE_VEHICLE",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_085",
+        "FLT_082",
+        "FLT_083",
+        "FLT_084",
+        "FLT_086"
+      ],
+      "deterministic": false
+    },
+    "SYM_ENGINE_HESITATES_ON_ACCELERATION": {
+      "symptom_id": "SYM_ENGINE_HESITATES_ON_ACCELERATION",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_086",
+        "FLT_082",
+        "FLT_083",
+        "FLT_084",
+        "FLT_085"
+      ],
+      "deterministic": false
+    },
+    "SYM_SOFT_BRAKE_PEDAL": {
+      "symptom_id": "SYM_SOFT_BRAKE_PEDAL",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_005",
+        "FLT_087",
+        "FLT_088",
+        "FLT_089",
+        "FLT_090",
+        "FLT_091"
+      ],
+      "deterministic": false
+    },
+    "SYM_WHINING_NOISE_WHEN_TURNING": {
+      "symptom_id": "SYM_WHINING_NOISE_WHEN_TURNING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_089",
+        "FLT_087",
+        "FLT_088",
+        "FLT_090",
+        "FLT_091"
+      ],
+      "deterministic": false
+    },
+    "SYM_SOFT_CLUTCH_PEDAL": {
+      "symptom_id": "SYM_SOFT_CLUTCH_PEDAL",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_092",
+        "FLT_093",
+        "FLT_094",
+        "FLT_095",
+        "FLT_096"
+      ],
+      "deterministic": false
+    },
+    "SYM_SLIPPING_GEARS": {
+      "symptom_id": "SYM_SLIPPING_GEARS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_093",
+        "FLT_092",
+        "FLT_094",
+        "FLT_095",
+        "FLT_096"
+      ],
+      "deterministic": false
+    },
+    "SYM_GEARS_SLIPPING": {
+      "symptom_id": "SYM_GEARS_SLIPPING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_094",
+        "FLT_092",
+        "FLT_093",
+        "FLT_095",
+        "FLT_096"
+      ],
+      "deterministic": false
+    },
+    "SYM_DELAYED_SHIFTING": {
+      "symptom_id": "SYM_DELAYED_SHIFTING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_095",
+        "FLT_092",
+        "FLT_093",
+        "FLT_094",
+        "FLT_096"
+      ],
+      "deterministic": false
+    },
+    "SYM_ERRATIC_SHIFTING": {
+      "symptom_id": "SYM_ERRATIC_SHIFTING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_096",
+        "FLT_092",
+        "FLT_093",
+        "FLT_094",
+        "FLT_095"
+      ],
+      "deterministic": false
+    },
+    "SYM_GRINDING_NOISE_FROM_WHEELS": {
+      "symptom_id": "SYM_GRINDING_NOISE_FROM_WHEELS",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_097",
+        "FLT_098",
+        "FLT_099"
+      ],
+      "deterministic": false
+    },
+    "SYM_TPMS_WARNING_LIGHT_ON": {
+      "symptom_id": "SYM_TPMS_WARNING_LIGHT_ON",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_098",
+        "FLT_097",
+        "FLT_099"
+      ],
+      "deterministic": false
+    },
+    "SYM_CLICKING_OR_POPPING_NOISE_WHEN_TURNING": {
+      "symptom_id": "SYM_CLICKING_OR_POPPING_NOISE_WHEN_TURNING",
+      "type": "primary",
+      "candidate_fault_ids": [
+        "FLT_099",
+        "FLT_097",
+        "FLT_098"
+      ],
+      "deterministic": false
+    }
+  }
+}

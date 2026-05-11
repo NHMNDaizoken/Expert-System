@@ -1,0 +1,111 @@
+[
+  {
+    "id": "TC_001",
+    "input": "dim headlights",
+    "expected_faults": [
+      "FLT_WEAK_BATTERY",
+      "FLT_STARTER_MOTOR_FAILURE"
+    ],
+    "description": "Single symptom strongly indicating weak battery"
+  },
+  {
+    "id": "TC_002",
+    "input": "clicking noise",
+    "expected_faults": [
+      "FLT_STARTER_MOTOR_FAILURE",
+      "FLT_WEAK_BATTERY",
+      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    ],
+    "description": "Ambiguous clicking symptom across starting and door-lock faults"
+  },
+  {
+    "id": "TC_003",
+    "input": "engine does not crank",
+    "expected_faults": [
+      "FLT_STARTER_MOTOR_FAILURE",
+      "FLT_WEAK_BATTERY"
+    ],
+    "description": "Single no-crank symptom favoring starter motor"
+  },
+  {
+    "id": "TC_004",
+    "input": "door does not lock",
+    "expected_faults": [
+      "FLT_DOOR_LOCK_ACTUATOR_FAILURE",
+      "FLT_KEY_FOB_BATTERY_DEAD"
+    ],
+    "description": "Single door-lock symptom with actuator ahead of key fob battery"
+  },
+  {
+    "id": "TC_005",
+    "input": "remote key not working",
+    "expected_faults": [
+      "FLT_KEY_FOB_BATTERY_DEAD"
+    ],
+    "description": "Single remote-key symptom for key fob battery"
+  },
+  {
+    "id": "TC_006",
+    "input": "clicking noise when starting and dim headlights",
+    "expected_faults": [
+      "FLT_WEAK_BATTERY",
+      "FLT_STARTER_MOTOR_FAILURE",
+      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    ],
+    "description": "Multi-symptom weak battery case"
+  },
+  {
+    "id": "TC_007",
+    "input": "engine does not crank and dim headlights",
+    "expected_faults": [
+      "FLT_WEAK_BATTERY",
+      "FLT_STARTER_MOTOR_FAILURE"
+    ],
+    "description": "No-crank plus dim lights favors battery over starter"
+  },
+  {
+    "id": "TC_008",
+    "input": "engine does not crank and clicking sound",
+    "expected_faults": [
+      "FLT_STARTER_MOTOR_FAILURE",
+      "FLT_WEAK_BATTERY",
+      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    ],
+    "description": "No-crank plus clicking favors starter motor"
+  },
+  {
+    "id": "TC_009",
+    "input": "door not locking and key fob not working",
+    "expected_faults": [
+      "FLT_KEY_FOB_BATTERY_DEAD",
+      "FLT_DOOR_LOCK_ACTUATOR_FAILURE"
+    ],
+    "description": "Door-lock and key-fob symptoms favor key fob battery"
+  },
+  {
+    "id": "TC_010",
+    "input": "door does not lock and clicking sound from door",
+    "expected_faults": [
+      "FLT_DOOR_LOCK_ACTUATOR_FAILURE",
+      "FLT_STARTER_MOTOR_FAILURE",
+      "FLT_WEAK_BATTERY",
+      "FLT_KEY_FOB_BATTERY_DEAD"
+    ],
+    "description": "Door clicking case distinguishes actuator from starting faults"
+  },
+  {
+    "id": "TC_011",
+    "input": "car will not start",
+    "expected_faults": [
+      "FLT_STARTER_MOTOR_FAILURE",
+      "FLT_WEAK_BATTERY"
+    ],
+    "description": "Alias-only input for no-crank ambiguity"
+  },
+  {
+    "id": "TC_012",
+    "input": "random banana noise",
+    "expected_faults": [],
+    "description": "Unknown symptom should return no diagnosis"
+  }
+]

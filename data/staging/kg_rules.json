@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "version": "1.0",
+    "domain": "car_diagnostic",
+    "source": "manual_seed"
+  },
+  "rules": [
+    {
+      "fault_id": "FLT_001",
+      "fault_name": "engine_misfire",
+      "label_vi": "Động cơ bỏ máy",
+      "system": "engine",
+      "symptoms": [
+        {
+          "symptom_id": "SYM_001",
+          "name": "engine_vibration",
+          "label_vi": "Xe rung khi tăng tốc",
+          "aliases": ["xe rung", "rung khi tăng tốc", "máy rung"],
+          "cf": 0.85,
+          "priority": 1
+        },
+        {
+          "symptom_id": "SYM_002",
+          "name": "rough_idle",
+          "label_vi": "Động cơ nổ không đều",
+          "aliases": ["nổ không đều", "ga lăng ti không đều", "idle không ổn định"],
+          "cf": 0.7,
+          "priority": 2
+        }
+      ],
+      "components": [
+        {
+          "component_id": "CMP_001",
+          "name": "spark_plug",
+          "label_vi": "Bugi",
+          "aliases": ["bugi", "spark plug"]
+        }
+      ],
+      "repairs": [
+        {
+          "repair_id": "REP_001",
+          "name": "replace_spark_plug",
+          "label_vi": "Thay bugi",
+          "steps": [
+            "Kiểm tra mã lỗi OBD-II nếu có",
+            "Tháo bugi và kiểm tra tình trạng mòn, bẩn hoặc nứt",
+            "Thay bugi nếu phát hiện hư hỏng",
+            "Xóa mã lỗi và chạy thử xe"
+          ]
+        }
+      ],
+      "status": "approved"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+fastapi
+google-generativeai
+httpx
+neo4j
+pandas
+pydantic
+python-dotenv
+pytest
+rapidfuzz
+uvicorn

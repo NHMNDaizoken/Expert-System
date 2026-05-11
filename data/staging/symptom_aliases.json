@@ -1,0 +1,1146 @@
+{
+  "SYM_ABS_LIGHT_STAYS_ON": {
+    "name": "abs_light_stays_on",
+    "display_name": "ABS light stays on",
+    "label_vi": "ABS light stays on",
+    "aliases": [
+      "ABS light stays on"
+    ]
+  },
+  "SYM_ABS_WARNING_LIGHT_ON": {
+    "name": "abs_warning_light_on",
+    "display_name": "ABS warning light on",
+    "label_vi": "ABS warning light on",
+    "aliases": [
+      "ABS warning light on"
+    ]
+  },
+  "SYM_AC_NOT_COOLING_AT_IDLE": {
+    "name": "ac_not_cooling_at_idle",
+    "display_name": "AC not cooling at idle",
+    "label_vi": "AC not cooling at idle",
+    "aliases": [
+      "AC not cooling at idle"
+    ]
+  },
+  "SYM_AC_SYSTEM_NOT_COOLING": {
+    "name": "ac_system_not_cooling",
+    "display_name": "AC system not cooling",
+    "label_vi": "AC system not cooling",
+    "aliases": [
+      "AC system not cooling"
+    ]
+  },
+  "SYM_AC_SYSTEM_NOT_WORKING": {
+    "name": "ac_system_not_working",
+    "display_name": "AC system not working",
+    "label_vi": "AC system not working",
+    "aliases": [
+      "AC system not working"
+    ]
+  },
+  "SYM_AXLE_NOISE_WHILE_TURNING": {
+    "name": "axle_noise_while_turning",
+    "display_name": "Axle noise while turning",
+    "label_vi": "Axle noise while turning",
+    "aliases": [
+      "Axle noise while turning"
+    ]
+  },
+  "SYM_BATTERY_WARNING_LIGHT_ON": {
+    "name": "battery_warning_light_on",
+    "display_name": "Battery warning light on",
+    "label_vi": "Battery warning light on",
+    "aliases": [
+      "Battery warning light on"
+    ]
+  },
+  "SYM_BLACK_SMOKE_FROM_EXHAUST": {
+    "name": "black_smoke_from_exhaust",
+    "display_name": "Black smoke from exhaust",
+    "label_vi": "Black smoke from exhaust",
+    "aliases": [
+      "Black smoke from exhaust"
+    ]
+  },
+  "SYM_BLUE_SMOKE_FROM_EXHAUST": {
+    "name": "blue_smoke_from_exhaust",
+    "display_name": "Blue smoke from exhaust",
+    "label_vi": "Blue smoke from exhaust",
+    "aliases": [
+      "Blue smoke from exhaust"
+    ]
+  },
+  "SYM_BRAKE_DRAGGING": {
+    "name": "brake_dragging",
+    "display_name": "Brake dragging",
+    "label_vi": "Brake dragging",
+    "aliases": [
+      "Brake dragging"
+    ]
+  },
+  "SYM_BRAKE_FLUID_LEAK": {
+    "name": "brake_fluid_leak",
+    "display_name": "Brake fluid leak",
+    "label_vi": "Brake fluid leak",
+    "aliases": [
+      "Brake fluid leak"
+    ]
+  },
+  "SYM_BRAKE_FLUID_LEAKS": {
+    "name": "brake_fluid_leaks",
+    "display_name": "Brake fluid leaks",
+    "label_vi": "Brake fluid leaks",
+    "aliases": [
+      "Brake fluid leaks"
+    ]
+  },
+  "SYM_BRAKE_PEDAL_PULSATION": {
+    "name": "brake_pedal_pulsation",
+    "display_name": "Brake pedal pulsation",
+    "label_vi": "Brake pedal pulsation",
+    "aliases": [
+      "Brake pedal pulsation"
+    ]
+  },
+  "SYM_BRAKE_PULLING_TO_ONE_SIDE": {
+    "name": "brake_pulling_to_one_side",
+    "display_name": "Brake pulling to one side",
+    "label_vi": "Brake pulling to one side",
+    "aliases": [
+      "Brake pulling to one side"
+    ]
+  },
+  "SYM_BRAKE_WARNING_LIGHT_ON": {
+    "name": "brake_warning_light_on",
+    "display_name": "Brake warning light on",
+    "label_vi": "Brake warning light on",
+    "aliases": [
+      "Brake warning light on"
+    ]
+  },
+  "SYM_BURNING_OIL_SMELL_FROM_ENGINE_BAY": {
+    "name": "burning_oil_smell_from_engine_bay",
+    "display_name": "Burning oil smell from engine bay",
+    "label_vi": "Burning oil smell from engine bay",
+    "aliases": [
+      "Burning oil smell from engine bay"
+    ]
+  },
+  "SYM_CHECK_ENGINE_LIGHT_ON": {
+    "name": "check_engine_light_on",
+    "display_name": "Check engine light on",
+    "label_vi": "Check engine light on",
+    "aliases": [
+      "Check engine light on"
+    ]
+  },
+  "SYM_CLICKING_OR_POPPING_NOISE_WHEN_TURNING": {
+    "name": "clicking_or_popping_noise_when_turning",
+    "display_name": "Clicking or popping noise when turning",
+    "label_vi": "Clicking or popping noise when turning",
+    "aliases": [
+      "Clicking or popping noise when turning"
+    ]
+  },
+  "SYM_CLICKING_SOUND_FROM_DOOR": {
+    "name": "clicking_sound_from_door",
+    "display_name": "Clicking sound from door",
+    "label_vi": "Clicking sound from door",
+    "aliases": [
+      "Clicking sound from door"
+    ]
+  },
+  "SYM_CLICKING_SOUND_WHEN_KEY_IS_TURNED": {
+    "name": "clicking_sound_when_key_is_turned",
+    "display_name": "Clicking sound when key is turned",
+    "label_vi": "Clicking sound when key is turned",
+    "aliases": [
+      "Clicking sound when key is turned"
+    ]
+  },
+  "SYM_CLICKING_SOUND_WHEN_STARTING": {
+    "name": "clicking_sound_when_starting",
+    "display_name": "Clicking sound when starting",
+    "label_vi": "Clicking sound when starting",
+    "aliases": [
+      "Clicking sound when starting"
+    ]
+  },
+  "SYM_CLUNKING_NOISE_WHEN_ACCELERATING": {
+    "name": "clunking_noise_when_accelerating",
+    "display_name": "Clunking noise when accelerating",
+    "label_vi": "Clunking noise when accelerating",
+    "aliases": [
+      "Clunking noise when accelerating"
+    ]
+  },
+  "SYM_CLUNKING_NOISE_WHEN_SHIFTING": {
+    "name": "clunking_noise_when_shifting",
+    "display_name": "Clunking noise when shifting",
+    "label_vi": "Clunking noise when shifting",
+    "aliases": [
+      "Clunking noise when shifting"
+    ]
+  },
+  "SYM_CLUTCH_PEDAL_FEELS_LOOSE": {
+    "name": "clutch_pedal_feels_loose",
+    "display_name": "Clutch pedal feels loose",
+    "label_vi": "Clutch pedal feels loose",
+    "aliases": [
+      "Clutch pedal feels loose"
+    ]
+  },
+  "SYM_CLUTCH_PEDAL_FEELS_SPONGY": {
+    "name": "clutch_pedal_feels_spongy",
+    "display_name": "Clutch pedal feels spongy",
+    "label_vi": "Clutch pedal feels spongy",
+    "aliases": [
+      "Clutch pedal feels spongy"
+    ]
+  },
+  "SYM_CLUTCH_SLIPPING": {
+    "name": "clutch_slipping",
+    "display_name": "Clutch slipping",
+    "label_vi": "Clutch slipping",
+    "aliases": [
+      "Clutch slipping"
+    ]
+  },
+  "SYM_COOLANT_LEAK": {
+    "name": "coolant_leak",
+    "display_name": "Coolant leak",
+    "label_vi": "Coolant leak",
+    "aliases": [
+      "Coolant leak"
+    ]
+  },
+  "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE": {
+    "name": "coolant_leaks_under_the_vehicle",
+    "display_name": "Coolant leaks under the vehicle",
+    "label_vi": "Coolant leaks under the vehicle",
+    "aliases": [
+      "Coolant leaks under the vehicle"
+    ]
+  },
+  "SYM_COOLANT_LEAK_NEAR_FRONT_OF_ENGINE": {
+    "name": "coolant_leak_near_front_of_engine",
+    "display_name": "Coolant leak near front of engine",
+    "label_vi": "Coolant leak near front of engine",
+    "aliases": [
+      "Coolant leak near front of engine"
+    ]
+  },
+  "SYM_COOLANT_LEAK_UNDER_VEHICLE": {
+    "name": "coolant_leak_under_vehicle",
+    "display_name": "Coolant leak under vehicle",
+    "label_vi": "Coolant leak under vehicle",
+    "aliases": [
+      "Coolant leak under vehicle"
+    ]
+  },
+  "SYM_COOLANT_ODOR_IN_CABIN": {
+    "name": "coolant_odor_in_cabin",
+    "display_name": "Coolant odor in cabin",
+    "label_vi": "Coolant odor in cabin",
+    "aliases": [
+      "Coolant odor in cabin"
+    ]
+  },
+  "SYM_DECREASED_ENGINE_PERFORMANCE": {
+    "name": "decreased_engine_performance",
+    "display_name": "Decreased engine performance",
+    "label_vi": "Decreased engine performance",
+    "aliases": [
+      "Decreased engine performance"
+    ]
+  },
+  "SYM_DELAYED_SHIFTING": {
+    "name": "delayed_shifting",
+    "display_name": "Delayed shifting",
+    "label_vi": "Delayed shifting",
+    "aliases": [
+      "Delayed shifting"
+    ]
+  },
+  "SYM_DELAY_IN_GEAR_ENGAGEMENT": {
+    "name": "delay_in_gear_engagement",
+    "display_name": "Delay in gear engagement",
+    "label_vi": "Delay in gear engagement",
+    "aliases": [
+      "Delay in gear engagement"
+    ]
+  },
+  "SYM_DIFFICULTY_ENGAGING_GEARS": {
+    "name": "difficulty_engaging_gears",
+    "display_name": "Difficulty engaging gears",
+    "label_vi": "Difficulty engaging gears",
+    "aliases": [
+      "Difficulty engaging gears"
+    ]
+  },
+  "SYM_DIFFICULTY_SHIFTING_GEARS": {
+    "name": "difficulty_shifting_gears",
+    "display_name": "Difficulty shifting gears",
+    "label_vi": "Difficulty shifting gears",
+    "aliases": [
+      "Difficulty shifting gears"
+    ]
+  },
+  "SYM_DIFFICULTY_STARTING_ENGINE": {
+    "name": "difficulty_starting_engine",
+    "display_name": "Difficulty starting engine",
+    "label_vi": "Difficulty starting engine",
+    "aliases": [
+      "Difficulty starting engine"
+    ]
+  },
+  "SYM_DIM_HEADLIGHT": {
+    "name": "dim_headlight",
+    "display_name": "Dim headlight",
+    "label_vi": "Dim headlight",
+    "aliases": [
+      "Dim headlight"
+    ]
+  },
+  "SYM_DIM_HEADLIGHTS": {
+    "name": "dim_headlights",
+    "display_name": "Dim headlights",
+    "label_vi": "Dim headlights",
+    "aliases": [
+      "Dim headlights"
+    ]
+  },
+  "SYM_DOOR_LOCK_NOT_RESPONDING": {
+    "name": "door_lock_not_responding",
+    "display_name": "Door lock not responding",
+    "label_vi": "Door lock not responding",
+    "aliases": [
+      "Door lock not responding"
+    ]
+  },
+  "SYM_DRIVELINE_VIBRATION": {
+    "name": "driveline_vibration",
+    "display_name": "Driveline vibration",
+    "label_vi": "Driveline vibration",
+    "aliases": [
+      "Driveline vibration"
+    ]
+  },
+  "SYM_ENGINE_CRANKS_SLOWLY": {
+    "name": "engine_cranks_slowly",
+    "display_name": "Engine cranks slowly",
+    "label_vi": "Engine cranks slowly",
+    "aliases": [
+      "Engine cranks slowly"
+    ]
+  },
+  "SYM_ENGINE_DOES_NOT_CRANK": {
+    "name": "engine_does_not_crank",
+    "display_name": "Engine does not crank",
+    "label_vi": "Engine does not crank",
+    "aliases": [
+      "Engine does not crank"
+    ]
+  },
+  "SYM_ENGINE_HESITATES_ON_ACCELERATION": {
+    "name": "engine_hesitates_on_acceleration",
+    "display_name": "Engine hesitates on acceleration",
+    "label_vi": "Engine hesitates on acceleration",
+    "aliases": [
+      "Engine hesitates on acceleration"
+    ]
+  },
+  "SYM_ENGINE_KNOCKING_NOISE": {
+    "name": "engine_knocking_noise",
+    "display_name": "Engine knocking noise",
+    "label_vi": "Engine knocking noise",
+    "aliases": [
+      "Engine knocking noise"
+    ]
+  },
+  "SYM_ENGINE_KNOCKING_PINGING": {
+    "name": "engine_knocking_pinging",
+    "display_name": "Engine knocking/pinging",
+    "label_vi": "Engine knocking/pinging",
+    "aliases": [
+      "Engine knocking/pinging"
+    ]
+  },
+  "SYM_ENGINE_MISFIRES": {
+    "name": "engine_misfires",
+    "display_name": "Engine misfires",
+    "label_vi": "Engine misfires",
+    "aliases": [
+      "Engine misfires"
+    ]
+  },
+  "SYM_ENGINE_OVERHEATING": {
+    "name": "engine_overheating",
+    "display_name": "Engine overheating",
+    "label_vi": "Engine overheating",
+    "aliases": [
+      "Engine overheating"
+    ]
+  },
+  "SYM_ENGINE_PERFORMANCE_ISSUES": {
+    "name": "engine_performance_issues",
+    "display_name": "Engine performance issues",
+    "label_vi": "Engine performance issues",
+    "aliases": [
+      "Engine performance issues"
+    ]
+  },
+  "SYM_ENGINE_SPUTTERS_AT_HIGH_SPEEDS": {
+    "name": "engine_sputters_at_high_speeds",
+    "display_name": "Engine sputters at high speeds",
+    "label_vi": "Engine sputters at high speeds",
+    "aliases": [
+      "Engine sputters at high speeds"
+    ]
+  },
+  "SYM_ENGINE_STALLS": {
+    "name": "engine_stalls",
+    "display_name": "Engine stalls",
+    "label_vi": "Engine stalls",
+    "aliases": [
+      "Engine stalls"
+    ]
+  },
+  "SYM_ENGINE_STALLS_AT_HIGH_SPEEDS": {
+    "name": "engine_stalls_at_high_speeds",
+    "display_name": "Engine stalls at high speeds",
+    "label_vi": "Engine stalls at high speeds",
+    "aliases": [
+      "Engine stalls at high speeds"
+    ]
+  },
+  "SYM_ENGINE_VIBRATION": {
+    "name": "engine_vibration",
+    "display_name": "Engine vibration",
+    "label_vi": "Engine vibration",
+    "aliases": [
+      "Engine vibration"
+    ]
+  },
+  "SYM_ENGINE_WON_T_START": {
+    "name": "engine_won_t_start",
+    "display_name": "Engine won't start",
+    "label_vi": "Engine won't start",
+    "aliases": [
+      "Engine won't start"
+    ]
+  },
+  "SYM_ERRATIC_IDLE_SPEED": {
+    "name": "erratic_idle_speed",
+    "display_name": "Erratic idle speed",
+    "label_vi": "Erratic idle speed",
+    "aliases": [
+      "Erratic idle speed"
+    ]
+  },
+  "SYM_ERRATIC_SHIFTING": {
+    "name": "erratic_shifting",
+    "display_name": "Erratic shifting",
+    "label_vi": "Erratic shifting",
+    "aliases": [
+      "Erratic shifting"
+    ]
+  },
+  "SYM_ERRATIC_SPEEDOMETER": {
+    "name": "erratic_speedometer",
+    "display_name": "Erratic speedometer",
+    "label_vi": "Erratic speedometer",
+    "aliases": [
+      "Erratic speedometer"
+    ]
+  },
+  "SYM_EXCESSIVE_ENGINE_MOVEMENT": {
+    "name": "excessive_engine_movement",
+    "display_name": "Excessive engine movement",
+    "label_vi": "Excessive engine movement",
+    "aliases": [
+      "Excessive engine movement"
+    ]
+  },
+  "SYM_EXHAUST_SMELL_IN_CABIN": {
+    "name": "exhaust_smell_in_cabin",
+    "display_name": "Exhaust smell in cabin",
+    "label_vi": "Exhaust smell in cabin",
+    "aliases": [
+      "Exhaust smell in cabin"
+    ]
+  },
+  "SYM_FLUID_LEAK_NEAR_CLUTCH_PEDAL": {
+    "name": "fluid_leak_near_clutch_pedal",
+    "display_name": "Fluid leak near clutch pedal",
+    "label_vi": "Fluid leak near clutch pedal",
+    "aliases": [
+      "Fluid leak near clutch pedal"
+    ]
+  },
+  "SYM_FUEL_ODOR_FROM_VEHICLE": {
+    "name": "fuel_odor_from_vehicle",
+    "display_name": "Fuel odor from vehicle",
+    "label_vi": "Fuel odor from vehicle",
+    "aliases": [
+      "Fuel odor from vehicle"
+    ]
+  },
+  "SYM_FUEL_ODOR_INSIDE_VEHICLE": {
+    "name": "fuel_odor_inside_vehicle",
+    "display_name": "Fuel odor inside vehicle",
+    "label_vi": "Fuel odor inside vehicle",
+    "aliases": [
+      "Fuel odor inside vehicle"
+    ]
+  },
+  "SYM_GAS_CAP_WARNING_LIGHT": {
+    "name": "gas_cap_warning_light",
+    "display_name": "Gas cap warning light",
+    "label_vi": "Gas cap warning light",
+    "aliases": [
+      "Gas cap warning light"
+    ]
+  },
+  "SYM_GEARS_SLIPPING": {
+    "name": "gears_slipping",
+    "display_name": "Gears slipping",
+    "label_vi": "Gears slipping",
+    "aliases": [
+      "Gears slipping"
+    ]
+  },
+  "SYM_GLOW_PLUG_INDICATOR_LIGHT_STAYS_ON": {
+    "name": "glow_plug_indicator_light_stays_on",
+    "display_name": "Glow plug indicator light stays on",
+    "label_vi": "Glow plug indicator light stays on",
+    "aliases": [
+      "Glow plug indicator light stays on"
+    ]
+  },
+  "SYM_GRINDING_NOISE_FROM_WHEELS": {
+    "name": "grinding_noise_from_wheels",
+    "display_name": "Grinding noise from wheels",
+    "label_vi": "Grinding noise from wheels",
+    "aliases": [
+      "Grinding noise from wheels"
+    ]
+  },
+  "SYM_HARD_BRAKE_PEDAL": {
+    "name": "hard_brake_pedal",
+    "display_name": "Hard brake pedal",
+    "label_vi": "Hard brake pedal",
+    "aliases": [
+      "Hard brake pedal"
+    ]
+  },
+  "SYM_HARD_STARTING_IN_COLD_WEATHER": {
+    "name": "hard_starting_in_cold_weather",
+    "display_name": "Hard starting in cold weather",
+    "label_vi": "Hard starting in cold weather",
+    "aliases": [
+      "Hard starting in cold weather"
+    ]
+  },
+  "SYM_HEADLIGHT_NOT_WORKING": {
+    "name": "headlight_not_working",
+    "display_name": "Headlight not working",
+    "label_vi": "Headlight not working",
+    "aliases": [
+      "Headlight not working"
+    ]
+  },
+  "SYM_HVAC_FAN_ONLY_WORKS_ON_CERTAIN_SETTINGS": {
+    "name": "hvac_fan_only_works_on_certain_settings",
+    "display_name": "HVAC fan only works on certain settings",
+    "label_vi": "HVAC fan only works on certain settings",
+    "aliases": [
+      "HVAC fan only works on certain settings"
+    ]
+  },
+  "SYM_HVAC_FAN_SPEED_ERRATIC": {
+    "name": "hvac_fan_speed_erratic",
+    "display_name": "HVAC fan speed erratic",
+    "label_vi": "HVAC fan speed erratic",
+    "aliases": [
+      "HVAC fan speed erratic"
+    ]
+  },
+  "SYM_LOSS_OF_ENGINE_POWER": {
+    "name": "loss_of_engine_power",
+    "display_name": "Loss of engine power",
+    "label_vi": "Loss of engine power",
+    "aliases": [
+      "Loss of engine power"
+    ]
+  },
+  "SYM_LOSS_OF_POWER": {
+    "name": "loss_of_power",
+    "display_name": "Loss of power",
+    "label_vi": "Loss of power",
+    "aliases": [
+      "Loss of power"
+    ]
+  },
+  "SYM_LOUD_ENGINE_NOISE": {
+    "name": "loud_engine_noise",
+    "display_name": "Loud engine noise",
+    "label_vi": "Loud engine noise",
+    "aliases": [
+      "Loud engine noise"
+    ]
+  },
+  "SYM_LOUD_EXHAUST_NOISE": {
+    "name": "loud_exhaust_noise",
+    "display_name": "Loud exhaust noise",
+    "label_vi": "Loud exhaust noise",
+    "aliases": [
+      "Loud exhaust noise"
+    ]
+  },
+  "SYM_LOUD_NOISE_FROM_HVAC_SYSTEM": {
+    "name": "loud_noise_from_hvac_system",
+    "display_name": "Loud noise from HVAC system",
+    "label_vi": "Loud noise from HVAC system",
+    "aliases": [
+      "Loud noise from HVAC system"
+    ]
+  },
+  "SYM_LOUD_NOISE_FROM_REAR_AXLE": {
+    "name": "loud_noise_from_rear_axle",
+    "display_name": "Loud noise from rear axle",
+    "label_vi": "Loud noise from rear axle",
+    "aliases": [
+      "Loud noise from rear axle"
+    ]
+  },
+  "SYM_LOUD_NOISE_WHEN_AC_IS_ON": {
+    "name": "loud_noise_when_ac_is_on",
+    "display_name": "Loud noise when AC is on",
+    "label_vi": "Loud noise when AC is on",
+    "aliases": [
+      "Loud noise when AC is on"
+    ]
+  },
+  "SYM_LOW_AC_SYSTEM_PRESSURE": {
+    "name": "low_ac_system_pressure",
+    "display_name": "Low AC system pressure",
+    "label_vi": "Low AC system pressure",
+    "aliases": [
+      "Low AC system pressure"
+    ]
+  },
+  "SYM_LOW_COOLANT_WARNING_LIGHT": {
+    "name": "low_coolant_warning_light",
+    "display_name": "Low coolant warning light",
+    "label_vi": "Low coolant warning light",
+    "aliases": [
+      "Low coolant warning light"
+    ]
+  },
+  "SYM_LOW_OIL_PRESSURE_WARNING_LIGHT": {
+    "name": "low_oil_pressure_warning_light",
+    "display_name": "Low oil pressure warning light",
+    "label_vi": "Low oil pressure warning light",
+    "aliases": [
+      "Low oil pressure warning light"
+    ]
+  },
+  "SYM_LOW_TIRE_PRESSURE": {
+    "name": "low_tire_pressure",
+    "display_name": "Low tire pressure",
+    "label_vi": "Low tire pressure",
+    "aliases": [
+      "Low tire pressure"
+    ]
+  },
+  "SYM_LOW_VOLTAGE": {
+    "name": "low_voltage",
+    "display_name": "Low voltage",
+    "label_vi": "Low voltage",
+    "aliases": [
+      "Low voltage"
+    ]
+  },
+  "SYM_MUSTY_ODOR_FROM_VENTS": {
+    "name": "musty_odor_from_vents",
+    "display_name": "Musty odor from vents",
+    "label_vi": "Musty odor from vents",
+    "aliases": [
+      "Musty odor from vents"
+    ]
+  },
+  "SYM_NOISE_FROM_DRIVETRAIN_WHILE_TURNING": {
+    "name": "noise_from_drivetrain_while_turning",
+    "display_name": "Noise from drivetrain while turning",
+    "label_vi": "Noise from drivetrain while turning",
+    "aliases": [
+      "Noise from drivetrain while turning"
+    ]
+  },
+  "SYM_NOISE_WHEN_TURNING_STEERING_WHEEL": {
+    "name": "noise_when_turning_steering_wheel",
+    "display_name": "Noise when turning steering wheel",
+    "label_vi": "Noise when turning steering wheel",
+    "aliases": [
+      "Noise when turning steering wheel"
+    ]
+  },
+  "SYM_NO_AIR_FROM_VENTS": {
+    "name": "no_air_from_vents",
+    "display_name": "No air from vents",
+    "label_vi": "No air from vents",
+    "aliases": [
+      "No air from vents"
+    ]
+  },
+  "SYM_NO_COLD_AIR_FROM_VENTS": {
+    "name": "no_cold_air_from_vents",
+    "display_name": "No cold air from vents",
+    "label_vi": "No cold air from vents",
+    "aliases": [
+      "No cold air from vents"
+    ]
+  },
+  "SYM_NO_HEAT_FROM_VENTS": {
+    "name": "no_heat_from_vents",
+    "display_name": "No heat from vents",
+    "label_vi": "No heat from vents",
+    "aliases": [
+      "No heat from vents"
+    ]
+  },
+  "SYM_NO_SOUND_WHEN_HORN_BUTTON_PRESSED": {
+    "name": "no_sound_when_horn_button_pressed",
+    "display_name": "No sound when horn button pressed",
+    "label_vi": "No sound when horn button pressed",
+    "aliases": [
+      "No sound when horn button pressed"
+    ]
+  },
+  "SYM_NO_WASHER_FLUID_SPRAY": {
+    "name": "no_washer_fluid_spray",
+    "display_name": "No washer fluid spray",
+    "label_vi": "No washer fluid spray",
+    "aliases": [
+      "No washer fluid spray"
+    ]
+  },
+  "SYM_OIL_LEAKS": {
+    "name": "oil_leaks",
+    "display_name": "Oil leaks",
+    "label_vi": "Oil leaks",
+    "aliases": [
+      "Oil leaks"
+    ]
+  },
+  "SYM_OIL_LEAK_AROUND_VALVE_COVER": {
+    "name": "oil_leak_around_valve_cover",
+    "display_name": "Oil leak around valve cover",
+    "label_vi": "Oil leak around valve cover",
+    "aliases": [
+      "Oil leak around valve cover"
+    ]
+  },
+  "SYM_POOR_ACCELERATION": {
+    "name": "poor_acceleration",
+    "display_name": "Poor acceleration",
+    "label_vi": "Poor acceleration",
+    "aliases": [
+      "Poor acceleration"
+    ]
+  },
+  "SYM_POOR_ENGINE_PERFORMANCE": {
+    "name": "poor_engine_performance",
+    "display_name": "Poor engine performance",
+    "label_vi": "Poor engine performance",
+    "aliases": [
+      "Poor engine performance"
+    ]
+  },
+  "SYM_POOR_FUEL_ECONOMY": {
+    "name": "poor_fuel_economy",
+    "display_name": "Poor fuel economy",
+    "label_vi": "Poor fuel economy",
+    "aliases": [
+      "Poor fuel economy"
+    ]
+  },
+  "SYM_REDUCED_AIRFLOW_FROM_VENTS": {
+    "name": "reduced_airflow_from_vents",
+    "display_name": "Reduced airflow from vents",
+    "label_vi": "Reduced airflow from vents",
+    "aliases": [
+      "Reduced airflow from vents"
+    ]
+  },
+  "SYM_ROTTEN_EGG_SMELL_FROM_EXHAUST": {
+    "name": "rotten_egg_smell_from_exhaust",
+    "display_name": "Rotten egg smell from exhaust",
+    "label_vi": "Rotten egg smell from exhaust",
+    "aliases": [
+      "Rotten egg smell from exhaust"
+    ]
+  },
+  "SYM_ROUGH_IDLE": {
+    "name": "rough_idle",
+    "display_name": "Rough idle",
+    "label_vi": "Rough idle",
+    "aliases": [
+      "Rough idle"
+    ]
+  },
+  "SYM_SHUDDERING_DURING_ACCELERATION": {
+    "name": "shuddering_during_acceleration",
+    "display_name": "Shuddering during acceleration",
+    "label_vi": "Shuddering during acceleration",
+    "aliases": [
+      "Shuddering during acceleration"
+    ]
+  },
+  "SYM_SLIPPING_GEARS": {
+    "name": "slipping_gears",
+    "display_name": "Slipping gears",
+    "label_vi": "Slipping gears",
+    "aliases": [
+      "Slipping gears"
+    ]
+  },
+  "SYM_SOFT_BRAKE_PEDAL": {
+    "name": "soft_brake_pedal",
+    "display_name": "Soft brake pedal",
+    "label_vi": "Soft brake pedal",
+    "aliases": [
+      "Soft brake pedal"
+    ]
+  },
+  "SYM_SOFT_CLUTCH_PEDAL": {
+    "name": "soft_clutch_pedal",
+    "display_name": "Soft clutch pedal",
+    "label_vi": "Soft clutch pedal",
+    "aliases": [
+      "Soft clutch pedal"
+    ]
+  },
+  "SYM_SPONGY_BRAKE_PEDAL": {
+    "name": "spongy_brake_pedal",
+    "display_name": "Spongy brake pedal",
+    "label_vi": "Spongy brake pedal",
+    "aliases": [
+      "Spongy brake pedal"
+    ]
+  },
+  "SYM_SQUEALING_BRAKES": {
+    "name": "squealing_brakes",
+    "display_name": "Squealing brakes",
+    "label_vi": "Squealing brakes",
+    "aliases": [
+      "Squealing brakes"
+    ]
+  },
+  "SYM_SQUEALING_NOISE_FROM_ENGINE_BAY": {
+    "name": "squealing_noise_from_engine_bay",
+    "display_name": "Squealing noise from engine bay",
+    "label_vi": "Squealing noise from engine bay",
+    "aliases": [
+      "Squealing noise from engine bay"
+    ]
+  },
+  "SYM_STALLING_AT_IDLE": {
+    "name": "stalling_at_idle",
+    "display_name": "Stalling at idle",
+    "label_vi": "Stalling at idle",
+    "aliases": [
+      "Stalling at idle"
+    ]
+  },
+  "SYM_STEERING_WHEEL_VIBRATION": {
+    "name": "steering_wheel_vibration",
+    "display_name": "Steering wheel vibration",
+    "label_vi": "Steering wheel vibration",
+    "aliases": [
+      "Steering wheel vibration"
+    ]
+  },
+  "SYM_STIFF_STEERING_WHEEL": {
+    "name": "stiff_steering_wheel",
+    "display_name": "Stiff steering wheel",
+    "label_vi": "Stiff steering wheel",
+    "aliases": [
+      "Stiff steering wheel"
+    ]
+  },
+  "SYM_SWEET_SMELL_IN_CABIN": {
+    "name": "sweet_smell_in_cabin",
+    "display_name": "Sweet smell in cabin",
+    "label_vi": "Sweet smell in cabin",
+    "aliases": [
+      "Sweet smell in cabin"
+    ]
+  },
+  "SYM_TEMPERATURE_GAUGE_IN_RED_ZONE": {
+    "name": "temperature_gauge_in_red_zone",
+    "display_name": "Temperature gauge in red zone",
+    "label_vi": "Temperature gauge in red zone",
+    "aliases": [
+      "Temperature gauge in red zone"
+    ]
+  },
+  "SYM_TPMS_WARNING_LIGHT_ON": {
+    "name": "tpms_warning_light_on",
+    "display_name": "TPMS warning light on",
+    "label_vi": "TPMS warning light on",
+    "aliases": [
+      "TPMS warning light on"
+    ]
+  },
+  "SYM_TRANSMISSION_OVERHEATING": {
+    "name": "transmission_overheating",
+    "display_name": "Transmission overheating",
+    "label_vi": "Transmission overheating",
+    "aliases": [
+      "Transmission overheating"
+    ]
+  },
+  "SYM_TRANSMISSION_SLIPPING": {
+    "name": "transmission_slipping",
+    "display_name": "Transmission slipping",
+    "label_vi": "Transmission slipping",
+    "aliases": [
+      "Transmission slipping"
+    ]
+  },
+  "SYM_TRANSMISSION_WON_T_SHIFT_GEARS": {
+    "name": "transmission_won_t_shift_gears",
+    "display_name": "Transmission won't shift gears",
+    "label_vi": "Transmission won't shift gears",
+    "aliases": [
+      "Transmission won't shift gears"
+    ]
+  },
+  "SYM_TURBO_LAG": {
+    "name": "turbo_lag",
+    "display_name": "Turbo lag",
+    "label_vi": "Turbo lag",
+    "aliases": [
+      "Turbo lag"
+    ]
+  },
+  "SYM_UNEVEN_TIRE_WEAR": {
+    "name": "uneven_tire_wear",
+    "display_name": "Uneven tire wear",
+    "label_vi": "Uneven tire wear",
+    "aliases": [
+      "Uneven tire wear"
+    ]
+  },
+  "SYM_UNUSUAL_NOISE_FROM_AC_SYSTEM": {
+    "name": "unusual_noise_from_ac_system",
+    "display_name": "Unusual noise from AC system",
+    "label_vi": "Unusual noise from AC system",
+    "aliases": [
+      "Unusual noise from AC system"
+    ]
+  },
+  "SYM_VEHICLE_BINDING_DURING_TURNS": {
+    "name": "vehicle_binding_during_turns",
+    "display_name": "Vehicle binding during turns",
+    "label_vi": "Vehicle binding during turns",
+    "aliases": [
+      "Vehicle binding during turns"
+    ]
+  },
+  "SYM_VEHICLE_BINDING_ON_TURNS": {
+    "name": "vehicle_binding_on_turns",
+    "display_name": "Vehicle binding on turns",
+    "label_vi": "Vehicle binding on turns",
+    "aliases": [
+      "Vehicle binding on turns"
+    ]
+  },
+  "SYM_VEHICLE_BOUNCES_OVER_BUMPS": {
+    "name": "vehicle_bounces_over_bumps",
+    "display_name": "Vehicle bounces over bumps",
+    "label_vi": "Vehicle bounces over bumps",
+    "aliases": [
+      "Vehicle bounces over bumps"
+    ]
+  },
+  "SYM_VEHICLE_LEANS_TO_ONE_SIDE": {
+    "name": "vehicle_leans_to_one_side",
+    "display_name": "Vehicle leans to one side",
+    "label_vi": "Vehicle leans to one side",
+    "aliases": [
+      "Vehicle leans to one side"
+    ]
+  },
+  "SYM_VEHICLE_VIBRATION_AT_HIGH_SPEEDS": {
+    "name": "vehicle_vibration_at_high_speeds",
+    "display_name": "Vehicle vibration at high speeds",
+    "label_vi": "Vehicle vibration at high speeds",
+    "aliases": [
+      "Vehicle vibration at high speeds"
+    ]
+  },
+  "SYM_VIBRATION_WHILE_DRIVING": {
+    "name": "vibration_while_driving",
+    "display_name": "Vibration while driving",
+    "label_vi": "Vibration while driving",
+    "aliases": [
+      "Vibration while driving"
+    ]
+  },
+  "SYM_VISIBLE_COOLANT_LEAK_UNDER_VEHICLE": {
+    "name": "visible_coolant_leak_under_vehicle",
+    "display_name": "Visible coolant leak under vehicle",
+    "label_vi": "Visible coolant leak under vehicle",
+    "aliases": [
+      "Visible coolant leak under vehicle"
+    ]
+  },
+  "SYM_VISIBLE_COOLANT_PUDDLE_UNDER_VEHICLE": {
+    "name": "visible_coolant_puddle_under_vehicle",
+    "display_name": "Visible coolant puddle under vehicle",
+    "label_vi": "Visible coolant puddle under vehicle",
+    "aliases": [
+      "Visible coolant puddle under vehicle"
+    ]
+  },
+  "SYM_VISIBLE_EXHAUST_LEAKS": {
+    "name": "visible_exhaust_leaks",
+    "display_name": "Visible exhaust leaks",
+    "label_vi": "Visible exhaust leaks",
+    "aliases": [
+      "Visible exhaust leaks"
+    ]
+  },
+  "SYM_VISIBLE_FUEL_LEAK_UNDER_VEHICLE": {
+    "name": "visible_fuel_leak_under_vehicle",
+    "display_name": "Visible fuel leak under vehicle",
+    "label_vi": "Visible fuel leak under vehicle",
+    "aliases": [
+      "Visible fuel leak under vehicle"
+    ]
+  },
+  "SYM_VISIBLE_WEAR_CRACKS_ON_HOSES": {
+    "name": "visible_wear_cracks_on_hoses",
+    "display_name": "Visible wear/cracks on hoses",
+    "label_vi": "Visible wear/cracks on hoses",
+    "aliases": [
+      "Visible wear/cracks on hoses"
+    ]
+  },
+  "SYM_WARM_AIR_FROM_AC_VENTS": {
+    "name": "warm_air_from_ac_vents",
+    "display_name": "Warm air from AC vents",
+    "label_vi": "Warm air from AC vents",
+    "aliases": [
+      "Warm air from AC vents"
+    ]
+  },
+  "SYM_WARM_AIR_FROM_VENTS": {
+    "name": "warm_air_from_vents",
+    "display_name": "Warm air from vents",
+    "label_vi": "Warm air from vents",
+    "aliases": [
+      "Warm air from vents"
+    ]
+  },
+  "SYM_WEAK_AIRFLOW_FROM_VENTS": {
+    "name": "weak_airflow_from_vents",
+    "display_name": "Weak airflow from vents",
+    "label_vi": "Weak airflow from vents",
+    "aliases": [
+      "Weak airflow from vents"
+    ]
+  },
+  "SYM_WEAK_WASHER_FLUID_SPRAY": {
+    "name": "weak_washer_fluid_spray",
+    "display_name": "Weak washer fluid spray",
+    "label_vi": "Weak washer fluid spray",
+    "aliases": [
+      "Weak washer fluid spray"
+    ]
+  },
+  "SYM_WHEEL_WOBBLING": {
+    "name": "wheel_wobbling",
+    "display_name": "Wheel wobbling",
+    "label_vi": "Wheel wobbling",
+    "aliases": [
+      "Wheel wobbling"
+    ]
+  },
+  "SYM_WHINING_NOISE_FROM_DRIVETRAIN": {
+    "name": "whining_noise_from_drivetrain",
+    "display_name": "Whining noise from drivetrain",
+    "label_vi": "Whining noise from drivetrain",
+    "aliases": [
+      "Whining noise from drivetrain"
+    ]
+  },
+  "SYM_WHINING_NOISE_FROM_REAR_END": {
+    "name": "whining_noise_from_rear_end",
+    "display_name": "Whining noise from rear end",
+    "label_vi": "Whining noise from rear end",
+    "aliases": [
+      "Whining noise from rear end"
+    ]
+  },
+  "SYM_WHINING_NOISE_WHEN_TURNING": {
+    "name": "whining_noise_when_turning",
+    "display_name": "Whining noise when turning",
+    "label_vi": "Whining noise when turning",
+    "aliases": [
+      "Whining noise when turning"
+    ]
+  },
+  "SYM_WINDOW_DOES_NOT_MOVE": {
+    "name": "window_does_not_move",
+    "display_name": "Window does not move",
+    "label_vi": "Window does not move",
+    "aliases": [
+      "Window does not move"
+    ]
+  },
+  "SYM_WINDOW_MOVES_INTERMITTENTLY": {
+    "name": "window_moves_intermittently",
+    "display_name": "Window moves intermittently",
+    "label_vi": "Window moves intermittently",
+    "aliases": [
+      "Window moves intermittently"
+    ]
+  },
+  "SYM_WINDOW_OFF_TRACK": {
+    "name": "window_off_track",
+    "display_name": "Window off track",
+    "label_vi": "Window off track",
+    "aliases": [
+      "Window off track"
+    ]
+  },
+  "SYM_WINDOW_STUCK_IN_ONE_POSITION": {
+    "name": "window_stuck_in_one_position",
+    "display_name": "Window stuck in one position",
+    "label_vi": "Window stuck in one position",
+    "aliases": [
+      "Window stuck in one position"
+    ]
+  },
+  "SYM_WIPERS_NOT_WORKING": {
+    "name": "wipers_not_working",
+    "display_name": "Wipers not working",
+    "label_vi": "Wipers not working",
+    "aliases": [
+      "Wipers not working"
+    ]
+  },
+  "SYM_WIPERS_OPERATE_INTERMITTENTLY": {
+    "name": "wipers_operate_intermittently",
+    "display_name": "Wipers operate intermittently",
+    "label_vi": "Wipers operate intermittently",
+    "aliases": [
+      "Wipers operate intermittently"
+    ]
+  }
+}

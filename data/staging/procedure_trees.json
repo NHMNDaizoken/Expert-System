@@ -1,0 +1,3071 @@
+{
+  "FLT_001": {
+    "fault_id": "FLT_001",
+    "fault_name": "ABS Control Module",
+    "entry_step": "flt_001_s1",
+    "steps": {
+      "flt_001_s1": {
+        "id": "flt_001_s1",
+        "question": "Check ABS fuse?",
+        "is_question": true,
+        "yes_next": "flt_001_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Blown",
+          "Intact"
+        ]
+      },
+      "flt_001_s2": {
+        "id": "flt_001_s2",
+        "question": "Inspect wiring to ABS module?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty wiring",
+          "Good wiring"
+        ]
+      }
+    }
+  },
+  "FLT_002": {
+    "fault_id": "FLT_002",
+    "fault_name": "ABS Wheel Speed Sensor",
+    "entry_step": "flt_002_s1",
+    "steps": {
+      "flt_002_s1": {
+        "id": "flt_002_s1",
+        "question": "Inspect wheel speed sensor connections?",
+        "is_question": true,
+        "yes_next": "flt_002_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose connections",
+          "Secure connections"
+        ]
+      },
+      "flt_002_s2": {
+        "id": "flt_002_s2",
+        "question": "Check wheel speed sensor for debris or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Dirty/damaged",
+          "Clean/intact"
+        ]
+      }
+    }
+  },
+  "FLT_003": {
+    "fault_id": "FLT_003",
+    "fault_name": "Brake Booster",
+    "entry_step": "flt_003_s1",
+    "steps": {
+      "flt_003_s1": {
+        "id": "flt_003_s1",
+        "question": "Check brake booster vacuum hose?",
+        "is_question": true,
+        "yes_next": "flt_003_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking",
+          "Intact"
+        ]
+      },
+      "flt_003_s2": {
+        "id": "flt_003_s2",
+        "question": "Test brake booster vacuum pressure?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low vacuum pressure",
+          "Normal vacuum pressure"
+        ]
+      }
+    }
+  },
+  "FLT_004": {
+    "fault_id": "FLT_004",
+    "fault_name": "Brake Caliper",
+    "entry_step": "flt_004_s1",
+    "steps": {
+      "flt_004_s1": {
+        "id": "flt_004_s1",
+        "question": "Inspect brake caliper for leaks?",
+        "is_question": true,
+        "yes_next": "flt_004_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking fluid",
+          "No leaks"
+        ]
+      },
+      "flt_004_s2": {
+        "id": "flt_004_s2",
+        "question": "Check brake caliper piston operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Stuck piston",
+          "Free-moving piston"
+        ]
+      }
+    }
+  },
+  "FLT_005": {
+    "fault_id": "FLT_005",
+    "fault_name": "Brake Hose",
+    "entry_step": "flt_005_s1",
+    "steps": {
+      "flt_005_s1": {
+        "id": "flt_005_s1",
+        "question": "Inspect brake hose for cracks or leaks?",
+        "is_question": true,
+        "yes_next": "flt_005_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/leaking hose",
+          "Intact hose"
+        ]
+      },
+      "flt_005_s2": {
+        "id": "flt_005_s2",
+        "question": "Pressure test brake hose?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Failed pressure test",
+          "Passes pressure test"
+        ]
+      }
+    }
+  },
+  "FLT_006": {
+    "fault_id": "FLT_006",
+    "fault_name": "Brake Master Cylinder",
+    "entry_step": "flt_006_s1",
+    "steps": {
+      "flt_006_s1": {
+        "id": "flt_006_s1",
+        "question": "Check brake fluid level in master cylinder?",
+        "is_question": true,
+        "yes_next": "flt_006_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low fluid level",
+          "Normal fluid level"
+        ]
+      },
+      "flt_006_s2": {
+        "id": "flt_006_s2",
+        "question": "Inspect master cylinder for leaks or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged",
+          "Intact"
+        ]
+      }
+    }
+  },
+  "FLT_007": {
+    "fault_id": "FLT_007",
+    "fault_name": "Brake Pad",
+    "entry_step": "flt_007_s1",
+    "steps": {
+      "flt_007_s1": {
+        "id": "flt_007_s1",
+        "question": "Check brake pad thickness?",
+        "is_question": true,
+        "yes_next": "flt_007_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn pads",
+          "Sufficient thickness pads"
+        ]
+      },
+      "flt_007_s2": {
+        "id": "flt_007_s2",
+        "question": "Inspect brake pad condition?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged pads",
+          "Good condition pads"
+        ]
+      }
+    }
+  },
+  "FLT_008": {
+    "fault_id": "FLT_008",
+    "fault_name": "Brake Rotor",
+    "entry_step": "flt_008_s1",
+    "steps": {
+      "flt_008_s1": {
+        "id": "flt_008_s1",
+        "question": "Measure brake rotor thickness?",
+        "is_question": true,
+        "yes_next": "flt_008_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Thin rotor",
+          "Sufficient thickness rotor"
+        ]
+      },
+      "flt_008_s2": {
+        "id": "flt_008_s2",
+        "question": "Inspect brake rotor for scoring or warping?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Scored/warped rotor",
+          "Smooth rotor"
+        ]
+      }
+    }
+  },
+  "FLT_009": {
+    "fault_id": "FLT_009",
+    "fault_name": "Brake Shoe & Drum",
+    "entry_step": "flt_009_s1",
+    "steps": {
+      "flt_009_s1": {
+        "id": "flt_009_s1",
+        "question": "Inspect brake shoes for wear?",
+        "is_question": true,
+        "yes_next": "flt_009_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn shoes",
+          "Good condition shoes"
+        ]
+      },
+      "flt_009_s2": {
+        "id": "flt_009_s2",
+        "question": "Check brake drum for scoring or cracks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Scored/cracked drum",
+          "Smooth drum"
+        ]
+      }
+    }
+  },
+  "FLT_010": {
+    "fault_id": "FLT_010",
+    "fault_name": "AC Compressor",
+    "entry_step": "flt_010_s1",
+    "steps": {
+      "flt_010_s1": {
+        "id": "flt_010_s1",
+        "question": "Check AC compressor clutch operation?",
+        "is_question": true,
+        "yes_next": "flt_010_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Clutch not engaging",
+          "Clutch engages properly"
+        ]
+      },
+      "flt_010_s2": {
+        "id": "flt_010_s2",
+        "question": "Inspect AC compressor for leaks or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged compressor",
+          "Intact compressor"
+        ]
+      }
+    }
+  },
+  "FLT_011": {
+    "fault_id": "FLT_011",
+    "fault_name": "AC Condenser",
+    "entry_step": "flt_011_s1",
+    "steps": {
+      "flt_011_s1": {
+        "id": "flt_011_s1",
+        "question": "Inspect AC condenser for debris or blockage?",
+        "is_question": true,
+        "yes_next": "flt_011_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Debris/blockage present",
+          "Clean/clear condenser"
+        ]
+      },
+      "flt_011_s2": {
+        "id": "flt_011_s2",
+        "question": "Check for leaks in AC condenser?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking condenser",
+          "No leaks"
+        ]
+      }
+    }
+  },
+  "FLT_012": {
+    "fault_id": "FLT_012",
+    "fault_name": "AC Evaporator",
+    "entry_step": "flt_012_s1",
+    "steps": {
+      "flt_012_s1": {
+        "id": "flt_012_s1",
+        "question": "Inspect AC evaporator for mold or mildew buildup?",
+        "is_question": true,
+        "yes_next": "flt_012_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Mold/mildew present",
+          "Clean evaporator"
+        ]
+      },
+      "flt_012_s2": {
+        "id": "flt_012_s2",
+        "question": "Check AC evaporator temperature sensor?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty sensor",
+          "Good sensor"
+        ]
+      }
+    }
+  },
+  "FLT_013": {
+    "fault_id": "FLT_013",
+    "fault_name": "AC Recharge",
+    "entry_step": "flt_013_s1",
+    "steps": {
+      "flt_013_s1": {
+        "id": "flt_013_s1",
+        "question": "Check AC system pressure with gauge?",
+        "is_question": true,
+        "yes_next": "flt_013_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low pressure",
+          "Normal pressure"
+        ]
+      },
+      "flt_013_s2": {
+        "id": "flt_013_s2",
+        "question": "Inspect for leaks in AC system?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking system",
+          "No leaks"
+        ]
+      }
+    }
+  },
+  "FLT_014": {
+    "fault_id": "FLT_014",
+    "fault_name": "Air Conditioning Diagnosis",
+    "entry_step": "flt_014_s1",
+    "steps": {
+      "flt_014_s1": {
+        "id": "flt_014_s1",
+        "question": "Perform AC system diagnostic scan?",
+        "is_question": false,
+        "yes_next": "flt_014_s2",
+        "no_next": "REFUTED",
+        "instruction": "Perform AC system diagnostic scan. Expected findings: Error codes present, No error codes",
+        "results": [
+          "Error codes present",
+          "No error codes"
+        ]
+      },
+      "flt_014_s2": {
+        "id": "flt_014_s2",
+        "question": "Check AC system components for proper operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Component failure",
+          "Components working properly"
+        ]
+      }
+    }
+  },
+  "FLT_015": {
+    "fault_id": "FLT_015",
+    "fault_name": "Cabin Air Filter",
+    "entry_step": "flt_015_s1",
+    "steps": {
+      "flt_015_s1": {
+        "id": "flt_015_s1",
+        "question": "Inspect and replace cabin air filter?",
+        "is_question": true,
+        "yes_next": "flt_015_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Dirty/clogged filter",
+          "Clean/new filter"
+        ]
+      },
+      "flt_015_s2": {
+        "id": "flt_015_s2",
+        "question": "Check for debris in cabin air intake?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Debris in intake",
+          "Clear intake"
+        ]
+      }
+    }
+  },
+  "FLT_016": {
+    "fault_id": "FLT_016",
+    "fault_name": "Heater Blower Motor",
+    "entry_step": "flt_016_s1",
+    "steps": {
+      "flt_016_s1": {
+        "id": "flt_016_s1",
+        "question": "Test blower motor operation?",
+        "is_question": true,
+        "yes_next": "flt_016_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Motor not running",
+          "Motor running properly"
+        ]
+      },
+      "flt_016_s2": {
+        "id": "flt_016_s2",
+        "question": "Inspect blower motor for debris or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Debris/damage present",
+          "Clean/intact motor"
+        ]
+      }
+    }
+  },
+  "FLT_017": {
+    "fault_id": "FLT_017",
+    "fault_name": "Heater Blower Motor Resistor",
+    "entry_step": "flt_017_s1",
+    "steps": {
+      "flt_017_s1": {
+        "id": "flt_017_s1",
+        "question": "Test blower motor resistor continuity?",
+        "is_question": true,
+        "yes_next": "flt_017_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Resistor failure",
+          "Resistor working properly"
+        ]
+      },
+      "flt_017_s2": {
+        "id": "flt_017_s2",
+        "question": "Inspect resistor for overheating or burn marks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Overheated/burned resistor",
+          "Good condition resistor"
+        ]
+      }
+    }
+  },
+  "FLT_018": {
+    "fault_id": "FLT_018",
+    "fault_name": "Coolant/Antifreeze",
+    "entry_step": "flt_018_s1",
+    "steps": {
+      "flt_018_s1": {
+        "id": "flt_018_s1",
+        "question": "Check coolant level and condition?",
+        "is_question": true,
+        "yes_next": "flt_018_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty coolant",
+          "Sufficient/clean coolant"
+        ]
+      },
+      "flt_018_s2": {
+        "id": "flt_018_s2",
+        "question": "Inspect radiator and hoses for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking radiator/hoses",
+          "No leaks"
+        ]
+      }
+    }
+  },
+  "FLT_019": {
+    "fault_id": "FLT_019",
+    "fault_name": "Coolant Leak Diagnosis",
+    "entry_step": "flt_019_s1",
+    "steps": {
+      "flt_019_s1": {
+        "id": "flt_019_s1",
+        "question": "Pressure test cooling system?",
+        "is_question": true,
+        "yes_next": "flt_019_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking system",
+          "No leaks detected"
+        ]
+      },
+      "flt_019_s2": {
+        "id": "flt_019_s2",
+        "question": "Inspect radiator, hoses, and water pump for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking component found",
+          "Components are intact"
+        ]
+      }
+    }
+  },
+  "FLT_020": {
+    "fault_id": "FLT_020",
+    "fault_name": "Engine Cooling System",
+    "entry_step": "flt_020_s1",
+    "steps": {
+      "flt_020_s1": {
+        "id": "flt_020_s1",
+        "question": "Check radiator for blockage or damage?",
+        "is_question": true,
+        "yes_next": "flt_020_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Blocked/damaged radiator",
+          "Clear/intact radiator"
+        ]
+      },
+      "flt_020_s2": {
+        "id": "flt_020_s2",
+        "question": "Test thermostat operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty thermostat",
+          "Thermostat functioning properly"
+        ]
+      }
+    }
+  },
+  "FLT_021": {
+    "fault_id": "FLT_021",
+    "fault_name": "Heater Core",
+    "entry_step": "flt_021_s1",
+    "steps": {
+      "flt_021_s1": {
+        "id": "flt_021_s1",
+        "question": "Inspect heater core for leaks?",
+        "is_question": true,
+        "yes_next": "flt_021_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking heater core",
+          "No leaks detected"
+        ]
+      },
+      "flt_021_s2": {
+        "id": "flt_021_s2",
+        "question": "Check coolant flow through heater core?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Restricted flow",
+          "Good coolant flow"
+        ]
+      }
+    }
+  },
+  "FLT_022": {
+    "fault_id": "FLT_022",
+    "fault_name": "Heater Hose",
+    "entry_step": "flt_022_s1",
+    "steps": {
+      "flt_022_s1": {
+        "id": "flt_022_s1",
+        "question": "Inspect heater hose connections?",
+        "is_question": true,
+        "yes_next": "flt_022_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/damaged connections",
+          "Secure/intact connections"
+        ]
+      },
+      "flt_022_s2": {
+        "id": "flt_022_s2",
+        "question": "Pressure test heater hoses?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking hose detected",
+          "No leaks found"
+        ]
+      }
+    }
+  },
+  "FLT_023": {
+    "fault_id": "FLT_023",
+    "fault_name": "Radiator/Cooling Fan",
+    "entry_step": "flt_023_s1",
+    "steps": {
+      "flt_023_s1": {
+        "id": "flt_023_s1",
+        "question": "Test radiator fan operation?",
+        "is_question": true,
+        "yes_next": "flt_023_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Fan not spinning",
+          "Fan operates correctly"
+        ]
+      },
+      "flt_023_s2": {
+        "id": "flt_023_s2",
+        "question": "Inspect radiator fan motor and relay?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty motor/relay",
+          "Motor/relay functioning properly"
+        ]
+      }
+    }
+  },
+  "FLT_024": {
+    "fault_id": "FLT_024",
+    "fault_name": "Radiator Hose",
+    "entry_step": "flt_024_s1",
+    "steps": {
+      "flt_024_s1": {
+        "id": "flt_024_s1",
+        "question": "Inspect radiator hoses for damage?",
+        "is_question": true,
+        "yes_next": "flt_024_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged hoses found",
+          "Hoses are in good condition"
+        ]
+      },
+      "flt_024_s2": {
+        "id": "flt_024_s2",
+        "question": "Check hose connections for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking connections",
+          "No leaks detected"
+        ]
+      }
+    }
+  },
+  "FLT_025": {
+    "fault_id": "FLT_025",
+    "fault_name": "Water Pump",
+    "entry_step": "flt_025_s1",
+    "steps": {
+      "flt_025_s1": {
+        "id": "flt_025_s1",
+        "question": "Inspect water pump for leaks?",
+        "is_question": true,
+        "yes_next": "flt_025_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking pump",
+          "No leaks detected"
+        ]
+      },
+      "flt_025_s2": {
+        "id": "flt_025_s2",
+        "question": "Test water pump for proper operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty pump",
+          "Pump working correctly"
+        ]
+      }
+    }
+  },
+  "FLT_026": {
+    "fault_id": "FLT_026",
+    "fault_name": "Bevel Gears",
+    "entry_step": "flt_026_s1",
+    "steps": {
+      "flt_026_s1": {
+        "id": "flt_026_s1",
+        "question": "Inspect bevel gears for wear or damage?",
+        "is_question": true,
+        "yes_next": "flt_026_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged gears",
+          "Gears in good condition"
+        ]
+      },
+      "flt_026_s2": {
+        "id": "flt_026_s2",
+        "question": "Check gear oil level and condition?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty gear oil",
+          "Sufficient/clean gear oil"
+        ]
+      }
+    }
+  },
+  "FLT_027": {
+    "fault_id": "FLT_027",
+    "fault_name": "Center Differential",
+    "entry_step": "flt_027_s1",
+    "steps": {
+      "flt_027_s1": {
+        "id": "flt_027_s1",
+        "question": "Inspect center differential fluid?",
+        "is_question": true,
+        "yes_next": "flt_027_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      },
+      "flt_027_s2": {
+        "id": "flt_027_s2",
+        "question": "Check for excessive play in center differential?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Excessive play detected",
+          "No excessive play"
+        ]
+      }
+    }
+  },
+  "FLT_028": {
+    "fault_id": "FLT_028",
+    "fault_name": "Clutch Cable",
+    "entry_step": "flt_028_s1",
+    "steps": {
+      "flt_028_s1": {
+        "id": "flt_028_s1",
+        "question": "Inspect clutch cable for fraying or stretching?",
+        "is_question": true,
+        "yes_next": "flt_028_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged cable",
+          "Intact cable"
+        ]
+      },
+      "flt_028_s2": {
+        "id": "flt_028_s2",
+        "question": "Adjust clutch cable tension?",
+        "is_question": false,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": "Adjust clutch cable tension. Expected findings: Incorrect tension, Correct tension",
+        "results": [
+          "Incorrect tension",
+          "Correct tension"
+        ]
+      }
+    }
+  },
+  "FLT_029": {
+    "fault_id": "FLT_029",
+    "fault_name": "Clutch Slave Cylinder",
+    "entry_step": "flt_029_s1",
+    "steps": {
+      "flt_029_s1": {
+        "id": "flt_029_s1",
+        "question": "Check clutch slave cylinder for leaks?",
+        "is_question": true,
+        "yes_next": "flt_029_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking cylinder",
+          "No leaks detected"
+        ]
+      },
+      "flt_029_s2": {
+        "id": "flt_029_s2",
+        "question": "Inspect clutch fluid level and condition?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Sufficient/clean fluid"
+        ]
+      }
+    }
+  },
+  "FLT_030": {
+    "fault_id": "FLT_030",
+    "fault_name": "Differential",
+    "entry_step": "flt_030_s1",
+    "steps": {
+      "flt_030_s1": {
+        "id": "flt_030_s1",
+        "question": "Inspect differential fluid level and condition?",
+        "is_question": true,
+        "yes_next": "flt_030_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      },
+      "flt_030_s2": {
+        "id": "flt_030_s2",
+        "question": "Check for differential bearing wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn bearings",
+          "Bearings in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_031": {
+    "fault_id": "FLT_031",
+    "fault_name": "Live Axle",
+    "entry_step": "flt_031_s1",
+    "steps": {
+      "flt_031_s1": {
+        "id": "flt_031_s1",
+        "question": "Inspect live axle for cracks or bending?",
+        "is_question": true,
+        "yes_next": "flt_031_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/bent axle",
+          "Axle is intact"
+        ]
+      },
+      "flt_031_s2": {
+        "id": "flt_031_s2",
+        "question": "Check axle bearings for wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn bearings",
+          "Bearings in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_032": {
+    "fault_id": "FLT_032",
+    "fault_name": "Rigid Axle",
+    "entry_step": "flt_032_s1",
+    "steps": {
+      "flt_032_s1": {
+        "id": "flt_032_s1",
+        "question": "Inspect rigid axle for cracks or damage?",
+        "is_question": true,
+        "yes_next": "flt_032_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/damaged axle",
+          "Axle in good condition"
+        ]
+      },
+      "flt_032_s2": {
+        "id": "flt_032_s2",
+        "question": "Check axle bearings for wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn bearings",
+          "Bearings in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_033": {
+    "fault_id": "FLT_033",
+    "fault_name": "Slushbox",
+    "entry_step": "flt_033_s1",
+    "steps": {
+      "flt_033_s1": {
+        "id": "flt_033_s1",
+        "question": "Check transmission fluid level and condition?",
+        "is_question": true,
+        "yes_next": "flt_033_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      },
+      "flt_033_s2": {
+        "id": "flt_033_s2",
+        "question": "Inspect transmission for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking transmission",
+          "No leaks detected"
+        ]
+      }
+    }
+  },
+  "FLT_034": {
+    "fault_id": "FLT_034",
+    "fault_name": "Universal Joint",
+    "entry_step": "flt_034_s1",
+    "steps": {
+      "flt_034_s1": {
+        "id": "flt_034_s1",
+        "question": "Inspect universal joint for wear or play?",
+        "is_question": true,
+        "yes_next": "flt_034_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/play detected",
+          "Joint in good condition"
+        ]
+      },
+      "flt_034_s2": {
+        "id": "flt_034_s2",
+        "question": "Check driveline alignment?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Misaligned driveline",
+          "Properly aligned driveline"
+        ]
+      }
+    }
+  },
+  "FLT_035": {
+    "fault_id": "FLT_035",
+    "fault_name": "Viscous Coupling",
+    "entry_step": "flt_035_s1",
+    "steps": {
+      "flt_035_s1": {
+        "id": "flt_035_s1",
+        "question": "Test viscous coupling operation?",
+        "is_question": true,
+        "yes_next": "flt_035_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Coupling failure",
+          "Coupling functioning properly"
+        ]
+      },
+      "flt_035_s2": {
+        "id": "flt_035_s2",
+        "question": "Inspect viscous coupling fluid?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      }
+    }
+  },
+  "FLT_036": {
+    "fault_id": "FLT_036",
+    "fault_name": "Battery Replacement",
+    "entry_step": "flt_036_s1",
+    "steps": {
+      "flt_036_s1": {
+        "id": "flt_036_s1",
+        "question": "Test battery voltage?",
+        "is_question": true,
+        "yes_next": "flt_036_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low voltage",
+          "Sufficient voltage"
+        ]
+      },
+      "flt_036_s2": {
+        "id": "flt_036_s2",
+        "question": "Inspect battery terminals for corrosion?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Corroded terminals",
+          "Clean terminals"
+        ]
+      }
+    }
+  },
+  "FLT_037": {
+    "fault_id": "FLT_037",
+    "fault_name": "Charging System",
+    "entry_step": "flt_037_s1",
+    "steps": {
+      "flt_037_s1": {
+        "id": "flt_037_s1",
+        "question": "Test alternator output?",
+        "is_question": true,
+        "yes_next": "flt_037_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low output",
+          "Normal output"
+        ]
+      },
+      "flt_037_s2": {
+        "id": "flt_037_s2",
+        "question": "Check alternator belt tension?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose belt",
+          "Properly tensioned belt"
+        ]
+      }
+    }
+  },
+  "FLT_038": {
+    "fault_id": "FLT_038",
+    "fault_name": "Check Engine Light Diagnosis",
+    "entry_step": "flt_038_s1",
+    "steps": {
+      "flt_038_s1": {
+        "id": "flt_038_s1",
+        "question": "Scan for diagnostic trouble codes (DTCs)?",
+        "is_question": false,
+        "yes_next": "flt_038_s2",
+        "no_next": "REFUTED",
+        "instruction": "Scan for diagnostic trouble codes (DTCs). Expected findings: DTCs present, No DTCs",
+        "results": [
+          "DTCs present",
+          "No DTCs"
+        ]
+      },
+      "flt_038_s2": {
+        "id": "flt_038_s2",
+        "question": "Check sensors related to DTCs?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty sensor",
+          "Sensor working properly"
+        ]
+      }
+    }
+  },
+  "FLT_039": {
+    "fault_id": "FLT_039",
+    "fault_name": "Door Window Motor",
+    "entry_step": "flt_039_s1",
+    "steps": {
+      "flt_039_s1": {
+        "id": "flt_039_s1",
+        "question": "Test power to window motor?",
+        "is_question": true,
+        "yes_next": "flt_039_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "No power",
+          "Power present"
+        ]
+      },
+      "flt_039_s2": {
+        "id": "flt_039_s2",
+        "question": "Inspect window regulator for damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged regulator",
+          "Regulator intact"
+        ]
+      }
+    }
+  },
+  "FLT_040": {
+    "fault_id": "FLT_040",
+    "fault_name": "Door Window Regulator",
+    "entry_step": "flt_040_s1",
+    "steps": {
+      "flt_040_s1": {
+        "id": "flt_040_s1",
+        "question": "Inspect window regulator mechanism?",
+        "is_question": true,
+        "yes_next": "flt_040_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Mechanism jammed",
+          "Mechanism functioning"
+        ]
+      },
+      "flt_040_s2": {
+        "id": "flt_040_s2",
+        "question": "Check window alignment in tracks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Misaligned window",
+          "Properly aligned window"
+        ]
+      }
+    }
+  },
+  "FLT_041": {
+    "fault_id": "FLT_041",
+    "fault_name": "Headlamp Bulb",
+    "entry_step": "flt_041_s1",
+    "steps": {
+      "flt_041_s1": {
+        "id": "flt_041_s1",
+        "question": "Inspect headlamp bulb for filament condition?",
+        "is_question": true,
+        "yes_next": "flt_041_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Burnt out filament",
+          "Filament intact"
+        ]
+      },
+      "flt_041_s2": {
+        "id": "flt_041_s2",
+        "question": "Check headlamp socket for corrosion?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Corroded socket",
+          "Clean socket"
+        ]
+      }
+    }
+  },
+  "FLT_042": {
+    "fault_id": "FLT_042",
+    "fault_name": "Ignition Distributor Cap",
+    "entry_step": "flt_042_s1",
+    "steps": {
+      "flt_042_s1": {
+        "id": "flt_042_s1",
+        "question": "Inspect distributor cap for cracks or carbon tracks?",
+        "is_question": true,
+        "yes_next": "flt_042_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/damaged cap",
+          "Cap in good condition"
+        ]
+      },
+      "flt_042_s2": {
+        "id": "flt_042_s2",
+        "question": "Check distributor rotor for wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn rotor",
+          "Rotor in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_043": {
+    "fault_id": "FLT_043",
+    "fault_name": "Ignition Wire Set",
+    "entry_step": "flt_043_s1",
+    "steps": {
+      "flt_043_s1": {
+        "id": "flt_043_s1",
+        "question": "Test ignition wires for continuity?",
+        "is_question": true,
+        "yes_next": "flt_043_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Broken wire",
+          "Wires intact"
+        ]
+      },
+      "flt_043_s2": {
+        "id": "flt_043_s2",
+        "question": "Inspect spark plug boots for damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged boots",
+          "Intact boots"
+        ]
+      }
+    }
+  },
+  "FLT_044": {
+    "fault_id": "FLT_044",
+    "fault_name": "Power Door Lock Actuator",
+    "entry_step": "flt_044_s1",
+    "steps": {
+      "flt_044_s1": {
+        "id": "flt_044_s1",
+        "question": "Test power to door lock actuator?",
+        "is_question": true,
+        "yes_next": "flt_044_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "No power",
+          "Power present"
+        ]
+      },
+      "flt_044_s2": {
+        "id": "flt_044_s2",
+        "question": "Inspect actuator mechanism for obstruction?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Obstructed mechanism",
+          "Clear mechanism"
+        ]
+      }
+    }
+  },
+  "FLT_045": {
+    "fault_id": "FLT_045",
+    "fault_name": "Starter Motor",
+    "entry_step": "flt_045_s1",
+    "steps": {
+      "flt_045_s1": {
+        "id": "flt_045_s1",
+        "question": "Test starter motor solenoid?",
+        "is_question": true,
+        "yes_next": "flt_045_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty solenoid",
+          "Solenoid working properly"
+        ]
+      },
+      "flt_045_s2": {
+        "id": "flt_045_s2",
+        "question": "Inspect starter motor brushes for wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn brushes",
+          "Brushes in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_046": {
+    "fault_id": "FLT_046",
+    "fault_name": "Windshield Washer Pump",
+    "entry_step": "flt_046_s1",
+    "steps": {
+      "flt_046_s1": {
+        "id": "flt_046_s1",
+        "question": "Test power to washer pump?",
+        "is_question": true,
+        "yes_next": "flt_046_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "No power",
+          "Power present"
+        ]
+      },
+      "flt_046_s2": {
+        "id": "flt_046_s2",
+        "question": "Inspect washer pump for clogs or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Clogged/damaged pump",
+          "Clean/intact pump"
+        ]
+      }
+    }
+  },
+  "FLT_047": {
+    "fault_id": "FLT_047",
+    "fault_name": "Wiper Motor",
+    "entry_step": "flt_047_s1",
+    "steps": {
+      "flt_047_s1": {
+        "id": "flt_047_s1",
+        "question": "Test power to wiper motor?",
+        "is_question": true,
+        "yes_next": "flt_047_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "No power",
+          "Power present"
+        ]
+      },
+      "flt_047_s2": {
+        "id": "flt_047_s2",
+        "question": "Inspect wiper motor linkage for wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn linkage",
+          "Intact linkage"
+        ]
+      }
+    }
+  },
+  "FLT_048": {
+    "fault_id": "FLT_048",
+    "fault_name": "Canister Purge Valve",
+    "entry_step": "flt_048_s1",
+    "steps": {
+      "flt_048_s1": {
+        "id": "flt_048_s1",
+        "question": "Test canister purge valve operation?",
+        "is_question": true,
+        "yes_next": "flt_048_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Valve stuck open/closed",
+          "Valve operates correctly"
+        ]
+      },
+      "flt_048_s2": {
+        "id": "flt_048_s2",
+        "question": "Check for leaks in purge valve hoses?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking hoses",
+          "No leaks"
+        ]
+      }
+    }
+  },
+  "FLT_049": {
+    "fault_id": "FLT_049",
+    "fault_name": "Catalytic Converter",
+    "entry_step": "flt_049_s1",
+    "steps": {
+      "flt_049_s1": {
+        "id": "flt_049_s1",
+        "question": "Inspect catalytic converter for physical damage?",
+        "is_question": true,
+        "yes_next": "flt_049_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged converter",
+          "Converter intact"
+        ]
+      },
+      "flt_049_s2": {
+        "id": "flt_049_s2",
+        "question": "Check catalytic converter efficiency?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low efficiency",
+          "High efficiency"
+        ]
+      }
+    }
+  },
+  "FLT_050": {
+    "fault_id": "FLT_050",
+    "fault_name": "Charcoal Canister",
+    "entry_step": "flt_050_s1",
+    "steps": {
+      "flt_050_s1": {
+        "id": "flt_050_s1",
+        "question": "Test charcoal canister purge valve?",
+        "is_question": true,
+        "yes_next": "flt_050_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Valve stuck open/closed",
+          "Valve operates correctly"
+        ]
+      },
+      "flt_050_s2": {
+        "id": "flt_050_s2",
+        "question": "Inspect canister for cracks or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/damaged canister",
+          "Intact canister"
+        ]
+      }
+    }
+  },
+  "FLT_051": {
+    "fault_id": "FLT_051",
+    "fault_name": "Exhaust Manifold",
+    "entry_step": "flt_051_s1",
+    "steps": {
+      "flt_051_s1": {
+        "id": "flt_051_s1",
+        "question": "Inspect exhaust manifold for cracks or leaks?",
+        "is_question": true,
+        "yes_next": "flt_051_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/leaking manifold",
+          "Intact manifold"
+        ]
+      },
+      "flt_051_s2": {
+        "id": "flt_051_s2",
+        "question": "Check exhaust manifold gasket for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking gasket",
+          "Good gasket"
+        ]
+      }
+    }
+  },
+  "FLT_052": {
+    "fault_id": "FLT_052",
+    "fault_name": "Exhaust Manifold Gasket",
+    "entry_step": "flt_052_s1",
+    "steps": {
+      "flt_052_s1": {
+        "id": "flt_052_s1",
+        "question": "Inspect exhaust manifold gasket for leaks?",
+        "is_question": true,
+        "yes_next": "flt_052_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking gasket",
+          "Good gasket"
+        ]
+      },
+      "flt_052_s2": {
+        "id": "flt_052_s2",
+        "question": "Check exhaust manifold bolts for tightness?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose bolts",
+          "Tight bolts"
+        ]
+      }
+    }
+  },
+  "FLT_053": {
+    "fault_id": "FLT_053",
+    "fault_name": "Fuel Tank Pressure Sensor",
+    "entry_step": "flt_053_s1",
+    "steps": {
+      "flt_053_s1": {
+        "id": "flt_053_s1",
+        "question": "Test fuel tank pressure sensor?",
+        "is_question": true,
+        "yes_next": "flt_053_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty sensor",
+          "Sensor working properly"
+        ]
+      },
+      "flt_053_s2": {
+        "id": "flt_053_s2",
+        "question": "Check fuel tank cap for proper seal?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose cap",
+          "Sealed cap"
+        ]
+      }
+    }
+  },
+  "FLT_054": {
+    "fault_id": "FLT_054",
+    "fault_name": "Knock Sensor",
+    "entry_step": "flt_054_s1",
+    "steps": {
+      "flt_054_s1": {
+        "id": "flt_054_s1",
+        "question": "Test knock sensor operation?",
+        "is_question": true,
+        "yes_next": "flt_054_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty sensor",
+          "Sensor working properly"
+        ]
+      },
+      "flt_054_s2": {
+        "id": "flt_054_s2",
+        "question": "Inspect for engine misfire codes?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Misfire codes present",
+          "No misfire codes"
+        ]
+      }
+    }
+  },
+  "FLT_055": {
+    "fault_id": "FLT_055",
+    "fault_name": "M.A.P. Sensor",
+    "entry_step": "flt_055_s1",
+    "steps": {
+      "flt_055_s1": {
+        "id": "flt_055_s1",
+        "question": "Test M.A.P. sensor voltage?",
+        "is_question": true,
+        "yes_next": "flt_055_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low voltage",
+          "Normal voltage"
+        ]
+      },
+      "flt_055_s2": {
+        "id": "flt_055_s2",
+        "question": "Inspect M.A.P. sensor vacuum hose?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking hose",
+          "Intact hose"
+        ]
+      }
+    }
+  },
+  "FLT_056": {
+    "fault_id": "FLT_056",
+    "fault_name": "Oxygen Sensor",
+    "entry_step": "flt_056_s1",
+    "steps": {
+      "flt_056_s1": {
+        "id": "flt_056_s1",
+        "question": "Test oxygen sensor voltage?",
+        "is_question": true,
+        "yes_next": "flt_056_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low voltage",
+          "Normal voltage"
+        ]
+      },
+      "flt_056_s2": {
+        "id": "flt_056_s2",
+        "question": "Inspect oxygen sensor wiring for damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged wiring",
+          "Intact wiring"
+        ]
+      }
+    }
+  },
+  "FLT_057": {
+    "fault_id": "FLT_057",
+    "fault_name": "Balance Shaft",
+    "entry_step": "flt_057_s1",
+    "steps": {
+      "flt_057_s1": {
+        "id": "flt_057_s1",
+        "question": "Inspect balance shaft for wear or damage?",
+        "is_question": true,
+        "yes_next": "flt_057_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged shaft",
+          "Shaft in good condition"
+        ]
+      },
+      "flt_057_s2": {
+        "id": "flt_057_s2",
+        "question": "Check balance shaft alignment?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Misaligned shaft",
+          "Properly aligned shaft"
+        ]
+      }
+    }
+  },
+  "FLT_058": {
+    "fault_id": "FLT_058",
+    "fault_name": "Boost Pressure",
+    "entry_step": "flt_058_s1",
+    "steps": {
+      "flt_058_s1": {
+        "id": "flt_058_s1",
+        "question": "Check boost pressure with gauge?",
+        "is_question": true,
+        "yes_next": "flt_058_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low boost pressure",
+          "Normal boost pressure"
+        ]
+      },
+      "flt_058_s2": {
+        "id": "flt_058_s2",
+        "question": "Inspect intercooler for leaks or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged intercooler",
+          "Intact intercooler"
+        ]
+      }
+    }
+  },
+  "FLT_059": {
+    "fault_id": "FLT_059",
+    "fault_name": "Diesel Injection Pump",
+    "entry_step": "flt_059_s1",
+    "steps": {
+      "flt_059_s1": {
+        "id": "flt_059_s1",
+        "question": "Test diesel injection pump pressure?",
+        "is_question": true,
+        "yes_next": "flt_059_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low pressure",
+          "Normal pressure"
+        ]
+      },
+      "flt_059_s2": {
+        "id": "flt_059_s2",
+        "question": "Inspect diesel injectors for leaks or clogs?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/clogged injectors",
+          "Clean/in-tolerance injectors"
+        ]
+      }
+    }
+  },
+  "FLT_060": {
+    "fault_id": "FLT_060",
+    "fault_name": "Diesel Glow Plug",
+    "entry_step": "flt_060_s1",
+    "steps": {
+      "flt_060_s1": {
+        "id": "flt_060_s1",
+        "question": "Test glow plug resistance?",
+        "is_question": true,
+        "yes_next": "flt_060_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "High resistance",
+          "Normal resistance"
+        ]
+      },
+      "flt_060_s2": {
+        "id": "flt_060_s2",
+        "question": "Inspect glow plug for carbon buildup?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Carbon buildup",
+          "Clean plug"
+        ]
+      }
+    }
+  },
+  "FLT_061": {
+    "fault_id": "FLT_061",
+    "fault_name": "Engine Mounts",
+    "entry_step": "flt_061_s1",
+    "steps": {
+      "flt_061_s1": {
+        "id": "flt_061_s1",
+        "question": "Inspect engine mounts for wear or damage?",
+        "is_question": true,
+        "yes_next": "flt_061_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged mounts",
+          "Mounts in good condition"
+        ]
+      },
+      "flt_061_s2": {
+        "id": "flt_061_s2",
+        "question": "Check mounting bolts for tightness?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose bolts",
+          "Tight bolts"
+        ]
+      }
+    }
+  },
+  "FLT_062": {
+    "fault_id": "FLT_062",
+    "fault_name": "Exhaust Valve",
+    "entry_step": "flt_062_s1",
+    "steps": {
+      "flt_062_s1": {
+        "id": "flt_062_s1",
+        "question": "Inspect exhaust valve for carbon buildup?",
+        "is_question": true,
+        "yes_next": "flt_062_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Buildup on valve",
+          "Clean valve"
+        ]
+      },
+      "flt_062_s2": {
+        "id": "flt_062_s2",
+        "question": "Check valve clearance?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Incorrect clearance",
+          "Correct clearance"
+        ]
+      }
+    }
+  },
+  "FLT_063": {
+    "fault_id": "FLT_063",
+    "fault_name": "Fuel Injector",
+    "entry_step": "flt_063_s1",
+    "steps": {
+      "flt_063_s1": {
+        "id": "flt_063_s1",
+        "question": "Test fuel injector spray pattern?",
+        "is_question": true,
+        "yes_next": "flt_063_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Irregular spray pattern",
+          "Uniform spray pattern"
+        ]
+      },
+      "flt_063_s2": {
+        "id": "flt_063_s2",
+        "question": "Inspect injector for leaks or clogs?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/clogged injector",
+          "Clean/in-tolerance injector"
+        ]
+      }
+    }
+  },
+  "FLT_064": {
+    "fault_id": "FLT_064",
+    "fault_name": "Idle Air Control Valve",
+    "entry_step": "flt_064_s1",
+    "steps": {
+      "flt_064_s1": {
+        "id": "flt_064_s1",
+        "question": "Test IAC valve for proper operation?",
+        "is_question": true,
+        "yes_next": "flt_064_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Valve stuck open/closed",
+          "Valve operates correctly"
+        ]
+      },
+      "flt_064_s2": {
+        "id": "flt_064_s2",
+        "question": "Clean throttle body and IAC valve?",
+        "is_question": false,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": "Clean throttle body and IAC valve. Expected findings: Dirty components, Clean components",
+        "results": [
+          "Dirty components",
+          "Clean components"
+        ]
+      }
+    }
+  },
+  "FLT_065": {
+    "fault_id": "FLT_065",
+    "fault_name": "Intake Valve",
+    "entry_step": "flt_065_s1",
+    "steps": {
+      "flt_065_s1": {
+        "id": "flt_065_s1",
+        "question": "Inspect intake valve for carbon buildup?",
+        "is_question": true,
+        "yes_next": "flt_065_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Buildup on valve",
+          "Clean valve"
+        ]
+      },
+      "flt_065_s2": {
+        "id": "flt_065_s2",
+        "question": "Check valve clearance?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Incorrect clearance",
+          "Correct clearance"
+        ]
+      }
+    }
+  },
+  "FLT_066": {
+    "fault_id": "FLT_066",
+    "fault_name": "Oil Pump",
+    "entry_step": "flt_066_s1",
+    "steps": {
+      "flt_066_s1": {
+        "id": "flt_066_s1",
+        "question": "Test oil pressure with gauge?",
+        "is_question": true,
+        "yes_next": "flt_066_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low oil pressure",
+          "Normal oil pressure"
+        ]
+      },
+      "flt_066_s2": {
+        "id": "flt_066_s2",
+        "question": "Inspect oil pump for wear or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged pump",
+          "Pump in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_067": {
+    "fault_id": "FLT_067",
+    "fault_name": "Piston Rings",
+    "entry_step": "flt_067_s1",
+    "steps": {
+      "flt_067_s1": {
+        "id": "flt_067_s1",
+        "question": "Perform compression test?",
+        "is_question": true,
+        "yes_next": "flt_067_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low compression",
+          "Good compression"
+        ]
+      },
+      "flt_067_s2": {
+        "id": "flt_067_s2",
+        "question": "Inspect piston rings for wear or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged rings",
+          "Rings in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_068": {
+    "fault_id": "FLT_068",
+    "fault_name": "Timing Belt",
+    "entry_step": "flt_068_s1",
+    "steps": {
+      "flt_068_s1": {
+        "id": "flt_068_s1",
+        "question": "Inspect timing belt for wear or damage?",
+        "is_question": true,
+        "yes_next": "flt_068_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn/damaged belt",
+          "Belt in good condition"
+        ]
+      },
+      "flt_068_s2": {
+        "id": "flt_068_s2",
+        "question": "Check timing marks for alignment?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Misaligned timing marks",
+          "Properly aligned marks"
+        ]
+      }
+    }
+  },
+  "FLT_069": {
+    "fault_id": "FLT_069",
+    "fault_name": "Valve Cover Gasket",
+    "entry_step": "flt_069_s1",
+    "steps": {
+      "flt_069_s1": {
+        "id": "flt_069_s1",
+        "question": "Inspect valve cover gasket for leaks?",
+        "is_question": true,
+        "yes_next": "flt_069_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking gasket",
+          "Good gasket seal"
+        ]
+      },
+      "flt_069_s2": {
+        "id": "flt_069_s2",
+        "question": "Check valve cover bolts for tightness?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose bolts",
+          "Tight bolts"
+        ]
+      }
+    }
+  },
+  "FLT_070": {
+    "fault_id": "FLT_070",
+    "fault_name": "Fan Belt",
+    "entry_step": "flt_070_s1",
+    "steps": {
+      "flt_070_s1": {
+        "id": "flt_070_s1",
+        "question": "Inspect fan belt for cuts or wear?",
+        "is_question": true,
+        "yes_next": "flt_070_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cut/worn belt",
+          "Belt in good condition"
+        ]
+      },
+      "flt_070_s2": {
+        "id": "flt_070_s2",
+        "question": "Check belt tension and alignment?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/misaligned belt",
+          "Properly tensioned/aligned belt"
+        ]
+      }
+    }
+  },
+  "FLT_071": {
+    "fault_id": "FLT_071",
+    "fault_name": "Horn",
+    "entry_step": "flt_071_s1",
+    "steps": {
+      "flt_071_s1": {
+        "id": "flt_071_s1",
+        "question": "Check horn fuse?",
+        "is_question": true,
+        "yes_next": "flt_071_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Blown fuse",
+          "Fuse intact"
+        ]
+      },
+      "flt_071_s2": {
+        "id": "flt_071_s2",
+        "question": "Test horn relay for operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty relay",
+          "Relay working properly"
+        ]
+      }
+    }
+  },
+  "FLT_072": {
+    "fault_id": "FLT_072",
+    "fault_name": "Battery Charging",
+    "entry_step": "flt_072_s1",
+    "steps": {
+      "flt_072_s1": {
+        "id": "flt_072_s1",
+        "question": "Test battery voltage?",
+        "is_question": true,
+        "yes_next": "flt_072_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low voltage",
+          "Normal voltage"
+        ]
+      },
+      "flt_072_s2": {
+        "id": "flt_072_s2",
+        "question": "Inspect alternator for proper operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty alternator",
+          "Alternator working correctly"
+        ]
+      }
+    }
+  },
+  "FLT_073": {
+    "fault_id": "FLT_073",
+    "fault_name": "Engine Belt",
+    "entry_step": "flt_073_s1",
+    "steps": {
+      "flt_073_s1": {
+        "id": "flt_073_s1",
+        "question": "Inspect engine belt for cuts or wear?",
+        "is_question": true,
+        "yes_next": "flt_073_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cut/worn belt",
+          "Belt in good condition"
+        ]
+      },
+      "flt_073_s2": {
+        "id": "flt_073_s2",
+        "question": "Check belt tension and alignment?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/misaligned belt",
+          "Properly tensioned/aligned belt"
+        ]
+      }
+    }
+  },
+  "FLT_074": {
+    "fault_id": "FLT_074",
+    "fault_name": "Steering Noise",
+    "entry_step": "flt_074_s1",
+    "steps": {
+      "flt_074_s1": {
+        "id": "flt_074_s1",
+        "question": "Inspect power steering fluid level?",
+        "is_question": true,
+        "yes_next": "flt_074_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low fluid level",
+          "Sufficient fluid level"
+        ]
+      },
+      "flt_074_s2": {
+        "id": "flt_074_s2",
+        "question": "Check power steering pump and hoses for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking pump/hoses",
+          "Pump and hoses in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_075": {
+    "fault_id": "FLT_075",
+    "fault_name": "Shaft and Tires",
+    "entry_step": "flt_075_s1",
+    "steps": {
+      "flt_075_s1": {
+        "id": "flt_075_s1",
+        "question": "Inspect shaft for balance and alignment?",
+        "is_question": true,
+        "yes_next": "flt_075_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Imbalanced/misaligned shaft",
+          "Properly balanced/aligned shaft"
+        ]
+      },
+      "flt_075_s2": {
+        "id": "flt_075_s2",
+        "question": "Check tire pressure and condition?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/inappropriate pressure",
+          "Correct tire pressure and condition"
+        ]
+      }
+    }
+  },
+  "FLT_076": {
+    "fault_id": "FLT_076",
+    "fault_name": "Air Filter",
+    "entry_step": "flt_076_s1",
+    "steps": {
+      "flt_076_s1": {
+        "id": "flt_076_s1",
+        "question": "Inspect air filter for clogs or dirt?",
+        "is_question": true,
+        "yes_next": "flt_076_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Clogged/dirty filter",
+          "Clean filter"
+        ]
+      },
+      "flt_076_s2": {
+        "id": "flt_076_s2",
+        "question": "Replace air filter if necessary?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Replace filter",
+          "Filter in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_077": {
+    "fault_id": "FLT_077",
+    "fault_name": "Engine Control Unit (ECU)",
+    "entry_step": "flt_077_s1",
+    "steps": {
+      "flt_077_s1": {
+        "id": "flt_077_s1",
+        "question": "Check ECU for fault codes?",
+        "is_question": true,
+        "yes_next": "flt_077_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Fault codes present",
+          "No fault codes"
+        ]
+      },
+      "flt_077_s2": {
+        "id": "flt_077_s2",
+        "question": "Inspect ECU wiring harness for damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged harness",
+          "Intact harness"
+        ]
+      }
+    }
+  },
+  "FLT_078": {
+    "fault_id": "FLT_078",
+    "fault_name": "Engine Oil",
+    "entry_step": "flt_078_s1",
+    "steps": {
+      "flt_078_s1": {
+        "id": "flt_078_s1",
+        "question": "Check engine oil level and condition?",
+        "is_question": true,
+        "yes_next": "flt_078_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty oil",
+          "Clean/sufficient oil"
+        ]
+      },
+      "flt_078_s2": {
+        "id": "flt_078_s2",
+        "question": "Inspect for oil leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Oil leaks present",
+          "No leaks detected"
+        ]
+      }
+    }
+  },
+  "FLT_079": {
+    "fault_id": "FLT_079",
+    "fault_name": "Fuel Filter",
+    "entry_step": "flt_079_s1",
+    "steps": {
+      "flt_079_s1": {
+        "id": "flt_079_s1",
+        "question": "Inspect fuel filter for clogs or debris?",
+        "is_question": true,
+        "yes_next": "flt_079_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Clogged/dirty filter",
+          "Clean filter"
+        ]
+      },
+      "flt_079_s2": {
+        "id": "flt_079_s2",
+        "question": "Replace fuel filter if necessary?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Replace filter",
+          "Filter in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_080": {
+    "fault_id": "FLT_080",
+    "fault_name": "PCV Valve",
+    "entry_step": "flt_080_s1",
+    "steps": {
+      "flt_080_s1": {
+        "id": "flt_080_s1",
+        "question": "Inspect PCV valve for clogs?",
+        "is_question": true,
+        "yes_next": "flt_080_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Clogged valve",
+          "Valve clear"
+        ]
+      },
+      "flt_080_s2": {
+        "id": "flt_080_s2",
+        "question": "Check PCV valve hose for cracks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked hose",
+          "Intact hose"
+        ]
+      }
+    }
+  },
+  "FLT_081": {
+    "fault_id": "FLT_081",
+    "fault_name": "Throttle Body",
+    "entry_step": "flt_081_s1",
+    "steps": {
+      "flt_081_s1": {
+        "id": "flt_081_s1",
+        "question": "Inspect throttle body for carbon buildup?",
+        "is_question": true,
+        "yes_next": "flt_081_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Buildup present",
+          "Clean throttle body"
+        ]
+      },
+      "flt_081_s2": {
+        "id": "flt_081_s2",
+        "question": "Test throttle position sensor (TPS)?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty TPS",
+          "TPS working correctly"
+        ]
+      }
+    }
+  },
+  "FLT_082": {
+    "fault_id": "FLT_082",
+    "fault_name": "Fuel Injector",
+    "entry_step": "flt_082_s1",
+    "steps": {
+      "flt_082_s1": {
+        "id": "flt_082_s1",
+        "question": "Test fuel injector spray pattern?",
+        "is_question": true,
+        "yes_next": "flt_082_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Irregular spray pattern",
+          "Uniform spray pattern"
+        ]
+      },
+      "flt_082_s2": {
+        "id": "flt_082_s2",
+        "question": "Inspect injector for leaks or clogs?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/clogged injector",
+          "Clean/in-tolerance injector"
+        ]
+      }
+    }
+  },
+  "FLT_083": {
+    "fault_id": "FLT_083",
+    "fault_name": "Fuel Pressure Regulator",
+    "entry_step": "flt_083_s1",
+    "steps": {
+      "flt_083_s1": {
+        "id": "flt_083_s1",
+        "question": "Test fuel pressure regulator operation?",
+        "is_question": true,
+        "yes_next": "flt_083_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Regulator malfunction",
+          "Regulator functions correctly"
+        ]
+      },
+      "flt_083_s2": {
+        "id": "flt_083_s2",
+        "question": "Check fuel pressure at regulator?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/high pressure",
+          "Correct pressure"
+        ]
+      }
+    }
+  },
+  "FLT_084": {
+    "fault_id": "FLT_084",
+    "fault_name": "Fuel Pump",
+    "entry_step": "flt_084_s1",
+    "steps": {
+      "flt_084_s1": {
+        "id": "flt_084_s1",
+        "question": "Test fuel pump pressure?",
+        "is_question": true,
+        "yes_next": "flt_084_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low pressure",
+          "Normal pressure"
+        ]
+      },
+      "flt_084_s2": {
+        "id": "flt_084_s2",
+        "question": "Inspect fuel pump for leaks or damage?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged pump",
+          "Intact pump"
+        ]
+      }
+    }
+  },
+  "FLT_085": {
+    "fault_id": "FLT_085",
+    "fault_name": "Fuel Tank",
+    "entry_step": "flt_085_s1",
+    "steps": {
+      "flt_085_s1": {
+        "id": "flt_085_s1",
+        "question": "Inspect fuel tank for leaks or damage?",
+        "is_question": true,
+        "yes_next": "flt_085_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged tank",
+          "Tank in good condition"
+        ]
+      },
+      "flt_085_s2": {
+        "id": "flt_085_s2",
+        "question": "Check fuel filler cap for seal?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/broken cap",
+          "Cap seals properly"
+        ]
+      }
+    }
+  },
+  "FLT_086": {
+    "fault_id": "FLT_086",
+    "fault_name": "Throttle Position Sensor",
+    "entry_step": "flt_086_s1",
+    "steps": {
+      "flt_086_s1": {
+        "id": "flt_086_s1",
+        "question": "Test throttle position sensor (TPS) voltage?",
+        "is_question": true,
+        "yes_next": "flt_086_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low voltage",
+          "Normal voltage"
+        ]
+      },
+      "flt_086_s2": {
+        "id": "flt_086_s2",
+        "question": "Inspect TPS wiring for damage or corrosion?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged/corroded wiring",
+          "Intact wiring"
+        ]
+      }
+    }
+  },
+  "FLT_087": {
+    "fault_id": "FLT_087",
+    "fault_name": "Brake Fluid",
+    "entry_step": "flt_087_s1",
+    "steps": {
+      "flt_087_s1": {
+        "id": "flt_087_s1",
+        "question": "Check brake fluid level and condition?",
+        "is_question": true,
+        "yes_next": "flt_087_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      },
+      "flt_087_s2": {
+        "id": "flt_087_s2",
+        "question": "Inspect brake lines for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking lines",
+          "Lines in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_088": {
+    "fault_id": "FLT_088",
+    "fault_name": "Coolant Reservoir",
+    "entry_step": "flt_088_s1",
+    "steps": {
+      "flt_088_s1": {
+        "id": "flt_088_s1",
+        "question": "Check coolant level in reservoir?",
+        "is_question": true,
+        "yes_next": "flt_088_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low coolant level",
+          "Sufficient coolant level"
+        ]
+      },
+      "flt_088_s2": {
+        "id": "flt_088_s2",
+        "question": "Inspect reservoir for cracks or leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Cracked/leaking reservoir",
+          "Intact reservoir"
+        ]
+      }
+    }
+  },
+  "FLT_089": {
+    "fault_id": "FLT_089",
+    "fault_name": "Power Steering Fluid",
+    "entry_step": "flt_089_s1",
+    "steps": {
+      "flt_089_s1": {
+        "id": "flt_089_s1",
+        "question": "Check power steering fluid level?",
+        "is_question": true,
+        "yes_next": "flt_089_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low fluid level",
+          "Sufficient fluid level"
+        ]
+      },
+      "flt_089_s2": {
+        "id": "flt_089_s2",
+        "question": "Inspect power steering hoses for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking hoses",
+          "Hoses in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_090": {
+    "fault_id": "FLT_090",
+    "fault_name": "Radiator",
+    "entry_step": "flt_090_s1",
+    "steps": {
+      "flt_090_s1": {
+        "id": "flt_090_s1",
+        "question": "Inspect radiator for leaks or damage?",
+        "is_question": true,
+        "yes_next": "flt_090_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged radiator",
+          "Radiator in good condition"
+        ]
+      },
+      "flt_090_s2": {
+        "id": "flt_090_s2",
+        "question": "Check radiator cap for proper seal?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/broken cap",
+          "Cap seals properly"
+        ]
+      }
+    }
+  },
+  "FLT_091": {
+    "fault_id": "FLT_091",
+    "fault_name": "Windshield Washer Fluid",
+    "entry_step": "flt_091_s1",
+    "steps": {
+      "flt_091_s1": {
+        "id": "flt_091_s1",
+        "question": "Check washer fluid level?",
+        "is_question": true,
+        "yes_next": "flt_091_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low fluid level",
+          "Sufficient fluid level"
+        ]
+      },
+      "flt_091_s2": {
+        "id": "flt_091_s2",
+        "question": "Inspect washer fluid pump for operation?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty pump",
+          "Pump operates correctly"
+        ]
+      }
+    }
+  },
+  "FLT_092": {
+    "fault_id": "FLT_092",
+    "fault_name": "Clutch Master Cylinder",
+    "entry_step": "flt_092_s1",
+    "steps": {
+      "flt_092_s1": {
+        "id": "flt_092_s1",
+        "question": "Check clutch fluid level?",
+        "is_question": true,
+        "yes_next": "flt_092_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low fluid level",
+          "Sufficient fluid level"
+        ]
+      },
+      "flt_092_s2": {
+        "id": "flt_092_s2",
+        "question": "Inspect master cylinder for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking cylinder",
+          "Cylinder in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_093": {
+    "fault_id": "FLT_093",
+    "fault_name": "Torque Converter",
+    "entry_step": "flt_093_s1",
+    "steps": {
+      "flt_093_s1": {
+        "id": "flt_093_s1",
+        "question": "Inspect torque converter for leaks or damage?",
+        "is_question": true,
+        "yes_next": "flt_093_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking/damaged converter",
+          "Converter in good condition"
+        ]
+      },
+      "flt_093_s2": {
+        "id": "flt_093_s2",
+        "question": "Check transmission fluid level and condition?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      }
+    }
+  },
+  "FLT_094": {
+    "fault_id": "FLT_094",
+    "fault_name": "Transmission Fluid",
+    "entry_step": "flt_094_s1",
+    "steps": {
+      "flt_094_s1": {
+        "id": "flt_094_s1",
+        "question": "Check transmission fluid level and condition?",
+        "is_question": true,
+        "yes_next": "flt_094_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/dirty fluid",
+          "Clean/sufficient fluid"
+        ]
+      },
+      "flt_094_s2": {
+        "id": "flt_094_s2",
+        "question": "Inspect transmission pan and seals for leaks?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Leaking pan/seals",
+          "Pan/seals in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_095": {
+    "fault_id": "FLT_095",
+    "fault_name": "Transmission Filter",
+    "entry_step": "flt_095_s1",
+    "steps": {
+      "flt_095_s1": {
+        "id": "flt_095_s1",
+        "question": "Inspect transmission filter for clogs or debris?",
+        "is_question": true,
+        "yes_next": "flt_095_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Clogged/dirty filter",
+          "Clean filter"
+        ]
+      },
+      "flt_095_s2": {
+        "id": "flt_095_s2",
+        "question": "Replace transmission filter if necessary?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Replace filter",
+          "Filter in good condition"
+        ]
+      }
+    }
+  },
+  "FLT_096": {
+    "fault_id": "FLT_096",
+    "fault_name": "Transmission Solenoid",
+    "entry_step": "flt_096_s1",
+    "steps": {
+      "flt_096_s1": {
+        "id": "flt_096_s1",
+        "question": "Test transmission solenoids for electrical continuity?",
+        "is_question": true,
+        "yes_next": "flt_096_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Faulty solenoid",
+          "Solenoid working correctly"
+        ]
+      },
+      "flt_096_s2": {
+        "id": "flt_096_s2",
+        "question": "Inspect wiring harness for damage or corrosion?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged/corroded wiring",
+          "Intact wiring"
+        ]
+      }
+    }
+  },
+  "FLT_097": {
+    "fault_id": "FLT_097",
+    "fault_name": "Wheel Bearing",
+    "entry_step": "flt_097_s1",
+    "steps": {
+      "flt_097_s1": {
+        "id": "flt_097_s1",
+        "question": "Check wheel bearing for play?",
+        "is_question": true,
+        "yes_next": "flt_097_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/worn bearing",
+          "Bearing in good condition"
+        ]
+      },
+      "flt_097_s2": {
+        "id": "flt_097_s2",
+        "question": "Inspect bearing for signs of damage or corrosion?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged/corroded bearing",
+          "Clean/intact bearing"
+        ]
+      }
+    }
+  },
+  "FLT_098": {
+    "fault_id": "FLT_098",
+    "fault_name": "Tire Pressure Monitoring System (TPMS)",
+    "entry_step": "flt_098_s1",
+    "steps": {
+      "flt_098_s1": {
+        "id": "flt_098_s1",
+        "question": "Check tire pressures with gauge?",
+        "is_question": true,
+        "yes_next": "flt_098_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Low/high pressure",
+          "Correct pressure"
+        ]
+      },
+      "flt_098_s2": {
+        "id": "flt_098_s2",
+        "question": "Inspect TPMS sensors for damage or corrosion?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Damaged/corroded sensors",
+          "Clean/intact sensors"
+        ]
+      }
+    }
+  },
+  "FLT_099": {
+    "fault_id": "FLT_099",
+    "fault_name": "Wheel Hub",
+    "entry_step": "flt_099_s1",
+    "steps": {
+      "flt_099_s1": {
+        "id": "flt_099_s1",
+        "question": "Inspect wheel hub for play or bearing noise?",
+        "is_question": true,
+        "yes_next": "flt_099_s2",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Loose/worn hub",
+          "Hub in good condition"
+        ]
+      },
+      "flt_099_s2": {
+        "id": "flt_099_s2",
+        "question": "Check wheel bearings for wear?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": [
+          "Worn bearings",
+          "Bearings in good condition"
+        ]
+      }
+    }
+  }
+}

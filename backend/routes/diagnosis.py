@@ -1,0 +1,55 @@
+from fastapi import APIRouter
+from fastapi import HTTPException, status
+
+from backend.schemas import AnswerRequest, DiagnoseRequest
+from backend.services.diagnosis_service import DiagnosisService
+from backend.services.session_service import SessionService
+
+
+router = APIRouter(tags=["diagnosis"])
+
+
+def _input_text(payload: DiagnoseRequest):
+    user_input = payload.symptom or payload.user_input or payload.text
+    if not user_input:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Provide either user_input or text.",
+        )
+    return user_input
+
+
+@router.post("/api/diagnose")
+@router.post("/diagnose")
+def diagnose(payload: DiagnoseRequest):
+    if payload.session_id:
+        return DiagnosisService().diagnose(
+            payload.symptom or payload.user_input or payload.text,
+            payload.top_k,
+            session_id=payload.session_id,
+            step_answer=payload.step_answer,
+        )
+    return DiagnosisService().diagnose(_input_text(payload), payload.top_k)
+
+
+@router.post("/api/answer")
+def answer(payload: AnswerRequest):
+    return DiagnosisService().answer(payload.session_id, payload.answer)
+
+
+@router.post("/session/new")
+@router.post("/api/session/new")
+def new_session():
+    return {"session_id": SessionService().create_empty()}
+
+
+@router.get("/session/{session_id}")
+@router.get("/api/session/{session_id}")
+def get_session(session_id: str):
+    session = SessionService().get(session_id)
+    if session is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Diagnosis session was not found.",
+        )
+    return session

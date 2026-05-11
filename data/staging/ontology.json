@@ -1,0 +1,77 @@
+{
+  "vehicle_systems": [
+    {
+      "id": "SYS_ELECTRICAL",
+      "name": "electrical_system",
+      "display_name": "Electrical System",
+      "subsystems": [
+        {
+          "id": "SUB_STARTING",
+          "name": "starting_system",
+          "display_name": "Starting System",
+          "components": [
+            {
+              "id": "CMP_STARTER_MOTOR",
+              "name": "starter_motor",
+              "display_name": "Starter Motor"
+            },
+            {
+              "id": "CMP_STARTER_RELAY",
+              "name": "starter_relay",
+              "display_name": "Starter Relay"
+            },
+            {
+              "id": "CMP_IGNITION_SWITCH",
+              "name": "ignition_switch",
+              "display_name": "Ignition Switch"
+            }
+          ]
+        },
+        {
+          "id": "SUB_BATTERY",
+          "name": "battery_system",
+          "display_name": "Battery System",
+          "components": [
+            {
+              "id": "CMP_BATTERY",
+              "name": "battery",
+              "display_name": "Battery"
+            },
+            {
+              "id": "CMP_BATTERY_TERMINAL",
+              "name": "battery_terminal",
+              "display_name": "Battery Terminal"
+            },
+            {
+              "id": "CMP_ALTERNATOR",
+              "name": "alternator",
+              "display_name": "Alternator"
+            }
+          ]
+        },
+        {
+          "id": "SUB_DOOR_LOCK",
+          "name": "door_lock_system",
+          "display_name": "Door Lock System",
+          "components": [
+            {
+              "id": "CMP_DOOR_LOCK_ACTUATOR",
+              "name": "door_lock_actuator",
+              "display_name": "Door Lock Actuator"
+            },
+            {
+              "id": "CMP_DOOR_LOCK_SWITCH",
+              "name": "door_lock_switch",
+              "display_name": "Door Lock Switch"
+            },
+            {
+              "id": "CMP_KEY_FOB",
+              "name": "key_fob",
+              "display_name": "Key Fob"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
