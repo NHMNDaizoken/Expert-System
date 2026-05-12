@@ -45,6 +45,7 @@ class WorkingMemory:
 
     @classmethod
     def from_session(cls, session: dict[str, Any]) -> "WorkingMemory":
+        asked_items = set(session.get("step_history") or []) | set((session.get("answers") or {}).keys())
         return cls(
             confirmed_symptoms=list(session.get("confirmed_symptoms") or []),
             rejected_symptoms=list(session.get("rejected_symptoms") or []),
@@ -53,7 +54,7 @@ class WorkingMemory:
             current_step_id=session.get("current_step_id"),
             branch_path=list(session.get("branch_path") or []),
             step_history=list(session.get("step_history") or []),
-            question_count=len(session.get("step_history") or []) + len(session.get("answers") or {}),
+            question_count=len(asked_items),
             last_answer=session.get("last_answer"),
         )
 
@@ -110,7 +111,7 @@ class ExplanationBuilder:
             },
             "system_selection": {
                 "detected_systems": memory.detected_systems,
-                "explanation": "Systems were selected from rules connected to the matched and confirmed symptoms.",
+                "explanation": "Hệ thống được chọn từ các luật liên kết với triệu chứng đã khớp và đã xác nhận.",
             },
             "primary_symptom": memory.primary_symptom,
             "hypothesis_generation": [
@@ -125,7 +126,7 @@ class ExplanationBuilder:
                         if rule.get("symptom_id")
                     ],
                     "matched_rule_count": len(diagnosis.get("matched_rules", [])),
-                    "explanation": "Fault is a candidate because confirmed symptoms match KB rules.",
+                    "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
                 }
                 for diagnosis in diagnoses
             ],
@@ -162,20 +163,20 @@ class ExplanationBuilder:
 
     def summary(self, memory: WorkingMemory, diagnoses: list[dict[str, Any]], status: str) -> str:
         if not diagnoses:
-            return "No Knowledge Base fault matched the confirmed symptoms."
+            return "Không có lỗi nào trong cơ sở tri thức khớp với các triệu chứng đã xác nhận."
         top = diagnoses[0]
-        system = self.kb.system_label(top.get("system")) or top.get("system") or "Unknown system"
-        primary = self.kb.label_for_symptom(memory.primary_symptom) if memory.primary_symptom else "the reported symptom"
+        system = self.kb.system_label(top.get("system")) or top.get("system") or "Hệ thống chưa rõ"
+        primary = self.kb.label_for_symptom(memory.primary_symptom) if memory.primary_symptom else "triệu chứng đã mô tả"
         return (
             f"{system} > {primary} > {top.get('fault_label', top.get('fault_name'))} "
-            f"with CF {top.get('final_cf')}. Status: {status}."
+            f"với CF {top.get('final_cf')}. Trạng thái: {status}."
         )
 
     def _question_selection(self, next_question: dict[str, Any] | None) -> dict[str, Any]:
         if not next_question or next_question.get("done"):
             return {
                 "status": "not_selected",
-                "explanation": "No useful follow-up question remains.",
+                "explanation": "Không còn câu hỏi bổ sung hữu ích.",
             }
         return {
             "status": "selected",
@@ -205,7 +206,7 @@ class ExplanationBuilder:
                 }
                 for rule in diagnosis.get("matched_rules", [])
             ],
-            "rule_text": f"IF {' AND '.join(symptoms) if symptoms else 'no matched symptom'} THEN {diagnosis.get('fault_label', diagnosis['fault_name'])}",
+            "rule_text": f"NẾU {' VÀ '.join(symptoms) if symptoms else 'chưa có triệu chứng khớp'} THÌ {diagnosis.get('fault_label', diagnosis['fault_name'])}",
         }
 
     def _cf_steps_for_diagnosis(self, diagnosis: dict[str, Any]) -> list[dict[str, Any]]:
@@ -219,15 +220,15 @@ class ExplanationBuilder:
                     "symptom_label": rule.get("symptom_label"),
                     "evidence_cf": rule.get("cf"),
                     "priority": rule.get("priority"),
-                    "formula": "combined_cf = old_cf + evidence_cf * (1 - old_cf)",
-                    "explanation": "A confirmed symptom increases fault confidence through its rule certainty factor.",
+                    "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+                    "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
                 }
             )
         steps.append(
             {
                 "fault_id": diagnosis["fault_id"],
                 "fault_label": diagnosis.get("fault_label"),
-                "formula": "final_cf is a bounded confidence score, not Bayesian probability.",
+                "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
                 "score_breakdown": diagnosis.get("score_breakdown", {}),
             }
         )
@@ -292,7 +293,7 @@ class ExpertSystemEngine:
         if procedure_terminal and procedure_terminal != "DIAGNOSED" and not next_question:
             next_question = self._select_information_gain_question(memory, diagnoses)
 
-        if procedure_terminal == "DIAGNOSED":
+        if procedure_terminal == "DIAGNOSED" or (diagnoses and not next_question):
             status = "diagnosed"
             next_question = None
         else:
@@ -351,7 +352,7 @@ class ExpertSystemEngine:
             "status": "unknown_symptom",
             "is_final": False,
             "tree_level": "symptom",
-            "explanation_summary": "The Knowledge Base could not map the reported symptom.",
+            "explanation_summary": "Cơ sở tri thức chưa ánh xạ được triệu chứng đã mô tả.",
             "source": "staging_files_kg",
             "procedure_terminal": None,
             **memory.to_response_fields(),
@@ -442,7 +443,7 @@ class ExpertSystemEngine:
                 {
                     "fault_id": fault_id,
                     "fault_name": rule.get("fault_name", fault_id),
-                    "fault_label": rule.get("display_name", rule.get("fault_name", fault_id)),
+                    "fault_label": self.kb.label_for_fault(rule, fault_id),
                     "system": rule.get("system_id") or rule.get("system"),
                     "subsystem": rule.get("subsystem_id") or rule.get("subsystem"),
                     "score": final_cf,
@@ -450,7 +451,7 @@ class ExpertSystemEngine:
                     "cf_breakdown": breakdown,
                     "score_breakdown": {
                         "cf_confidence": final_cf,
-                        "note": "Certainty Factor confidence score, not Bayesian probability.",
+                        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                     },
                     "confidence_label": self._confidence_label(final_cf),
                     "decision": "accepted" if final_cf >= 0.5 else "uncertain",
@@ -468,24 +469,23 @@ class ExpertSystemEngine:
         memory: WorkingMemory,
         diagnoses: list[dict[str, Any]],
     ) -> tuple[dict[str, Any] | None, str | None]:
+        if memory.question_count >= self.max_questions:
+            return None, "MAX_QUESTIONS_REACHED"
+
         if not diagnoses:
             return self._select_information_gain_question(memory, diagnoses), None
 
         top = diagnoses[0]
         procedure = self.kb.get_procedure_for_fault(top.get("fault_id"))
         if procedure:
-            if memory.current_step_id:
-                step = self.procedure_runner.get_next_from_tree(
-                    memory.current_step_id,
-                    memory.last_answer,
-                    procedure,
-                )
-            else:
-                step = self.procedure_runner.entry_step(procedure)
+            step = self._next_procedure_step(procedure, memory)
 
             if step:
                 terminal = step.get("terminal")
                 if terminal == "DIAGNOSED":
+                    next_ig = self._select_information_gain_question(memory, diagnoses)
+                    if next_ig:
+                        return next_ig, None
                     return None, terminal
                 if terminal:
                     return self._select_information_gain_question(memory, diagnoses), terminal
@@ -493,17 +493,77 @@ class ExpertSystemEngine:
 
         return self._select_information_gain_question(memory, diagnoses), None
 
+    def _next_procedure_step(
+        self,
+        procedure: dict[str, Any],
+        memory: WorkingMemory,
+    ) -> dict[str, Any] | None:
+        visited = set(memory.step_history or [])
+        if memory.current_step_id:
+            step = self.procedure_runner.get_next_from_tree(
+                memory.current_step_id,
+                memory.last_answer,
+                procedure,
+                visited=visited,
+                max_depth=self.max_questions,
+            )
+        else:
+            step = self.procedure_runner.entry_step(procedure)
+
+        return self._skip_answered_procedure_steps(step, procedure, memory, visited)
+
+    def _skip_answered_procedure_steps(
+        self,
+        step: dict[str, Any] | None,
+        procedure: dict[str, Any],
+        memory: WorkingMemory,
+        visited: set[str],
+    ) -> dict[str, Any] | None:
+        confirmed = set(memory.confirmed_symptoms or [])
+        rejected = set(memory.rejected_symptoms or [])
+
+        while step and not step.get("terminal"):
+            symptom_id = step.get("symptom_id")
+            if symptom_id not in confirmed and symptom_id not in rejected:
+                return step
+
+            step_id = step.get("step_id")
+            if not step_id or step_id in visited or len(visited) >= self.max_questions:
+                return {"terminal": "END", "step_id": step_id, "error": "loop_detected"}
+
+            visited.add(step_id)
+            step = self.procedure_runner.get_next_from_tree(
+                step_id,
+                symptom_id in confirmed,
+                procedure,
+                visited=visited,
+                max_depth=self.max_questions,
+            )
+        return step
+
     def _select_information_gain_question(
         self,
         memory: WorkingMemory,
         ranked: list[dict[str, Any]],
     ) -> dict[str, Any] | None:
+        if memory.question_count >= self.max_questions:
+            return None
+
+        candidate_fault_ids = {diagnosis.get("fault_id") for diagnosis in ranked if diagnosis.get("fault_id")}
         all_symptoms = [
             symptom.get("symptom_id")
             for rule in self.kb.rules
+            if rule.get("fault_id") in candidate_fault_ids
             for symptom in rule.get("symptoms", [])
             if symptom.get("symptom_id")
         ]
+        if not all_symptoms:
+            all_symptoms = [
+                symptom.get("symptom_id")
+                for rule in self.kb.rules_for_symptoms(memory.confirmed_symptoms)
+                for symptom in rule.get("symptoms", [])
+                if symptom.get("symptom_id")
+            ]
         asked = set(memory.confirmed_symptoms) | set(memory.rejected_symptoms)
         result = self._select_by_information_gain(ranked, asked, all_symptoms, self.kb.cf_map)
         if not result:
@@ -514,12 +574,12 @@ class ExpertSystemEngine:
             "symptom": symptom_id,
             "symptom_id": symptom_id,
             "label": label,
-            "question": f"Do you also notice {label.lower()}?",
+            "question": f"Bạn có thấy thêm dấu hiệu: {label.lower()} không?",
             "step_id": None,
             "mode": "information_gain",
             "information_gain": result["information_gain"],
             "fault_preview": None,
-            "explanation": "Selected as the best unasked symptom to separate competing fault hypotheses.",
+            "explanation": "Được chọn vì đây là triệu chứng chưa hỏi giúp phân biệt tốt nhất giữa các giả thuyết lỗi.",
         }
 
     @staticmethod
@@ -576,6 +636,9 @@ class ExpertSystemEngine:
         return {
             "question": step.get("question"),
             "step_id": step.get("step_id"),
+            "symptom": step.get("symptom_id"),
+            "symptom_id": step.get("symptom_id"),
+            "label": step.get("symptom_label"),
             "mode": "procedure_tree",
             "results": step.get("results", []),
             "fault_preview": {
@@ -584,7 +647,7 @@ class ExpertSystemEngine:
                 "score": top.get("score"),
                 "final_cf": top.get("final_cf"),
             },
-            "explanation": "Selected from the diagnostic procedure for the strongest active hypothesis.",
+            "explanation": "Được chọn từ quy trình kiểm tra của giả thuyết lỗi mạnh nhất hiện tại.",
         }
 
     def _tree_level(self, status: str, next_question: dict[str, Any] | None) -> str:
@@ -617,12 +680,12 @@ class ExpertSystemEngine:
     @staticmethod
     def _confidence_label(score: float) -> str:
         if score >= 0.8:
-            return "Very likely"
+            return "Rất có khả năng"
         if score >= 0.6:
-            return "Likely"
+            return "Có khả năng"
         if score >= 0.4:
-            return "Possible"
-        return "Uncertain"
+            return "Có thể xảy ra"
+        return "Chưa chắc chắn"
 
 
 # ============================================================================
@@ -684,7 +747,7 @@ def rank_faults(
             {
                 "fault_id": fault_id,
                 "fault_name": rule.get("fault_name", fault_id),
-                "fault_label": rule.get("display_name", rule.get("fault_name", fault_id)),
+                "fault_label": rule.get("label_vi") or rule.get("display_name", rule.get("fault_name", fault_id)),
                 "system": rule.get("system_id") or rule.get("system"),
                 "subsystem": rule.get("subsystem_id") or rule.get("subsystem"),
                 "score": final_cf,
@@ -692,7 +755,7 @@ def rank_faults(
                 "cf_breakdown": breakdown,
                 "score_breakdown": {
                     "cf_confidence": final_cf,
-                    "note": "Certainty Factor confidence score, not Bayesian probability.",
+                    "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                 },
                 "confidence_label": ExpertSystemEngine._confidence_label(final_cf),
                 "decision": "accepted" if final_cf >= 0.5 else "uncertain",

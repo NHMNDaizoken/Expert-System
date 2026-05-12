@@ -5,6 +5,8 @@ import {
   GitBranch,
   ListTree,
   Loader2,
+  PanelLeftClose,
+  PanelLeftOpen,
   RefreshCw,
   Search,
   X,
@@ -40,6 +42,54 @@ const STAT_LABELS = [
   "relationships",
 ];
 
+const TYPE_LABELS = {
+  all: "Tất cả hạng mục",
+  VehicleSystem: "Hệ thống xe",
+  Subsystem: "Phân hệ",
+  Component: "Bộ phận",
+  Fault: "Lỗi",
+  Symptom: "Triệu chứng",
+  Repair: "Sửa chữa",
+};
+
+const STATUS_LABELS = {
+  all: "Tất cả trạng thái",
+  approved: "Đã xác minh",
+  pending_review: "Chờ xác minh",
+  rejected: "Từ chối",
+  unknown: "Chưa rõ",
+};
+
+const RELATIONSHIP_LABELS = {
+  HAS_SYMPTOM: "Dấu hiệu",
+  AFFECTS: "Ảnh hưởng đến",
+  FIXED_BY: "Giải pháp sửa chữa",
+  PART_OF: "Thuộc hệ thống",
+  RELATED_TO: "Liên quan đến",
+};
+
+const STAT_DISPLAY_LABELS = {
+  VehicleSystem: "Hệ thống xe",
+  Subsystem: "Phân hệ",
+  Component: "Bộ phận",
+  Fault: "Lỗi",
+  Symptom: "Triệu chứng",
+  Repair: "Sửa chữa",
+  relationships: "Quan hệ",
+};
+
+const SYSTEM_LABELS = {
+  SYS_ENGINE: "Động cơ",
+  SYS_BRAKE: "Hệ thống phanh",
+  SYS_ELECTRICAL: "Hệ thống điện",
+  SYS_TRANSMISSION: "Hộp số",
+  SYS_COOLING: "Hệ thống làm mát",
+  SYS_FUEL: "Hệ thống nhiên liệu",
+  SYS_SUSPENSION_STEERING: "Treo và lái",
+  SYS_HVAC: "Điều hòa",
+  SYS_EXHAUST_EMISSION: "Khí xả và phát thải",
+};
+
 export default function GraphViewer() {
   const [graph, setGraph] = useState({ nodes: [], edges: [] });
   const [selectedNode, setSelectedNode] = useState(null);
@@ -54,6 +104,7 @@ export default function GraphViewer() {
   const [faultListLoading, setFaultListLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState("");
+  const [faultBrowserCollapsed, setFaultBrowserCollapsed] = useState(false);
 
   async function loadStats() {
     try {
@@ -79,7 +130,7 @@ export default function GraphViewer() {
     if (
       relationshipCount > 1000 &&
       !window.confirm(
-        `Full graph has ${relationshipCount} relationships and may be slow. Load it anyway?`
+        `Sơ đồ đầy đủ có ${relationshipCount} quan hệ và có thể tải chậm. Bạn vẫn muốn mở?`
       )
     ) {
       return;
@@ -218,9 +269,13 @@ export default function GraphViewer() {
         <div className="graph-title">
           <GitBranch size={22} />
           <div>
-            <h1>Knowledge Graph</h1>
+            <h1>Sơ đồ tri thức</h1>
             <span className={`mode-pill ${mode}`}>
-              {mode === "focused" ? "Focused graph" : mode === "full" ? "Full graph" : "Browse by fault"}
+              {mode === "focused"
+                ? "Sơ đồ chi tiết"
+                : mode === "full"
+                  ? "Sơ đồ đầy đủ"
+                  : "Duyệt theo lỗi"}
             </span>
           </div>
         </div>
@@ -231,14 +286,14 @@ export default function GraphViewer() {
             <input
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search faults, symptoms, components, repairs"
+              placeholder="Tìm lỗi, triệu chứng, bộ phận, sửa chữa"
             />
             {searchQuery && (
               <button
                 className="icon-button ghost"
                 type="button"
                 onClick={() => setSearchQuery("")}
-                aria-label="Clear search"
+                aria-label="Xóa tìm kiếm"
               >
                 <X size={16} />
               </button>
@@ -246,11 +301,11 @@ export default function GraphViewer() {
             {hasSearch && (
               <div className="search-popover">
                 <div className="search-popover-head">
-                  <span>Matches</span>
+                  <span>Kết quả phù hợp</span>
                   {searchLoading && <Loader2 size={15} className="spin" />}
                 </div>
                 {!searchLoading && searchResults.length === 0 && (
-                  <p className="muted">No matches</p>
+                  <p className="muted">Không có kết quả phù hợp</p>
                 )}
                 {searchResults.map((result) => (
                   <button
@@ -259,8 +314,8 @@ export default function GraphViewer() {
                     type="button"
                     onClick={() => handleSearchResultClick(result)}
                   >
-                    <span>{result.label}</span>
-                    <small>{result.type}</small>
+                    <span>{displayLabel(result)}</span>
+                    <small>{TYPE_LABELS[result.type] || result.type}</small>
                   </button>
                 ))}
               </div>
@@ -269,26 +324,30 @@ export default function GraphViewer() {
 
           <button type="button" onClick={handleLoadFullGraph} disabled={loading}>
             <RefreshCw size={18} className={loading && mode === "full" ? "spin" : ""} />
-            Full graph
+            Sơ đồ đầy đủ
           </button>
         </div>
       </header>
 
-      <section className="graph-stats" aria-label="Graph statistics">
+      <section className="graph-stats" aria-label="Thống kê sơ đồ">
         {STAT_LABELS.map((label) => (
           <div className="stat-card" key={label}>
-            <span>{label}</span>
+            <span>{STAT_DISPLAY_LABELS[label] || label}</span>
             <strong>{stats[label] ?? 0}</strong>
           </div>
         ))}
       </section>
 
-      <section className="graph-workspace">
+      <section className={`graph-workspace ${faultBrowserCollapsed ? "fault-collapsed" : ""}`}>
         <FaultBrowser
           faults={faultList}
           loading={faultListLoading}
           selectedId={selectedNode?.id}
           onOpenFault={handleOpenFaultGraph}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          collapsed={faultBrowserCollapsed}
+          onToggleCollapse={() => setFaultBrowserCollapsed((value) => !value)}
         />
 
         <div className="graph-main">
@@ -296,7 +355,7 @@ export default function GraphViewer() {
             <select value={type} onChange={(event) => setType(event.target.value)}>
               {TYPE_OPTIONS.map((option) => (
                 <option key={option} value={option}>
-                  {option === "all" ? "All types" : option}
+                  {TYPE_LABELS[option] || option}
                 </option>
               ))}
             </select>
@@ -306,14 +365,14 @@ export default function GraphViewer() {
             >
               {STATUS_OPTIONS.map((option) => (
                 <option key={option} value={option}>
-                  {option === "all" ? "All statuses" : option}
+                  {STATUS_LABELS[option] || option}
                 </option>
               ))}
             </select>
             {mode === "focused" && (
               <span className="focused-chip">
                 <Focus size={15} />
-                {selectedNode?.type === "Fault" ? selectedNode.label : "Focused"}
+                {selectedNode?.type === "Fault" ? displayLabel(selectedNode) : "Đang xem chi tiết"}
               </span>
             )}
           </div>
@@ -327,29 +386,32 @@ export default function GraphViewer() {
           {loading && (
             <div className="notice graph-message">
               <Loader2 size={18} className="spin" />
-              Loading graph data...
+              Đang tải dữ liệu sơ đồ...
             </div>
           )}
           {emptyGraph && (
             <div className="empty-state graph-message">
-              <h2>No graph data found</h2>
+              <h2>Chưa tìm thấy dữ liệu sơ đồ</h2>
               <p>
-                Import data into Neo4j, or keep the staging JSON files in
+                Hãy nhập dữ liệu vào Neo4j hoặc giữ các tệp JSON staging trong
                 <code> data/staging </code>.
               </p>
             </div>
           )}
 
           {hasGraph ? (
-            <GraphCanvas graph={filteredGraph} onNodeClick={handleNodeClick} />
+            <GraphCanvas
+              graph={filteredGraph}
+              selectedNodeId={selectedNode?.id}
+              onNodeClick={handleNodeClick}
+            />
           ) : (
             <div className="graph-start-panel">
               <ListTree size={34} />
-              <h2>Select a fault to view a focused graph</h2>
+              <h2>Chọn một lỗi để xem sơ đồ chi tiết</h2>
               <p>
-                The page now loads a compact list first, then renders only the
-                selected fault, its symptoms, affected components, repairs, and
-                parent system path.
+                Danh sách bên trái giúp mở nhanh lỗi, triệu chứng, bộ phận bị
+                ảnh hưởng, hướng sửa chữa và đường dẫn hệ thống liên quan.
               </p>
             </div>
           )}
@@ -366,7 +428,7 @@ export default function GraphViewer() {
           ) : (
             <div className="detail-empty">
               <GitBranch size={28} />
-              <p>Select a fault or node</p>
+              <p>Chọn một lỗi hoặc hạng mục</p>
             </div>
           )}
         </aside>
@@ -375,19 +437,59 @@ export default function GraphViewer() {
   );
 }
 
-function FaultBrowser({ faults, loading, selectedId, onOpenFault }) {
+function FaultBrowser({
+  faults,
+  loading,
+  selectedId,
+  onOpenFault,
+  searchQuery,
+  onSearchChange,
+  collapsed,
+  onToggleCollapse,
+}) {
+  if (collapsed) {
+    return (
+      <aside className="fault-browser collapsed">
+        <button
+          className="collapse-button"
+          type="button"
+          onClick={onToggleCollapse}
+          aria-label="Mở danh sách lỗi"
+        >
+          <PanelLeftOpen size={18} />
+        </button>
+      </aside>
+    );
+  }
+
   return (
     <aside className="fault-browser">
       <div className="fault-browser-head">
         <div>
-          <h2>Fault list</h2>
-          <p>Open one small graph at a time</p>
+          <h2>Danh sách lỗi</h2>
+          <p>Mở từng sơ đồ nhỏ để đọc rõ hơn</p>
         </div>
+        <button
+          className="collapse-button"
+          type="button"
+          onClick={onToggleCollapse}
+          aria-label="Thu gọn danh sách lỗi"
+        >
+          <PanelLeftClose size={18} />
+        </button>
         {loading && <Loader2 size={17} className="spin" />}
       </div>
+      <label className="fault-search">
+        <Search size={17} />
+        <input
+          value={searchQuery}
+          onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Tìm trong danh sách lỗi"
+        />
+      </label>
       <div className="fault-list">
         {!loading && faults.length === 0 && (
-          <p className="muted">No faults match the current search.</p>
+          <p className="muted">Không có lỗi phù hợp với từ khóa hiện tại.</p>
         )}
         {faults.map((fault) => (
           <button
@@ -396,12 +498,11 @@ function FaultBrowser({ faults, loading, selectedId, onOpenFault }) {
             className={`fault-list-item ${selectedId === fault.id ? "active" : ""}`}
             onClick={() => onOpenFault(fault.id, fault)}
           >
-            <span>{fault.label}</span>
-            <small>
-              {fault.summary?.system || "Unknown system"}
-              {" · "}
-              {fault.summary?.symptom_count ?? 0} symptoms
-            </small>
+            <span className="fault-card-title">{displayLabel(fault)}</span>
+            <span className="fault-card-meta">
+              <span>{displaySystem(fault.summary?.system)}</span>
+              <span>{fault.summary?.symptom_count ?? 0} dấu hiệu</span>
+            </span>
           </button>
         ))}
       </div>
@@ -410,7 +511,6 @@ function FaultBrowser({ faults, loading, selectedId, onOpenFault }) {
 }
 
 function NodeDetails({ node, graph, onOpenFaultGraph, loading }) {
-  const metadataEntries = Object.entries(node.metadata || {});
   const nodesById = useMemo(
     () => new Map((graph?.nodes || []).map((item) => [item.id, item])),
     [graph?.nodes]
@@ -427,39 +527,41 @@ function NodeDetails({ node, graph, onOpenFaultGraph, loading }) {
     <>
       <div className="detail-head">
         <span className={`graph-type-badge ${node.type?.toLowerCase()}`}>
-          {node.type}
+          {TYPE_LABELS[node.type] || node.type}
         </span>
-        {node.status && <span className={`graph-status ${node.status}`}>{node.status}</span>}
+        {node.status && (
+          <span className={`graph-status ${node.status}`}>
+            {STATUS_LABELS[node.status] || node.status}
+          </span>
+        )}
       </div>
-      <h2>{node.label}</h2>
-      <dl className="detail-list">
-        <dt>ID</dt>
-        <dd>{node.id}</dd>
-        <dt>Label</dt>
-        <dd>{node.label}</dd>
-        <dt>Type</dt>
-        <dd>{node.type}</dd>
-        <dt>Status</dt>
-        <dd>{node.status || "unknown"}</dd>
-      </dl>
+      <h2>{displayLabel(node)}</h2>
+      <section className="expert-panel info-panel">
+        <h3>Thông tin lỗi</h3>
+        <dl className="detail-list">
+          <dt>Mã</dt>
+          <dd>{node.id}</dd>
+          <dt>Tên</dt>
+          <dd>{displayLabel(node)}</dd>
+          <dt>Loại</dt>
+          <dd>{TYPE_LABELS[node.type] || node.type}</dd>
+          <dt>Trạng thái</dt>
+          <dd>{STATUS_LABELS[node.status] || "Chưa rõ"}</dd>
+        </dl>
+      </section>
       {node.type === "Fault" && (
-        <button type="button" onClick={onOpenFaultGraph} disabled={loading}>
+        <button className="detail-cta" type="button" onClick={onOpenFaultGraph} disabled={loading}>
           <Focus size={17} />
-          Open focused graph
+          Mở sơ đồ chi tiết
         </button>
       )}
       {node.type === "Fault" && (
         <FaultRulePanel node={node} edges={connectedEdges} nodesById={nodesById} />
       )}
       <RelationshipPanel edges={connectedEdges} nodesById={nodesById} />
-      <div className="metadata-panel">
-        <h3>Metadata</h3>
-        {metadataEntries.length === 0 ? (
-          <p className="muted">No metadata</p>
-        ) : (
-          <pre>{JSON.stringify(node.metadata, null, 2)}</pre>
-        )}
-      </div>
+      {node.type === "Fault" && (
+        <RepairPanel edges={connectedEdges} nodesById={nodesById} />
+      )}
     </>
   );
 }
@@ -471,23 +573,19 @@ function FaultRulePanel({ node, edges, nodesById }) {
   const componentEdges = edges.filter(
     (edge) => edge.type === "AFFECTS" && edge.source === node.id
   );
-  const repairEdges = edges.filter(
-    (edge) => edge.type === "FIXED_BY" && edge.source === node.id
-  );
 
   return (
     <section className="expert-panel">
-      <h3>Luật hệ chuyên gia</h3>
+      <h3>Luật chẩn đoán</h3>
       <div className="rule-line">
-        <strong>IF</strong>
+        <strong>NẾU</strong>
         <div>
           {symptomEdges.length === 0 ? (
-            <span className="muted">No symptom rule in current graph</span>
+            <span className="muted">Chưa có dấu hiệu trong sơ đồ hiện tại</span>
           ) : (
             symptomEdges.map((edge) => (
               <span className="rule-chip" key={edge.id}>
                 {nodeLabel(nodesById, edge.target)}
-                {edge.cf != null && <small>CF {Number(edge.cf).toFixed(2)}</small>}
                 {edge.metadata?.priority && <small>P{edge.metadata.priority}</small>}
               </span>
             ))
@@ -495,23 +593,18 @@ function FaultRulePanel({ node, edges, nodesById }) {
         </div>
       </div>
       <div className="rule-line">
-        <strong>THEN</strong>
+        <strong>THÌ</strong>
         <div>
-          <span className="rule-chip fault-rule">{node.label}</span>
+          <span className="rule-chip fault-rule">{displayLabel(node)}</span>
         </div>
       </div>
-      {(componentEdges.length > 0 || repairEdges.length > 0) && (
+      {componentEdges.length > 0 && (
         <div className="rule-line">
-          <strong>LINK</strong>
+          <strong>LIÊN KẾT</strong>
           <div>
             {componentEdges.map((edge) => (
               <span className="rule-chip" key={edge.id}>
-                AFFECTS {nodeLabel(nodesById, edge.target)}
-              </span>
-            ))}
-            {repairEdges.map((edge) => (
-              <span className="rule-chip" key={edge.id}>
-                FIXED_BY {nodeLabel(nodesById, edge.target)}
+                Ảnh hưởng đến {nodeLabel(nodesById, edge.target)}
               </span>
             ))}
           </div>
@@ -522,24 +615,27 @@ function FaultRulePanel({ node, edges, nodesById }) {
 }
 
 function RelationshipPanel({ edges, nodesById }) {
+  const visibleEdges = edges.filter((edge) =>
+    ["HAS_SYMPTOM", "AFFECTS", "PART_OF", "RELATED_TO"].includes(edge.type)
+  );
+
   return (
     <section className="expert-panel">
-      <h3>Quan hệ trực tiếp</h3>
-      {edges.length === 0 ? (
-        <p className="muted">No direct relationships in current graph</p>
+      <h3>Quan hệ liên kết</h3>
+      {visibleEdges.length === 0 ? (
+        <p className="muted">Không có quan hệ trực tiếp trong sơ đồ hiện tại</p>
       ) : (
         <ul className="relationship-list">
-          {edges.map((edge) => (
+          {visibleEdges.map((edge) => (
             <li key={edge.id}>
               <span className={`relationship-type ${edge.type?.toLowerCase()}`}>
-                {edge.type}
+                {edge.label || RELATIONSHIP_LABELS[edge.type] || "Liên quan"}
               </span>
               <span>
                 {nodeLabel(nodesById, edge.source)}
                 {" -> "}
                 {nodeLabel(nodesById, edge.target)}
               </span>
-              {edge.cf != null && <small>CF {Number(edge.cf).toFixed(2)}</small>}
             </li>
           ))}
         </ul>
@@ -548,6 +644,46 @@ function RelationshipPanel({ edges, nodesById }) {
   );
 }
 
+function RepairPanel({ edges, nodesById }) {
+  const repairEdges = edges.filter((edge) => edge.type === "FIXED_BY");
+
+  return (
+    <section className="expert-panel repair-panel">
+      <h3>Giải pháp sửa chữa</h3>
+      {repairEdges.length === 0 ? (
+        <p className="muted">Chưa có giải pháp sửa chữa trong sơ đồ hiện tại</p>
+      ) : (
+        <ul className="repair-list">
+          {repairEdges.map((edge) => (
+            <li key={edge.id}>{nodeLabel(nodesById, edge.target)}</li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 function nodeLabel(nodesById, nodeId) {
-  return nodesById.get(nodeId)?.label || nodeId;
+  const node = nodesById.get(nodeId);
+  return displayLabel(node || { id: nodeId, label: nodeId });
+}
+
+function displayLabel(node) {
+  if (!node) {
+    return "";
+  }
+  const value = SYSTEM_LABELS[node.label] || SYSTEM_LABELS[node.id] || node.label || node.id;
+  return normalizeAutomotiveTerm(value);
+}
+
+function displaySystem(system) {
+  return normalizeAutomotiveTerm(SYSTEM_LABELS[system] || system || "Hệ thống chưa rõ");
+}
+
+function normalizeAutomotiveTerm(value) {
+  if (!value) {
+    return value;
+  }
+
+  return String(value).replaceAll("Bạc đạn", "Ổ bi");
 }

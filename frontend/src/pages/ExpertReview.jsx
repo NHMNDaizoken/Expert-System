@@ -43,12 +43,12 @@ export default function ExpertReview() {
     <div className="page">
       <header className="toolbar-header">
         <div>
-          <h1>Expert Review</h1>
-          <p>Approve or reject pending knowledge before it enters the graph.</p>
+          <h1>Kiểm duyệt tri thức</h1>
+          <p>Duyệt hoặc từ chối luật đang chờ trước khi đưa vào sơ đồ tri thức.</p>
         </div>
         <button onClick={loadRules} disabled={!adminApiKey.trim()}>
           <RefreshCw size={18} />
-          Load
+          Tải luật
         </button>
       </header>
       <input
@@ -78,11 +78,11 @@ export default function ExpertReview() {
             <div className="action-row">
               <button onClick={() => decide(rule, "approve")}>
                 <Check size={18} />
-                Approve
+                Duyệt
               </button>
               <button className="danger" onClick={() => decide(rule, "reject")}>
                 <X size={18} />
-                Reject
+                Từ chối
               </button>
             </div>
           </article>

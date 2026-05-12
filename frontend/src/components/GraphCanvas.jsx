@@ -11,9 +11,11 @@ import ReactFlow, {
   useReactFlow,
 } from "reactflow";
 
-const nodeWidth = 220;
-const nodeHeight = 86;
-const levelGap = nodeWidth + 180;
+const minNodeWidth = 196;
+const maxNodeWidth = 276;
+const baseNodeHeight = 88;
+const levelGap = 370;
+const rowGap = 44;
 
 const NODE_LEVEL = {
   Symptom: 0,
@@ -25,24 +27,66 @@ const NODE_LEVEL = {
 };
 
 const EDGE_STYLES = {
-  HAS_SYMPTOM: { stroke: "#2563eb", strokeWidth: 2.4 },
-  AFFECTS: { stroke: "#dc2626", strokeWidth: 2.4 },
-  PART_OF: { stroke: "#0f766e", strokeWidth: 2.2 },
-  FIXED_BY: { stroke: "#16a34a", strokeWidth: 2.4 },
-  RELATED_TO: { stroke: "#7c3aed", strokeWidth: 2, strokeDasharray: "6 5" },
+  HAS_SYMPTOM: { stroke: "rgba(148, 163, 184, 0.58)", strokeWidth: 1.7 },
+  AFFECTS: { stroke: "rgba(248, 113, 113, 0.56)", strokeWidth: 1.8 },
+  PART_OF: { stroke: "rgba(100, 116, 139, 0.5)", strokeWidth: 1.5 },
+  FIXED_BY: { stroke: "rgba(74, 222, 128, 0.56)", strokeWidth: 1.8 },
+  RELATED_TO: {
+    stroke: "rgba(123, 135, 158, 0.44)",
+    strokeWidth: 1.5,
+    strokeDasharray: "7 7",
+  },
+};
+
+const TYPE_LABELS = {
+  VehicleSystem: "Hệ thống xe",
+  Subsystem: "Phân hệ",
+  Component: "Bộ phận",
+  Fault: "Lỗi",
+  Symptom: "Triệu chứng",
+  Repair: "Sửa chữa",
+};
+
+const STATUS_LABELS = {
+  approved: "Đã xác minh",
+  pending_review: "Chờ xác minh",
+  rejected: "Từ chối",
+  unknown: "Chưa rõ",
+};
+
+const EDGE_LABELS = {
+  HAS_SYMPTOM: "Dấu hiệu",
+  AFFECTS: "Ảnh hưởng đến",
+  FIXED_BY: "Giải pháp sửa chữa",
+  PART_OF: "Thuộc hệ thống",
+  RELATED_TO: "Liên quan đến",
+};
+
+const SYSTEM_LABELS = {
+  SYS_ENGINE: "Động cơ",
+  SYS_BRAKE: "Hệ thống phanh",
+  SYS_ELECTRICAL: "Hệ thống điện",
+  SYS_TRANSMISSION: "Hộp số",
+  SYS_COOLING: "Hệ thống làm mát",
+  SYS_FUEL: "Hệ thống nhiên liệu",
+  SYS_SUSPENSION_STEERING: "Treo và lái",
+  SYS_HVAC: "Điều hòa",
+  SYS_EXHAUST_EMISSION: "Khí xả và phát thải",
 };
 
 function ExpertNode({ data }) {
   return (
     <div className="graph-node-card">
       <Handle type="target" position={Position.Left} />
-      <div className="graph-node-label">{data.label}</div>
+      <div className="graph-node-label">{displayLabel(data)}</div>
       <div className="graph-node-meta">
         <span className={`graph-type-badge ${data.type?.toLowerCase()}`}>
-          {data.type}
+          {TYPE_LABELS[data.type] || data.type}
         </span>
         {data.status && data.status !== "unknown" && (
-          <span className={`graph-status ${data.status}`}>{data.status}</span>
+          <span className={`graph-status ${data.status}`}>
+            {STATUS_LABELS[data.status] || data.status}
+          </span>
         )}
       </div>
       <Handle type="source" position={Position.Right} />
@@ -63,32 +107,47 @@ const nodeTypes = {
 
 function toVisualEdge(edge) {
   const isSymptomEdge = edge.type === "HAS_SYMPTOM";
+  const label = edge.label || EDGE_LABELS[edge.type] || "Liên quan";
+  const style = EDGE_STYLES[edge.type] || {
+    stroke: "rgba(100, 116, 139, 0.5)",
+    strokeWidth: 1.5,
+  };
 
   return {
     id: edge.id,
     source: isSymptomEdge ? edge.target : edge.source,
     target: isSymptomEdge ? edge.source : edge.target,
-    label: edge.cf == null ? edge.type : `${edge.type} ${Number(edge.cf).toFixed(2)}`,
-    animated: isSymptomEdge,
+    label,
+    animated: false,
     type: "smoothstep",
     data: edge,
-    style: EDGE_STYLES[edge.type] || { stroke: "#64748b", strokeWidth: 2 },
+    style,
     markerEnd: {
       type: MarkerType.ArrowClosed,
-      color: EDGE_STYLES[edge.type]?.stroke || "#64748b",
+      color: style.stroke,
     },
-    labelBgPadding: [8, 4],
-    labelBgBorderRadius: 6,
+    labelBgPadding: [7, 3],
+    labelBgBorderRadius: 8,
     labelBgStyle: {
-      fill: "#1a1d27",
-      fillOpacity: 0.95,
+      fill: "#0c1118",
+      fillOpacity: 0.82,
     },
     labelStyle: {
-      fill: "#94a3b8",
-      fontSize: 11,
+      fill: "#9aa8bc",
+      fontSize: 10.5,
       fontWeight: 700,
     },
   };
+}
+
+function nodeDimensions(node) {
+  const labelLength = displayLabel(node).length;
+  const width = Math.min(
+    maxNodeWidth,
+    Math.max(minNodeWidth, 164 + Math.min(labelLength, 42) * 2.2)
+  );
+  const height = labelLength > 58 ? 112 : labelLength > 32 ? 100 : baseNodeHeight;
+  return { width, height };
 }
 
 function layoutGraph(nodes, edges) {
@@ -96,15 +155,16 @@ function layoutGraph(nodes, edges) {
   graph.setDefaultEdgeLabel(() => ({}));
   graph.setGraph({
     rankdir: "LR",
-    ranksep: 180,
-    nodesep: 80,
+    ranksep: 150,
+    nodesep: 70,
     edgesep: 30,
   });
 
   nodes.forEach((node) => {
+    const { width, height } = nodeDimensions(node.data || node);
     graph.setNode(node.id, {
-      width: nodeWidth,
-      height: nodeHeight,
+      width,
+      height,
       rank: NODE_LEVEL[node.type] ?? 10,
     });
   });
@@ -115,25 +175,26 @@ function layoutGraph(nodes, edges) {
 
   dagre.layout(graph);
 
-  const levelOffsets = new Map();
-
   return nodes.map((node) => {
     const position = graph.node(node.id) || { x: 0, y: 0 };
     const level = NODE_LEVEL[node.type] ?? 5;
-    const sameLevelCount = levelOffsets.get(level) || 0;
-    levelOffsets.set(level, sameLevelCount + 1);
+    const { width, height } = nodeDimensions(node.data || node);
+    const snappedY = Math.round((position.y - height / 2) / rowGap) * rowGap;
 
     return {
       ...node,
+      style: {
+        width,
+      },
       position: {
         x: level * levelGap,
-        y: position.y - nodeHeight / 2 + sameLevelCount * 4,
+        y: snappedY,
       },
     };
   });
 }
 
-function GraphCanvasInner({ graph, onNodeClick }) {
+function GraphCanvasInner({ graph, selectedNodeId, onNodeClick }) {
   const visualEdges = useMemo(
     () => (graph.edges || []).map(toVisualEdge),
     [graph.edges]
@@ -148,14 +209,16 @@ function GraphCanvasInner({ graph, onNodeClick }) {
         ...node,
         raw: node,
       },
-      className: `graph-node ${node.type?.toLowerCase()} ${node.status || ""}`,
+      className: `graph-node ${node.type?.toLowerCase()} ${node.status || ""} ${
+        selectedNodeId === node.id ? "selected" : ""
+      }`,
       position: { x: 0, y: 0 },
       sourcePosition: "right",
       targetPosition: "left",
     }));
 
     return layoutGraph(reactFlowNodes, visualEdges);
-  }, [graph.nodes, visualEdges]);
+  }, [graph.nodes, selectedNodeId, visualEdges]);
 
   const { fitView } = useReactFlow();
 
@@ -183,16 +246,37 @@ function GraphCanvasInner({ graph, onNodeClick }) {
           nodeClassName={(node) => `minimap-${node.type?.toLowerCase()}`}
         />
         <Controls />
-        <Background gap={22} color="#2d3245" />
+        <Background gap={24} color="rgba(139, 155, 184, 0.16)" />
       </ReactFlow>
     </div>
   );
 }
 
-export default function GraphCanvas({ graph = { nodes: [], edges: [] }, onNodeClick }) {
+export default function GraphCanvas({
+  graph = { nodes: [], edges: [] },
+  selectedNodeId,
+  onNodeClick,
+}) {
   return (
     <ReactFlowProvider>
-      <GraphCanvasInner graph={graph} onNodeClick={onNodeClick} />
+      <GraphCanvasInner
+        graph={graph}
+        selectedNodeId={selectedNodeId}
+        onNodeClick={onNodeClick}
+      />
     </ReactFlowProvider>
   );
+}
+
+function displayLabel(node) {
+  const value = SYSTEM_LABELS[node.label] || SYSTEM_LABELS[node.id] || node.label || node.id;
+  return normalizeAutomotiveTerm(value);
+}
+
+function normalizeAutomotiveTerm(value) {
+  if (!value) {
+    return value;
+  }
+
+  return String(value).replaceAll("Bạc đạn", "Ổ bi");
 }

@@ -1,10 +1,12 @@
 import argparse
 from pprint import pprint
 
-import _bootstrap  # noqa: F401
-
-from src.kg_inference import DEFAULT_ALIAS_PATH, DEFAULT_RULES_PATH
-from src.kg_inference import KGInference, SymptomMatcher, extract_rules, load_json
+try:
+    import _bootstrap  # type: ignore # noqa: F401
+except ModuleNotFoundError:
+    from scripts import _bootstrap  # type: ignore # noqa: F401
+from src.legacy.kg_inference import DEFAULT_ALIAS_PATH, DEFAULT_RULES_PATH
+from src.legacy.kg_inference import KGInference, SymptomMatcher, extract_rules, load_json
 
 
 DEFAULT_INPUTS = [

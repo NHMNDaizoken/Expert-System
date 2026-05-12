@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 from neo4j import GraphDatabase
@@ -11,6 +12,23 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 ONTOLOGY_PATH = PROJECT_ROOT / "data" / "staging" / "ontology.json"
 RULES_PATH = PROJECT_ROOT / "data" / "staging" / "kg_rules_from_dataset.json"
 SYMPTOM_ALIASES_PATH = PROJECT_ROOT / "data" / "staging" / "symptom_aliases.json"
+TRANSLATIONS_PATH = PROJECT_ROOT / "data" / "staging" / "vi_translations.json"
+
+RELATION_LABELS = {
+    "HAS_SYMPTOM": "Dấu hiệu",
+    "CAUSED_BY": "Nguyên nhân",
+    "AFFECTS": "Ảnh hưởng đến",
+    "FIXED_BY": "Giải pháp sửa chữa",
+    "RELATED_TO": "Liên quan đến",
+    "PART_OF": "Thuộc hệ thống",
+}
+
+
+def slugify(text):
+    text = str(text or "").lower().strip()
+    text = re.sub(r"[^a-z0-9]+", "_", text)
+    text = re.sub(r"_+", "_", text)
+    return text.strip("_")
 
 
 class GraphService:
@@ -33,6 +51,7 @@ class GraphService:
 
     def __init__(self):
         self.driver = None
+        self.translations = self._load_json(TRANSLATIONS_PATH, default={})
         if settings.neo4j_uri and settings.neo4j_user and settings.neo4j_password:
             self.driver = GraphDatabase.driver(
                 settings.neo4j_uri,
@@ -288,6 +307,7 @@ class GraphService:
                 "source": source,
                 "target": target,
                 "type": edge_type,
+                "label": RELATION_LABELS.get(edge_type, edge_type),
                 "cf": cf,
                 "confidence_label": (
                     confidence_label(float(cf)) if cf is not None else None
@@ -481,7 +501,7 @@ class GraphService:
             return json.load(file)
 
     def _display_label(self, data):
-        return (
+        return self._localize_display_label(
             data.get("label_vi")
             or data.get("display_name")
             or data.get("label")
@@ -491,6 +511,32 @@ class GraphService:
             or data.get("repair_name")
             or data.get("name")
         )
+
+    def _localize_display_label(self, value):
+        text = str(value or "").strip()
+        if not text:
+            return text
+        action_label = self._format_action_label(text)
+        if action_label != text:
+            return action_label
+        return self.translations.get(slugify(text), text)
+
+    def _format_action_label(self, text):
+        patterns = [
+            (r"^Diagnosis for (.+)$", "Kiểm tra"),
+            (r"^Repair for (.+)$", "Sửa chữa"),
+            (r"^Replace (.+)$", "Thay"),
+            (r"^Inspect (.+)$", "Kiểm tra"),
+            (r"^Clean (.+)$", "Vệ sinh"),
+            (r"^Test (.+)$", "Kiểm tra"),
+            (r"^Adjust (.+)$", "Điều chỉnh"),
+        ]
+        for pattern, verb in patterns:
+            match = re.match(pattern, text, flags=re.IGNORECASE)
+            if match:
+                target = self.translations.get(slugify(match.group(1)), match.group(1).strip())
+                return f"{verb} {target}"
+        return text
 
     def _node_id(self, node):
         properties = self._node_properties(node)
@@ -507,7 +553,7 @@ class GraphService:
             (label for label in self.NODE_LABELS if label in labels),
             properties.get("type") or (labels[0] if labels else "Node"),
         )
-        label = (
+        label = self._localize_display_label(
             properties.get("label_vi")
             or properties.get("display_name")
             or properties.get("label")
@@ -552,6 +598,7 @@ class GraphService:
             "source": self._node_id(rel.start_node),
             "target": self._node_id(rel.end_node),
             "type": rel.type,
+            "label": RELATION_LABELS.get(rel.type, rel.type),
             "cf": cf,
             "confidence_label": confidence,
             "metadata": metadata,

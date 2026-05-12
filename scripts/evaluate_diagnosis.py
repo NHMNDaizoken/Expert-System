@@ -6,8 +6,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import _bootstrap  # noqa: F401
-
+try:
+    import _bootstrap  # type: ignore # noqa: F401
+except ModuleNotFoundError:
+    from scripts import _bootstrap  # type: ignore # noqa: F401
 from src.legacy.kg_inference import KGInference
 
 

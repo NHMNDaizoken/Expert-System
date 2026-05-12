@@ -4,6 +4,7 @@ from typing import Any
 
 
 TERMINALS = {"DIAGNOSED", "REFUTED", "END"}
+MAX_QUESTION_DEPTH = 8
 
 
 class ProcedureRunner:
@@ -14,7 +15,15 @@ class ProcedureRunner:
         current_step_id: str,
         last_answer: bool | None,
         procedure: dict[str, Any],
+        visited: set[str] | list[str] | None = None,
+        max_depth: int = MAX_QUESTION_DEPTH,
     ) -> dict[str, Any] | None:
+        visited_set = set(visited or [])
+        if current_step_id in visited_set and last_answer is None:
+            return {"terminal": "END", "step_id": current_step_id, "error": "loop_detected"}
+        if len(visited_set) >= max_depth:
+            return {"terminal": "END", "step_id": current_step_id, "error": "max_depth_reached"}
+
         steps = procedure.get("steps", {})
         step = steps.get(current_step_id)
         if not step:
@@ -27,6 +36,10 @@ class ProcedureRunner:
         next_id = step.get(branch)
         if next_id in (None, "DIAGNOSED", "REFUTED"):
             return {"terminal": next_id or "END", "step_id": next_id}
+        if next_id in visited_set:
+            return {"terminal": "END", "step_id": next_id, "error": "loop_detected"}
+        if len(visited_set) + 1 >= max_depth:
+            return {"terminal": "END", "step_id": next_id, "error": "max_depth_reached"}
 
         next_step = steps.get(next_id)
         if not next_step:
@@ -45,6 +58,8 @@ class ProcedureRunner:
     def _step_payload(self, step_id: str, step: dict[str, Any]) -> dict[str, Any]:
         return {
             "step_id": step_id,
+            "symptom_id": step.get("symptom_id"),
+            "symptom_label": step.get("symptom_label"),
             "question": step.get("question") or step.get("instruction"),
             "instruction": step.get("instruction"),
             "results": step.get("results", []),
@@ -56,8 +71,9 @@ def get_next_from_tree(
     current_step_id: str,
     last_answer: bool | None,
     procedure: dict[str, Any],
+    visited: set[str] | list[str] | None = None,
 ) -> dict[str, Any] | None:
-    return ProcedureRunner().get_next_from_tree(current_step_id, last_answer, procedure)
+    return ProcedureRunner().get_next_from_tree(current_step_id, last_answer, procedure, visited)
 
 
 # Backward compatibility alias

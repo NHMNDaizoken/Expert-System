@@ -6,26 +6,26 @@
     "steps": {
       "flt_001_s1": {
         "id": "flt_001_s1",
-        "question": "Check ABS fuse?",
+        "question": "Kiểm tra cầu chì ABS?",
         "is_question": true,
         "yes_next": "flt_001_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Blown",
-          "Intact"
+          "Bị cháy/thổi",
+          "Nguyên vẹn"
         ]
       },
       "flt_001_s2": {
         "id": "flt_001_s2",
-        "question": "Inspect wiring to ABS module?",
+        "question": "Kiểm tra dây điện đến bộ điều khiển ABS?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty wiring",
-          "Good wiring"
+          "Hệ thống dây điện lỗi",
+          "Hệ thống dây điện tốt"
         ]
       }
     }
@@ -37,26 +37,26 @@
     "steps": {
       "flt_002_s1": {
         "id": "flt_002_s1",
-        "question": "Inspect wheel speed sensor connections?",
+        "question": "Kiểm tra giắc cắm cảm biến tốc độ bánh xe?",
         "is_question": true,
         "yes_next": "flt_002_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose connections",
-          "Secure connections"
+          "Giắc cắm lỏng",
+          "Kết nối chắc chắn"
         ]
       },
       "flt_002_s2": {
         "id": "flt_002_s2",
-        "question": "Check wheel speed sensor for debris or damage?",
+        "question": "Kiểm tra cảm biến tốc độ bánh xe xem có bẩn hoặc hư hỏng không?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Dirty/damaged",
-          "Clean/intact"
+          "Bẩn/hư hỏng",
+          "Sạch/nguyên vẹn"
         ]
       }
     }
@@ -68,26 +68,26 @@
     "steps": {
       "flt_003_s1": {
         "id": "flt_003_s1",
-        "question": "Check brake booster vacuum hose?",
+        "question": "Kiểm tra ống chân không bầu trợ lực phanh?",
         "is_question": true,
         "yes_next": "flt_003_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking",
-          "Intact"
+          "Đang rò rỉ",
+          "Nguyên vẹn"
         ]
       },
       "flt_003_s2": {
         "id": "flt_003_s2",
-        "question": "Test brake booster vacuum pressure?",
+        "question": "Kiểm tra áp suất chân không bầu trợ lực phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low vacuum pressure",
-          "Normal vacuum pressure"
+          "Áp suất chân không thấp",
+          "Áp suất chân không bình thường"
         ]
       }
     }
@@ -99,26 +99,26 @@
     "steps": {
       "flt_004_s1": {
         "id": "flt_004_s1",
-        "question": "Inspect brake caliper for leaks?",
+        "question": "Kiểm tra rò rỉ heo phanh?",
         "is_question": true,
         "yes_next": "flt_004_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking fluid",
-          "No leaks"
+          "Rò rỉ chất lỏng",
+          "Không rò rỉ"
         ]
       },
       "flt_004_s2": {
         "id": "flt_004_s2",
-        "question": "Check brake caliper piston operation?",
+        "question": "Kiểm tra hoạt động piston heo phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Stuck piston",
-          "Free-moving piston"
+          "Kẹt piston",
+          "Piston di chuyển tự do"
         ]
       }
     }
@@ -130,26 +130,26 @@
     "steps": {
       "flt_005_s1": {
         "id": "flt_005_s1",
-        "question": "Inspect brake hose for cracks or leaks?",
+        "question": "Kiểm tra nứt hoặc rò rỉ ống dầu phanh?",
         "is_question": true,
         "yes_next": "flt_005_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/leaking hose",
-          "Intact hose"
+          "Ống dẫn bị nứt/rò rỉ",
+          "Ống dẫn nguyên vẹn"
         ]
       },
       "flt_005_s2": {
         "id": "flt_005_s2",
-        "question": "Pressure test brake hose?",
+        "question": "Kiểm tra áp suất ống dầu phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Failed pressure test",
-          "Passes pressure test"
+          "Kiểm tra áp suất không đạt",
+          "Đạt kiểm tra áp suất"
         ]
       }
     }
@@ -161,26 +161,26 @@
     "steps": {
       "flt_006_s1": {
         "id": "flt_006_s1",
-        "question": "Check brake fluid level in master cylinder?",
+        "question": "Kiểm tra mức dầu phanh trong tổng phanh?",
         "is_question": true,
         "yes_next": "flt_006_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low fluid level",
-          "Normal fluid level"
+          "Mức dầu/dung dịch thấp",
+          "Mức dung dịch bình thường"
         ]
       },
       "flt_006_s2": {
         "id": "flt_006_s2",
-        "question": "Inspect master cylinder for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng tổng phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged",
-          "Intact"
+          "Rò rỉ/hư hỏng",
+          "Nguyên vẹn"
         ]
       }
     }
@@ -192,26 +192,26 @@
     "steps": {
       "flt_007_s1": {
         "id": "flt_007_s1",
-        "question": "Check brake pad thickness?",
+        "question": "Kiểm tra độ dày má phanh?",
         "is_question": true,
         "yes_next": "flt_007_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn pads",
-          "Sufficient thickness pads"
+          "Má phanh bị mòn",
+          "Má phanh đủ độ dày"
         ]
       },
       "flt_007_s2": {
         "id": "flt_007_s2",
-        "question": "Inspect brake pad condition?",
+        "question": "Kiểm tra tình trạng má phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged pads",
-          "Good condition pads"
+          "Má phanh bị mòn/hỏng",
+          "Má phanh còn tốt"
         ]
       }
     }
@@ -223,26 +223,26 @@
     "steps": {
       "flt_008_s1": {
         "id": "flt_008_s1",
-        "question": "Measure brake rotor thickness?",
+        "question": "Đo độ dày đĩa phanh?",
         "is_question": true,
         "yes_next": "flt_008_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Thin rotor",
-          "Sufficient thickness rotor"
+          "Đĩa phanh mòn",
+          "Đĩa phanh đủ độ dày"
         ]
       },
       "flt_008_s2": {
         "id": "flt_008_s2",
-        "question": "Inspect brake rotor for scoring or warping?",
+        "question": "Kiểm tra xước hoặc vênh đĩa phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Scored/warped rotor",
-          "Smooth rotor"
+          "Đĩa phanh bị xước/vênh",
+          "Đĩa phanh phẳng"
         ]
       }
     }
@@ -254,26 +254,26 @@
     "steps": {
       "flt_009_s1": {
         "id": "flt_009_s1",
-        "question": "Inspect brake shoes for wear?",
+        "question": "Kiểm tra độ mòn guốc phanh?",
         "is_question": true,
         "yes_next": "flt_009_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn shoes",
-          "Good condition shoes"
+          "Guốc phanh bị mòn",
+          "Guốc phanh còn tốt"
         ]
       },
       "flt_009_s2": {
         "id": "flt_009_s2",
-        "question": "Check brake drum for scoring or cracks?",
+        "question": "Kiểm tra tang trống phanh xem có bị xước hoặc nứt không?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Scored/cracked drum",
-          "Smooth drum"
+          "Trống phanh bị xước/nứt",
+          "Trống phanh phẳng"
         ]
       }
     }
@@ -285,26 +285,26 @@
     "steps": {
       "flt_010_s1": {
         "id": "flt_010_s1",
-        "question": "Check AC compressor clutch operation?",
+        "question": "Kiểm tra hoạt động ly hợp lốc lạnh?",
         "is_question": true,
         "yes_next": "flt_010_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Clutch not engaging",
-          "Clutch engages properly"
+          "Côn không bắt",
+          "Côn bắt tốt"
         ]
       },
       "flt_010_s2": {
         "id": "flt_010_s2",
-        "question": "Inspect AC compressor for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng lốc lạnh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged compressor",
-          "Intact compressor"
+          "Lốc lạnh rò rỉ/hư hỏng",
+          "Máy nén nguyên vẹn"
         ]
       }
     }
@@ -316,26 +316,26 @@
     "steps": {
       "flt_011_s1": {
         "id": "flt_011_s1",
-        "question": "Inspect AC condenser for debris or blockage?",
+        "question": "Kiểm tra bụi bẩn hoặc tắc nghẽn dàn nóng?",
         "is_question": true,
         "yes_next": "flt_011_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Debris/blockage present",
-          "Clean/clear condenser"
+          "Có dị vật/tắc nghẽn",
+          "Vệ sinh/thông dàn nóng"
         ]
       },
       "flt_011_s2": {
         "id": "flt_011_s2",
-        "question": "Check for leaks in AC condenser?",
+        "question": "Kiểm tra rò rỉ dàn nóng điều hòa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking condenser",
-          "No leaks"
+          "Dàn nóng rò rỉ",
+          "Không rò rỉ"
         ]
       }
     }
@@ -347,26 +347,26 @@
     "steps": {
       "flt_012_s1": {
         "id": "flt_012_s1",
-        "question": "Inspect AC evaporator for mold or mildew buildup?",
+        "question": "Kiểm tra nấm mốc dàn lạnh?",
         "is_question": true,
         "yes_next": "flt_012_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Mold/mildew present",
-          "Clean evaporator"
+          "Có nấm mốc",
+          "Vệ sinh dàn lạnh"
         ]
       },
       "flt_012_s2": {
         "id": "flt_012_s2",
-        "question": "Check AC evaporator temperature sensor?",
+        "question": "Kiểm tra cảm biến nhiệt độ giàn lạnh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty sensor",
-          "Good sensor"
+          "Cảm biến lỗi",
+          "Cảm biến còn tốt"
         ]
       }
     }
@@ -378,26 +378,26 @@
     "steps": {
       "flt_013_s1": {
         "id": "flt_013_s1",
-        "question": "Check AC system pressure with gauge?",
+        "question": "Kiểm tra áp suất hệ thống điều hòa bằng đồng hồ?",
         "is_question": true,
         "yes_next": "flt_013_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low pressure",
-          "Normal pressure"
+          "Áp suất thấp",
+          "Áp suất bình thường"
         ]
       },
       "flt_013_s2": {
         "id": "flt_013_s2",
-        "question": "Inspect for leaks in AC system?",
+        "question": "Kiểm tra rò rỉ hệ thống điều hòa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking system",
-          "No leaks"
+          "Hệ thống rò rỉ",
+          "Không rò rỉ"
         ]
       }
     }
@@ -409,26 +409,26 @@
     "steps": {
       "flt_014_s1": {
         "id": "flt_014_s1",
-        "question": "Perform AC system diagnostic scan?",
+        "question": "Quét lỗi hệ thống điều hòa?",
         "is_question": false,
         "yes_next": "flt_014_s2",
         "no_next": "REFUTED",
-        "instruction": "Perform AC system diagnostic scan. Expected findings: Error codes present, No error codes",
+        "instruction": "Quét lỗi hệ thống điều hòa. Kết quả kỳ vọng: Có mã lỗi, Không có mã lỗi",
         "results": [
-          "Error codes present",
-          "No error codes"
+          "Có mã lỗi",
+          "Không có mã lỗi"
         ]
       },
       "flt_014_s2": {
         "id": "flt_014_s2",
-        "question": "Check AC system components for proper operation?",
+        "question": "Kiểm tra hoạt động các bộ phận hệ thống điều hòa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Component failure",
-          "Components working properly"
+          "Bộ phận bị hỏng",
+          "Các bộ phận hoạt động bình thường"
         ]
       }
     }
@@ -440,26 +440,26 @@
     "steps": {
       "flt_015_s1": {
         "id": "flt_015_s1",
-        "question": "Inspect and replace cabin air filter?",
+        "question": "Kiểm tra và thay lọc gió điều hòa?",
         "is_question": true,
         "yes_next": "flt_015_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Dirty/clogged filter",
-          "Clean/new filter"
+          "Lọc bị bẩn/tắc",
+          "Lọc sạch/mới"
         ]
       },
       "flt_015_s2": {
         "id": "flt_015_s2",
-        "question": "Check for debris in cabin air intake?",
+        "question": "Kiểm tra rác trong đường lấy gió điều hòa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Debris in intake",
-          "Clear intake"
+          "Có dị vật trong đường nạp",
+          "Thông đường nạp"
         ]
       }
     }
@@ -471,26 +471,26 @@
     "steps": {
       "flt_016_s1": {
         "id": "flt_016_s1",
-        "question": "Test blower motor operation?",
+        "question": "Kiểm tra hoạt động quạt gió?",
         "is_question": true,
         "yes_next": "flt_016_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Motor not running",
-          "Motor running properly"
+          "Mô tơ không chạy",
+          "Mô tơ chạy bình thường"
         ]
       },
       "flt_016_s2": {
         "id": "flt_016_s2",
-        "question": "Inspect blower motor for debris or damage?",
+        "question": "Kiểm tra bụi bẩn hoặc hư hỏng mô tơ quạt gió?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Debris/damage present",
-          "Clean/intact motor"
+          "Có dị vật/hư hỏng",
+          "Mô tơ sạch/nguyên vẹn"
         ]
       }
     }
@@ -502,26 +502,26 @@
     "steps": {
       "flt_017_s1": {
         "id": "flt_017_s1",
-        "question": "Test blower motor resistor continuity?",
+        "question": "Kiểm tra thông mạch điện trở quạt gió?",
         "is_question": true,
         "yes_next": "flt_017_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Resistor failure",
-          "Resistor working properly"
+          "Hỏng điện trở",
+          "Điện trở hoạt động bình thường"
         ]
       },
       "flt_017_s2": {
         "id": "flt_017_s2",
-        "question": "Inspect resistor for overheating or burn marks?",
+        "question": "Kiểm tra quá nhiệt hoặc vết cháy trên điện trở?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Overheated/burned resistor",
-          "Good condition resistor"
+          "Điện trở bị quá nhiệt/cháy",
+          "Điện trở còn tốt"
         ]
       }
     }
@@ -533,26 +533,26 @@
     "steps": {
       "flt_018_s1": {
         "id": "flt_018_s1",
-        "question": "Check coolant level and condition?",
+        "question": "Kiểm tra mức và tình trạng nước làm mát?",
         "is_question": true,
         "yes_next": "flt_018_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty coolant",
-          "Sufficient/clean coolant"
+          "Nước làm mát thấp/bẩn",
+          "Nước làm mát đủ/sạch"
         ]
       },
       "flt_018_s2": {
         "id": "flt_018_s2",
-        "question": "Inspect radiator and hoses for leaks?",
+        "question": "Kiểm tra rò rỉ két nước và ống dẫn?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking radiator/hoses",
-          "No leaks"
+          "Rò rỉ két nước/ống dẫn",
+          "Không rò rỉ"
         ]
       }
     }
@@ -564,26 +564,26 @@
     "steps": {
       "flt_019_s1": {
         "id": "flt_019_s1",
-        "question": "Pressure test cooling system?",
+        "question": "Kiểm tra áp suất hệ thống làm mát?",
         "is_question": true,
         "yes_next": "flt_019_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking system",
-          "No leaks detected"
+          "Hệ thống rò rỉ",
+          "Không phát hiện rò rỉ"
         ]
       },
       "flt_019_s2": {
         "id": "flt_019_s2",
-        "question": "Inspect radiator, hoses, and water pump for leaks?",
+        "question": "Kiểm tra rò rỉ két nước, ống dẫn và bơm nước?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking component found",
-          "Components are intact"
+          "Phát hiện bộ phận rò rỉ",
+          "Các bộ phận còn nguyên vẹn"
         ]
       }
     }
@@ -595,26 +595,26 @@
     "steps": {
       "flt_020_s1": {
         "id": "flt_020_s1",
-        "question": "Check radiator for blockage or damage?",
+        "question": "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không?",
         "is_question": true,
         "yes_next": "flt_020_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Blocked/damaged radiator",
-          "Clear/intact radiator"
+          "Két nước bị tắc hoặc hư hỏng",
+          "Két nước sạch/nguyên vẹn"
         ]
       },
       "flt_020_s2": {
         "id": "flt_020_s2",
-        "question": "Test thermostat operation?",
+        "question": "Kiểm tra hoạt động van hằng nhiệt?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty thermostat",
-          "Thermostat functioning properly"
+          "Van hằng nhiệt lỗi",
+          "Van hằng nhiệt hoạt động tốt"
         ]
       }
     }
@@ -626,26 +626,26 @@
     "steps": {
       "flt_021_s1": {
         "id": "flt_021_s1",
-        "question": "Inspect heater core for leaks?",
+        "question": "Kiểm tra rò rỉ két sưởi?",
         "is_question": true,
         "yes_next": "flt_021_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking heater core",
-          "No leaks detected"
+          "Rò rỉ két sưởi",
+          "Không phát hiện rò rỉ"
         ]
       },
       "flt_021_s2": {
         "id": "flt_021_s2",
-        "question": "Check coolant flow through heater core?",
+        "question": "Kiểm tra lưu thông nước làm mát qua két sưởi?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Restricted flow",
-          "Good coolant flow"
+          "Dòng chảy bị tắc nghẽn",
+          "Dòng nước làm mát tốt"
         ]
       }
     }
@@ -657,26 +657,26 @@
     "steps": {
       "flt_022_s1": {
         "id": "flt_022_s1",
-        "question": "Inspect heater hose connections?",
+        "question": "Kiểm tra các đầu nối ống dẫn nước sưởi?",
         "is_question": true,
         "yes_next": "flt_022_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/damaged connections",
-          "Secure/intact connections"
+          "Giắc cắm lỏng/hư hỏng",
+          "Kết nối chắc chắn/nguyên vẹn"
         ]
       },
       "flt_022_s2": {
         "id": "flt_022_s2",
-        "question": "Pressure test heater hoses?",
+        "question": "Kiểm tra áp suất ống dẫn sưởi?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking hose detected",
-          "No leaks found"
+          "Phát hiện ống dẫn rò rỉ",
+          "Không tìm thấy rò rỉ"
         ]
       }
     }
@@ -688,26 +688,26 @@
     "steps": {
       "flt_023_s1": {
         "id": "flt_023_s1",
-        "question": "Test radiator fan operation?",
+        "question": "Kiểm tra hoạt động quạt két nước?",
         "is_question": true,
         "yes_next": "flt_023_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Fan not spinning",
-          "Fan operates correctly"
+          "Quạt không quay",
+          "Quạt hoạt động bình thường"
         ]
       },
       "flt_023_s2": {
         "id": "flt_023_s2",
-        "question": "Inspect radiator fan motor and relay?",
+        "question": "Kiểm tra mô-tơ quạt và rơ-le két nước?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty motor/relay",
-          "Motor/relay functioning properly"
+          "Mô-tơ/rơ-le lỗi",
+          "Mô tơ/rơ le hoạt động bình thường"
         ]
       }
     }
@@ -719,26 +719,26 @@
     "steps": {
       "flt_024_s1": {
         "id": "flt_024_s1",
-        "question": "Inspect radiator hoses for damage?",
+        "question": "Kiểm tra hư hỏng ống dẫn két nước?",
         "is_question": true,
         "yes_next": "flt_024_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged hoses found",
-          "Hoses are in good condition"
+          "Phát hiện ống dẫn bị hỏng",
+          "Các ống dẫn trong tình trạng tốt"
         ]
       },
       "flt_024_s2": {
         "id": "flt_024_s2",
-        "question": "Check hose connections for leaks?",
+        "question": "Kiểm tra rò rỉ các đầu nối ống?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking connections",
-          "No leaks detected"
+          "Rò rỉ tại các mối nối",
+          "Không phát hiện rò rỉ"
         ]
       }
     }
@@ -750,26 +750,26 @@
     "steps": {
       "flt_025_s1": {
         "id": "flt_025_s1",
-        "question": "Inspect water pump for leaks?",
+        "question": "Kiểm tra rò rỉ bơm nước?",
         "is_question": true,
         "yes_next": "flt_025_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking pump",
-          "No leaks detected"
+          "Rò rỉ bơm",
+          "Không phát hiện rò rỉ"
         ]
       },
       "flt_025_s2": {
         "id": "flt_025_s2",
-        "question": "Test water pump for proper operation?",
+        "question": "Kiểm tra hoạt động bơm nước?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty pump",
-          "Pump working correctly"
+          "Bơm lỗi",
+          "Bơm hoạt động bình thường"
         ]
       }
     }
@@ -781,26 +781,26 @@
     "steps": {
       "flt_026_s1": {
         "id": "flt_026_s1",
-        "question": "Inspect bevel gears for wear or damage?",
+        "question": "Kiểm tra mòn hoặc hư hỏng bánh răng côn?",
         "is_question": true,
         "yes_next": "flt_026_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged gears",
-          "Gears in good condition"
+          "Bánh răng bị mòn/hỏng",
+          "Bánh răng còn tốt"
         ]
       },
       "flt_026_s2": {
         "id": "flt_026_s2",
-        "question": "Check gear oil level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu hộp số?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty gear oil",
-          "Sufficient/clean gear oil"
+          "Dầu hộp số thấp/bẩn",
+          "Dầu hộp số đủ/sạch"
         ]
       }
     }
@@ -812,26 +812,26 @@
     "steps": {
       "flt_027_s1": {
         "id": "flt_027_s1",
-        "question": "Inspect center differential fluid?",
+        "question": "Kiểm tra dầu vi sai trung tâm?",
         "is_question": true,
         "yes_next": "flt_027_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       },
       "flt_027_s2": {
         "id": "flt_027_s2",
-        "question": "Check for excessive play in center differential?",
+        "question": "Kiểm tra độ rơ quá mức vi sai trung tâm?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Excessive play detected",
-          "No excessive play"
+          "Phát hiện độ rơ quá mức",
+          "Không có độ rơ quá mức"
         ]
       }
     }
@@ -843,26 +843,26 @@
     "steps": {
       "flt_028_s1": {
         "id": "flt_028_s1",
-        "question": "Inspect clutch cable for fraying or stretching?",
+        "question": "Kiểm tra tưa hoặc giãn dây côn?",
         "is_question": true,
         "yes_next": "flt_028_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged cable",
-          "Intact cable"
+          "Dây cáp bị hỏng",
+          "Dây cáp nguyên vẹn"
         ]
       },
       "flt_028_s2": {
         "id": "flt_028_s2",
-        "question": "Adjust clutch cable tension?",
+        "question": "Chỉnh độ căng dây côn?",
         "is_question": false,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
-        "instruction": "Adjust clutch cable tension. Expected findings: Incorrect tension, Correct tension",
+        "instruction": "Chỉnh độ căng dây côn. Kết quả kỳ vọng: Độ căng không đúng, Độ căng đúng tiêu chuẩn",
         "results": [
-          "Incorrect tension",
-          "Correct tension"
+          "Độ căng không đúng",
+          "Độ căng đúng tiêu chuẩn"
         ]
       }
     }
@@ -874,26 +874,26 @@
     "steps": {
       "flt_029_s1": {
         "id": "flt_029_s1",
-        "question": "Check clutch slave cylinder for leaks?",
+        "question": "Kiểm tra rò rỉ xi lanh con bộ ly hợp?",
         "is_question": true,
         "yes_next": "flt_029_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking cylinder",
-          "No leaks detected"
+          "Rò rỉ xi-lanh",
+          "Không phát hiện rò rỉ"
         ]
       },
       "flt_029_s2": {
         "id": "flt_029_s2",
-        "question": "Inspect clutch fluid level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu côn?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Sufficient/clean fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu đủ/sạch"
         ]
       }
     }
@@ -905,26 +905,26 @@
     "steps": {
       "flt_030_s1": {
         "id": "flt_030_s1",
-        "question": "Inspect differential fluid level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu cầu?",
         "is_question": true,
         "yes_next": "flt_030_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       },
       "flt_030_s2": {
         "id": "flt_030_s2",
-        "question": "Check for differential bearing wear?",
+        "question": "Kiểm tra độ mòn ổ bi vi sai?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn bearings",
-          "Bearings in good condition"
+          "Ổ bi bị mòn",
+          "Các ổ bi còn tốt"
         ]
       }
     }
@@ -936,26 +936,26 @@
     "steps": {
       "flt_031_s1": {
         "id": "flt_031_s1",
-        "question": "Inspect live axle for cracks or bending?",
+        "question": "Kiểm tra nứt hoặc cong trục cầu chủ động?",
         "is_question": true,
         "yes_next": "flt_031_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/bent axle",
-          "Axle is intact"
+          "Trục bị nứt/cong",
+          "Trục láp nguyên vẹn"
         ]
       },
       "flt_031_s2": {
         "id": "flt_031_s2",
-        "question": "Check axle bearings for wear?",
+        "question": "Kiểm tra độ mòn ổ bi trục láp?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn bearings",
-          "Bearings in good condition"
+          "Ổ bi bị mòn",
+          "Các ổ bi còn tốt"
         ]
       }
     }
@@ -967,26 +967,26 @@
     "steps": {
       "flt_032_s1": {
         "id": "flt_032_s1",
-        "question": "Inspect rigid axle for cracks or damage?",
+        "question": "Kiểm tra nứt hoặc hư hỏng cầu xe?",
         "is_question": true,
         "yes_next": "flt_032_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/damaged axle",
-          "Axle in good condition"
+          "Trục bị nứt/hỏng",
+          "Trục láp còn tốt"
         ]
       },
       "flt_032_s2": {
         "id": "flt_032_s2",
-        "question": "Check axle bearings for wear?",
+        "question": "Kiểm tra độ mòn ổ bi trục láp?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn bearings",
-          "Bearings in good condition"
+          "Ổ bi bị mòn",
+          "Các ổ bi còn tốt"
         ]
       }
     }
@@ -998,26 +998,26 @@
     "steps": {
       "flt_033_s1": {
         "id": "flt_033_s1",
-        "question": "Check transmission fluid level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu hộp số?",
         "is_question": true,
         "yes_next": "flt_033_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       },
       "flt_033_s2": {
         "id": "flt_033_s2",
-        "question": "Inspect transmission for leaks?",
+        "question": "Kiểm tra rò rỉ hộp số?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking transmission",
-          "No leaks detected"
+          "Rò rỉ hộp số",
+          "Không phát hiện rò rỉ"
         ]
       }
     }
@@ -1029,26 +1029,26 @@
     "steps": {
       "flt_034_s1": {
         "id": "flt_034_s1",
-        "question": "Inspect universal joint for wear or play?",
+        "question": "Kiểm tra độ mòn hoặc rơ lắc khớp các-đăng?",
         "is_question": true,
         "yes_next": "flt_034_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/play detected",
-          "Joint in good condition"
+          "Phát hiện độ rơ/mòn",
+          "Khớp nối trong tình trạng tốt"
         ]
       },
       "flt_034_s2": {
         "id": "flt_034_s2",
-        "question": "Check driveline alignment?",
+        "question": "Kiểm tra độ thẳng hàng trục truyền động?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Misaligned driveline",
-          "Properly aligned driveline"
+          "Trục truyền động bị lệch",
+          "Trục truyền động thẳng hàng"
         ]
       }
     }
@@ -1060,26 +1060,26 @@
     "steps": {
       "flt_035_s1": {
         "id": "flt_035_s1",
-        "question": "Test viscous coupling operation?",
+        "question": "Kiểm tra hoạt động khớp từ quạt gió?",
         "is_question": true,
         "yes_next": "flt_035_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Coupling failure",
-          "Coupling functioning properly"
+          "Khớp nối bị hỏng",
+          "Khớp nối hoạt động bình thường"
         ]
       },
       "flt_035_s2": {
         "id": "flt_035_s2",
-        "question": "Inspect viscous coupling fluid?",
+        "question": "Kiểm tra dầu khớp nối nhớt?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       }
     }
@@ -1091,26 +1091,26 @@
     "steps": {
       "flt_036_s1": {
         "id": "flt_036_s1",
-        "question": "Test battery voltage?",
+        "question": "Kiểm tra điện áp ắc quy?",
         "is_question": true,
         "yes_next": "flt_036_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low voltage",
-          "Sufficient voltage"
+          "Điện áp thấp",
+          "Điện áp đủ"
         ]
       },
       "flt_036_s2": {
         "id": "flt_036_s2",
-        "question": "Inspect battery terminals for corrosion?",
+        "question": "Kiểm tra rỉ sét cọc bình ắc quy?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Corroded terminals",
-          "Clean terminals"
+          "Đầu cực bị oxy hóa",
+          "Vệ sinh các cực điện"
         ]
       }
     }
@@ -1122,26 +1122,26 @@
     "steps": {
       "flt_037_s1": {
         "id": "flt_037_s1",
-        "question": "Test alternator output?",
+        "question": "Kiểm tra đầu ra máy phát?",
         "is_question": true,
         "yes_next": "flt_037_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low output",
-          "Normal output"
+          "Đầu ra thấp",
+          "Đầu ra bình thường"
         ]
       },
       "flt_037_s2": {
         "id": "flt_037_s2",
-        "question": "Check alternator belt tension?",
+        "question": "Kiểm tra độ căng dây curoa máy phát?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose belt",
-          "Properly tensioned belt"
+          "Dây curoa chùng",
+          "Dây curoa đủ độ căng"
         ]
       }
     }
@@ -1153,26 +1153,26 @@
     "steps": {
       "flt_038_s1": {
         "id": "flt_038_s1",
-        "question": "Scan for diagnostic trouble codes (DTCs)?",
+        "question": "Quét mã lỗi (DTC)?",
         "is_question": false,
         "yes_next": "flt_038_s2",
         "no_next": "REFUTED",
-        "instruction": "Scan for diagnostic trouble codes (DTCs). Expected findings: DTCs present, No DTCs",
+        "instruction": "Quét mã lỗi (DTC). Kết quả kỳ vọng: Có mã lỗi DTC, Không có mã lỗi",
         "results": [
-          "DTCs present",
-          "No DTCs"
+          "Có mã lỗi DTC",
+          "Không có mã lỗi"
         ]
       },
       "flt_038_s2": {
         "id": "flt_038_s2",
-        "question": "Check sensors related to DTCs?",
+        "question": "Kiểm tra các cảm biến liên quan đến mã lỗi?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty sensor",
-          "Sensor working properly"
+          "Cảm biến lỗi",
+          "Cảm biến hoạt động bình thường"
         ]
       }
     }
@@ -1184,26 +1184,26 @@
     "steps": {
       "flt_039_s1": {
         "id": "flt_039_s1",
-        "question": "Test power to window motor?",
+        "question": "Kiểm tra nguồn cấp mô tơ kính?",
         "is_question": true,
         "yes_next": "flt_039_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "No power",
-          "Power present"
+          "Mất điện/mất công suất",
+          "Có nguồn điện"
         ]
       },
       "flt_039_s2": {
         "id": "flt_039_s2",
-        "question": "Inspect window regulator for damage?",
+        "question": "Kiểm tra hư hỏng cơ cấu nâng hạ kính?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged regulator",
-          "Regulator intact"
+          "Bộ điều áp bị hỏng",
+          "Bộ điều áp nguyên vẹn"
         ]
       }
     }
@@ -1215,26 +1215,26 @@
     "steps": {
       "flt_040_s1": {
         "id": "flt_040_s1",
-        "question": "Inspect window regulator mechanism?",
+        "question": "Kiểm tra cơ cấu nâng hạ kính?",
         "is_question": true,
         "yes_next": "flt_040_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Mechanism jammed",
-          "Mechanism functioning"
+          "Cơ cấu bị kẹt",
+          "Cơ cấu hoạt động bình thường"
         ]
       },
       "flt_040_s2": {
         "id": "flt_040_s2",
-        "question": "Check window alignment in tracks?",
+        "question": "Kiểm tra độ thẳng hàng của kính trong ray?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Misaligned window",
-          "Properly aligned window"
+          "Kính cửa bị lệch",
+          "Cửa sổ căn chỉnh đúng"
         ]
       }
     }
@@ -1246,26 +1246,26 @@
     "steps": {
       "flt_041_s1": {
         "id": "flt_041_s1",
-        "question": "Inspect headlamp bulb for filament condition?",
+        "question": "Kiểm tra tình trạng dây tóc bóng đèn pha?",
         "is_question": true,
         "yes_next": "flt_041_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Burnt out filament",
-          "Filament intact"
+          "Đứt dây tóc bóng đèn",
+          "Sợi đốt còn tốt"
         ]
       },
       "flt_041_s2": {
         "id": "flt_041_s2",
-        "question": "Check headlamp socket for corrosion?",
+        "question": "Kiểm tra rỉ sét giắc cắm đèn pha?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Corroded socket",
-          "Clean socket"
+          "Giắc cắm bị oxy hóa",
+          "Vệ sinh ổ cắm"
         ]
       }
     }
@@ -1277,26 +1277,26 @@
     "steps": {
       "flt_042_s1": {
         "id": "flt_042_s1",
-        "question": "Inspect distributor cap for cracks or carbon tracks?",
+        "question": "Kiểm tra nứt hoặc vệt than nắp bộ chia điện?",
         "is_question": true,
         "yes_next": "flt_042_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/damaged cap",
-          "Cap in good condition"
+          "Nắp bị nứt/hỏng",
+          "Nắp đậy còn tốt"
         ]
       },
       "flt_042_s2": {
         "id": "flt_042_s2",
-        "question": "Check distributor rotor for wear?",
+        "question": "Kiểm tra độ mòn con quay chia điện?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn rotor",
-          "Rotor in good condition"
+          "Đĩa phanh bị mòn",
+          "Đĩa phanh tốt"
         ]
       }
     }
@@ -1308,26 +1308,26 @@
     "steps": {
       "flt_043_s1": {
         "id": "flt_043_s1",
-        "question": "Test ignition wires for continuity?",
+        "question": "Kiểm tra thông mạch dây cao áp?",
         "is_question": true,
         "yes_next": "flt_043_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Broken wire",
-          "Wires intact"
+          "Đứt dây điện",
+          "Dây điện bình thường"
         ]
       },
       "flt_043_s2": {
         "id": "flt_043_s2",
-        "question": "Inspect spark plug boots for damage?",
+        "question": "Kiểm tra hư hỏng chụp bugi?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged boots",
-          "Intact boots"
+          "Cao su chắn bụi bị hỏng",
+          "Chụp bụi nguyên vẹn"
         ]
       }
     }
@@ -1339,26 +1339,26 @@
     "steps": {
       "flt_044_s1": {
         "id": "flt_044_s1",
-        "question": "Test power to door lock actuator?",
+        "question": "Kiểm tra nguồn cấp cơ cấu khóa cửa?",
         "is_question": true,
         "yes_next": "flt_044_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "No power",
-          "Power present"
+          "Mất điện/mất công suất",
+          "Có nguồn điện"
         ]
       },
       "flt_044_s2": {
         "id": "flt_044_s2",
-        "question": "Inspect actuator mechanism for obstruction?",
+        "question": "Kiểm tra vật cản cơ cấu chấp hành?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Obstructed mechanism",
-          "Clear mechanism"
+          "Cơ cấu bị kẹt",
+          "Thông cơ cấu"
         ]
       }
     }
@@ -1370,26 +1370,26 @@
     "steps": {
       "flt_045_s1": {
         "id": "flt_045_s1",
-        "question": "Test starter motor solenoid?",
+        "question": "Kiểm tra solenoid củ đề?",
         "is_question": true,
         "yes_next": "flt_045_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty solenoid",
-          "Solenoid working properly"
+          "Solenoid lỗi",
+          "Solenoid hoạt động tốt"
         ]
       },
       "flt_045_s2": {
         "id": "flt_045_s2",
-        "question": "Inspect starter motor brushes for wear?",
+        "question": "Kiểm tra độ mòn chổi than máy đề?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn brushes",
-          "Brushes in good condition"
+          "Chổi than bị mòn",
+          "Chổi than còn tốt"
         ]
       }
     }
@@ -1401,26 +1401,26 @@
     "steps": {
       "flt_046_s1": {
         "id": "flt_046_s1",
-        "question": "Test power to washer pump?",
+        "question": "Kiểm tra nguồn cấp bơm nước rửa kính?",
         "is_question": true,
         "yes_next": "flt_046_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "No power",
-          "Power present"
+          "Mất điện/mất công suất",
+          "Có nguồn điện"
         ]
       },
       "flt_046_s2": {
         "id": "flt_046_s2",
-        "question": "Inspect washer pump for clogs or damage?",
+        "question": "Kiểm tra tắc nghẽn hoặc hư hỏng bơm nước rửa kính?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Clogged/damaged pump",
-          "Clean/intact pump"
+          "Bơm bị tắc/hỏng",
+          "Bơm sạch/nguyên vẹn"
         ]
       }
     }
@@ -1432,26 +1432,26 @@
     "steps": {
       "flt_047_s1": {
         "id": "flt_047_s1",
-        "question": "Test power to wiper motor?",
+        "question": "Kiểm tra nguồn cấp mô tơ gạt mưa?",
         "is_question": true,
         "yes_next": "flt_047_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "No power",
-          "Power present"
+          "Mất điện/mất công suất",
+          "Có nguồn điện"
         ]
       },
       "flt_047_s2": {
         "id": "flt_047_s2",
-        "question": "Inspect wiper motor linkage for wear?",
+        "question": "Kiểm tra độ mòn cơ cấu mô-tơ gạt mưa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn linkage",
-          "Intact linkage"
+          "Cơ cấu liên kết bị mòn",
+          "Cơ cấu liên kết nguyên vẹn"
         ]
       }
     }
@@ -1463,26 +1463,26 @@
     "steps": {
       "flt_048_s1": {
         "id": "flt_048_s1",
-        "question": "Test canister purge valve operation?",
+        "question": "Kiểm tra hoạt động van thông hơi bình than?",
         "is_question": true,
         "yes_next": "flt_048_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Valve stuck open/closed",
-          "Valve operates correctly"
+          "Xupap bị kẹt mở/đóng",
+          "Xupap hoạt động bình thường"
         ]
       },
       "flt_048_s2": {
         "id": "flt_048_s2",
-        "question": "Check for leaks in purge valve hoses?",
+        "question": "Kiểm tra rò rỉ ống van thông hơi bình xăng?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking hoses",
-          "No leaks"
+          "Các ống dẫn rò rỉ",
+          "Không rò rỉ"
         ]
       }
     }
@@ -1494,26 +1494,26 @@
     "steps": {
       "flt_049_s1": {
         "id": "flt_049_s1",
-        "question": "Inspect catalytic converter for physical damage?",
+        "question": "Kiểm tra hư hỏng vật lý bộ xúc tác khí thải?",
         "is_question": true,
         "yes_next": "flt_049_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged converter",
-          "Converter intact"
+          "Bộ biến mô bị hỏng",
+          "Bộ biến mô còn nguyên vẹn"
         ]
       },
       "flt_049_s2": {
         "id": "flt_049_s2",
-        "question": "Check catalytic converter efficiency?",
+        "question": "Kiểm tra hiệu suất bộ xúc tác khí thải?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low efficiency",
-          "High efficiency"
+          "Hiệu suất thấp",
+          "Hiệu suất cao"
         ]
       }
     }
@@ -1525,26 +1525,26 @@
     "steps": {
       "flt_050_s1": {
         "id": "flt_050_s1",
-        "question": "Test charcoal canister purge valve?",
+        "question": "Kiểm tra van thông hơi bình than?",
         "is_question": true,
         "yes_next": "flt_050_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Valve stuck open/closed",
-          "Valve operates correctly"
+          "Xupap bị kẹt mở/đóng",
+          "Xupap hoạt động bình thường"
         ]
       },
       "flt_050_s2": {
         "id": "flt_050_s2",
-        "question": "Inspect canister for cracks or damage?",
+        "question": "Kiểm tra nứt hoặc hư hỏng bầu lọc than hoạt tính?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/damaged canister",
-          "Intact canister"
+          "Bầu lọc than hoạt tính bị nứt/hỏng",
+          "Bình than hoạt tính nguyên vẹn"
         ]
       }
     }
@@ -1556,26 +1556,26 @@
     "steps": {
       "flt_051_s1": {
         "id": "flt_051_s1",
-        "question": "Inspect exhaust manifold for cracks or leaks?",
+        "question": "Kiểm tra nứt hoặc rò rỉ cổ góp xả?",
         "is_question": true,
         "yes_next": "flt_051_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/leaking manifold",
-          "Intact manifold"
+          "Cổ hút/xả bị nứt/rò rỉ",
+          "Cổ hút/xả nguyên vẹn"
         ]
       },
       "flt_051_s2": {
         "id": "flt_051_s2",
-        "question": "Check exhaust manifold gasket for leaks?",
+        "question": "Kiểm tra rò rỉ gioăng cổ góp xả?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking gasket",
-          "Good gasket"
+          "Rò rỉ gioăng",
+          "Gioăng còn tốt"
         ]
       }
     }
@@ -1587,26 +1587,26 @@
     "steps": {
       "flt_052_s1": {
         "id": "flt_052_s1",
-        "question": "Inspect exhaust manifold gasket for leaks?",
+        "question": "Kiểm tra rò rỉ gioăng cổ góp xả?",
         "is_question": true,
         "yes_next": "flt_052_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking gasket",
-          "Good gasket"
+          "Rò rỉ gioăng",
+          "Gioăng còn tốt"
         ]
       },
       "flt_052_s2": {
         "id": "flt_052_s2",
-        "question": "Check exhaust manifold bolts for tightness?",
+        "question": "Kiểm tra độ chặt bu lông cổ góp xả?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose bolts",
-          "Tight bolts"
+          "Bu lông lỏng",
+          "Bu lông chặt"
         ]
       }
     }
@@ -1618,26 +1618,26 @@
     "steps": {
       "flt_053_s1": {
         "id": "flt_053_s1",
-        "question": "Test fuel tank pressure sensor?",
+        "question": "Kiểm tra cảm biến áp suất bình xăng?",
         "is_question": true,
         "yes_next": "flt_053_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty sensor",
-          "Sensor working properly"
+          "Cảm biến lỗi",
+          "Cảm biến hoạt động bình thường"
         ]
       },
       "flt_053_s2": {
         "id": "flt_053_s2",
-        "question": "Check fuel tank cap for proper seal?",
+        "question": "Kiểm tra độ kín nắp bình nhiên liệu?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose cap",
-          "Sealed cap"
+          "Nắp đậy lỏng",
+          "Nắp đậy kín"
         ]
       }
     }
@@ -1649,26 +1649,26 @@
     "steps": {
       "flt_054_s1": {
         "id": "flt_054_s1",
-        "question": "Test knock sensor operation?",
+        "question": "Kiểm tra hoạt động cảm biến kích nổ?",
         "is_question": true,
         "yes_next": "flt_054_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty sensor",
-          "Sensor working properly"
+          "Cảm biến lỗi",
+          "Cảm biến hoạt động bình thường"
         ]
       },
       "flt_054_s2": {
         "id": "flt_054_s2",
-        "question": "Inspect for engine misfire codes?",
+        "question": "Kiểm tra mã lỗi bỏ máy?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Misfire codes present",
-          "No misfire codes"
+          "Có mã lỗi bỏ máy",
+          "Không có mã lỗi bỏ máy"
         ]
       }
     }
@@ -1680,26 +1680,26 @@
     "steps": {
       "flt_055_s1": {
         "id": "flt_055_s1",
-        "question": "Test M.A.P. sensor voltage?",
+        "question": "Kiểm tra điện áp cảm biến MAP?",
         "is_question": true,
         "yes_next": "flt_055_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low voltage",
-          "Normal voltage"
+          "Điện áp thấp",
+          "Điện áp bình thường"
         ]
       },
       "flt_055_s2": {
         "id": "flt_055_s2",
-        "question": "Inspect M.A.P. sensor vacuum hose?",
+        "question": "Kiểm tra ống chân không cảm biến MAP?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking hose",
-          "Intact hose"
+          "Rò rỉ ống dẫn",
+          "Ống dẫn nguyên vẹn"
         ]
       }
     }
@@ -1711,26 +1711,26 @@
     "steps": {
       "flt_056_s1": {
         "id": "flt_056_s1",
-        "question": "Test oxygen sensor voltage?",
+        "question": "Kiểm tra điện áp cảm biến oxy?",
         "is_question": true,
         "yes_next": "flt_056_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low voltage",
-          "Normal voltage"
+          "Điện áp thấp",
+          "Điện áp bình thường"
         ]
       },
       "flt_056_s2": {
         "id": "flt_056_s2",
-        "question": "Inspect oxygen sensor wiring for damage?",
+        "question": "Kiểm tra hư hỏng dây điện cảm biến oxy?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged wiring",
-          "Intact wiring"
+          "Dây điện bị hỏng",
+          "Dây điện nguyên vẹn"
         ]
       }
     }
@@ -1742,26 +1742,26 @@
     "steps": {
       "flt_057_s1": {
         "id": "flt_057_s1",
-        "question": "Inspect balance shaft for wear or damage?",
+        "question": "Kiểm tra mòn hoặc hư hỏng trục cân bằng?",
         "is_question": true,
         "yes_next": "flt_057_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged shaft",
-          "Shaft in good condition"
+          "Trục bị mòn/hỏng",
+          "Trục ở tình trạng tốt"
         ]
       },
       "flt_057_s2": {
         "id": "flt_057_s2",
-        "question": "Check balance shaft alignment?",
+        "question": "Kiểm tra dấu trục cân bằng?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Misaligned shaft",
-          "Properly aligned shaft"
+          "Trục bị lệch",
+          "Trục thẳng hàng"
         ]
       }
     }
@@ -1773,26 +1773,26 @@
     "steps": {
       "flt_058_s1": {
         "id": "flt_058_s1",
-        "question": "Check boost pressure with gauge?",
+        "question": "Kiểm tra áp suất tăng áp bằng đồng hồ đo?",
         "is_question": true,
         "yes_next": "flt_058_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low boost pressure",
-          "Normal boost pressure"
+          "Áp suất tăng áp thấp",
+          "Áp suất tăng áp bình thường"
         ]
       },
       "flt_058_s2": {
         "id": "flt_058_s2",
-        "question": "Inspect intercooler for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng két làm mát khí nạp?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged intercooler",
-          "Intact intercooler"
+          "Két làm mát khí nạp rò rỉ/hư hỏng",
+          "Két làm mát khí nạp nguyên vẹn"
         ]
       }
     }
@@ -1804,26 +1804,26 @@
     "steps": {
       "flt_059_s1": {
         "id": "flt_059_s1",
-        "question": "Test diesel injection pump pressure?",
+        "question": "Kiểm tra áp suất bơm cao áp?",
         "is_question": true,
         "yes_next": "flt_059_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low pressure",
-          "Normal pressure"
+          "Áp suất thấp",
+          "Áp suất bình thường"
         ]
       },
       "flt_059_s2": {
         "id": "flt_059_s2",
-        "question": "Inspect diesel injectors for leaks or clogs?",
+        "question": "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/clogged injectors",
-          "Clean/in-tolerance injectors"
+          "Các kim phun rò rỉ/tắc",
+          "Các kim phun sạch/đúng tiêu chuẩn"
         ]
       }
     }
@@ -1835,26 +1835,26 @@
     "steps": {
       "flt_060_s1": {
         "id": "flt_060_s1",
-        "question": "Test glow plug resistance?",
+        "question": "Kiểm tra điện trở bugi sấy?",
         "is_question": true,
         "yes_next": "flt_060_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "High resistance",
-          "Normal resistance"
+          "Điện trở cao",
+          "Điện trở bình thường"
         ]
       },
       "flt_060_s2": {
         "id": "flt_060_s2",
-        "question": "Inspect glow plug for carbon buildup?",
+        "question": "Kiểm tra muội than bugi sấy?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Carbon buildup",
-          "Clean plug"
+          "Đóng cặn muội than",
+          "Vệ sinh giắc cắm"
         ]
       }
     }
@@ -1866,26 +1866,26 @@
     "steps": {
       "flt_061_s1": {
         "id": "flt_061_s1",
-        "question": "Inspect engine mounts for wear or damage?",
+        "question": "Kiểm tra mòn hoặc hư hỏng cao su chân máy?",
         "is_question": true,
         "yes_next": "flt_061_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged mounts",
-          "Mounts in good condition"
+          "Cao su chân máy bị mòn/hỏng",
+          "Cao su chân máy bình thường"
         ]
       },
       "flt_061_s2": {
         "id": "flt_061_s2",
-        "question": "Check mounting bolts for tightness?",
+        "question": "Kiểm tra độ chặt bu lông bắt chân máy/số?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose bolts",
-          "Tight bolts"
+          "Bu lông lỏng",
+          "Bu lông chặt"
         ]
       }
     }
@@ -1897,26 +1897,26 @@
     "steps": {
       "flt_062_s1": {
         "id": "flt_062_s1",
-        "question": "Inspect exhaust valve for carbon buildup?",
+        "question": "Kiểm tra muội than xupap xả?",
         "is_question": true,
         "yes_next": "flt_062_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Buildup on valve",
-          "Clean valve"
+          "Muội than bám trên xupap",
+          "Vệ sinh van"
         ]
       },
       "flt_062_s2": {
         "id": "flt_062_s2",
-        "question": "Check valve clearance?",
+        "question": "Kiểm tra khe hở nhiệt xupap?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Incorrect clearance",
-          "Correct clearance"
+          "Khe hở không đúng",
+          "Khe hở đúng tiêu chuẩn"
         ]
       }
     }
@@ -1928,26 +1928,26 @@
     "steps": {
       "flt_063_s1": {
         "id": "flt_063_s1",
-        "question": "Test fuel injector spray pattern?",
+        "question": "Kiểm tra tia phun kim phun?",
         "is_question": true,
         "yes_next": "flt_063_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Irregular spray pattern",
-          "Uniform spray pattern"
+          "Tia phun không đều",
+          "Dạng phun đều"
         ]
       },
       "flt_063_s2": {
         "id": "flt_063_s2",
-        "question": "Inspect injector for leaks or clogs?",
+        "question": "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/clogged injector",
-          "Clean/in-tolerance injector"
+          "Kim phun rò rỉ/tắc",
+          "Kim phun sạch/đúng tiêu chuẩn"
         ]
       }
     }
@@ -1959,26 +1959,26 @@
     "steps": {
       "flt_064_s1": {
         "id": "flt_064_s1",
-        "question": "Test IAC valve for proper operation?",
+        "question": "Kiểm tra hoạt động van không tải?",
         "is_question": true,
         "yes_next": "flt_064_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Valve stuck open/closed",
-          "Valve operates correctly"
+          "Xupap bị kẹt mở/đóng",
+          "Xupap hoạt động bình thường"
         ]
       },
       "flt_064_s2": {
         "id": "flt_064_s2",
-        "question": "Clean throttle body and IAC valve?",
+        "question": "Vệ sinh họng ga và van không tải?",
         "is_question": false,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
-        "instruction": "Clean throttle body and IAC valve. Expected findings: Dirty components, Clean components",
+        "instruction": "Vệ sinh họng ga và van không tải. Kết quả kỳ vọng: Các bộ phận bị bẩn, Vệ sinh các bộ phận",
         "results": [
-          "Dirty components",
-          "Clean components"
+          "Các bộ phận bị bẩn",
+          "Vệ sinh các bộ phận"
         ]
       }
     }
@@ -1990,26 +1990,26 @@
     "steps": {
       "flt_065_s1": {
         "id": "flt_065_s1",
-        "question": "Inspect intake valve for carbon buildup?",
+        "question": "Kiểm tra muội than xupap nạp?",
         "is_question": true,
         "yes_next": "flt_065_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Buildup on valve",
-          "Clean valve"
+          "Muội than bám trên xupap",
+          "Vệ sinh van"
         ]
       },
       "flt_065_s2": {
         "id": "flt_065_s2",
-        "question": "Check valve clearance?",
+        "question": "Kiểm tra khe hở nhiệt xupap?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Incorrect clearance",
-          "Correct clearance"
+          "Khe hở không đúng",
+          "Khe hở đúng tiêu chuẩn"
         ]
       }
     }
@@ -2021,26 +2021,26 @@
     "steps": {
       "flt_066_s1": {
         "id": "flt_066_s1",
-        "question": "Test oil pressure with gauge?",
+        "question": "Kiểm tra áp suất dầu bằng đồng hồ?",
         "is_question": true,
         "yes_next": "flt_066_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low oil pressure",
-          "Normal oil pressure"
+          "Áp suất dầu thấp",
+          "Áp suất dầu bình thường"
         ]
       },
       "flt_066_s2": {
         "id": "flt_066_s2",
-        "question": "Inspect oil pump for wear or damage?",
+        "question": "Kiểm tra độ mòn hoặc hư hỏng bơm nhớt?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged pump",
-          "Pump in good condition"
+          "Bơm bị mòn/hỏng",
+          "Bơm ở tình trạng tốt"
         ]
       }
     }
@@ -2052,26 +2052,26 @@
     "steps": {
       "flt_067_s1": {
         "id": "flt_067_s1",
-        "question": "Perform compression test?",
+        "question": "Kiểm tra áp suất buồng đốt?",
         "is_question": true,
         "yes_next": "flt_067_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low compression",
-          "Good compression"
+          "Áp suất buồng đốt thấp",
+          "Áp suất buồng đốt tốt"
         ]
       },
       "flt_067_s2": {
         "id": "flt_067_s2",
-        "question": "Inspect piston rings for wear or damage?",
+        "question": "Kiểm tra độ mòn hoặc hư hỏng xéc-măng?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged rings",
-          "Rings in good condition"
+          "Xéc măng bị mòn/hỏng",
+          "Xéc-măng tốt"
         ]
       }
     }
@@ -2083,26 +2083,26 @@
     "steps": {
       "flt_068_s1": {
         "id": "flt_068_s1",
-        "question": "Inspect timing belt for wear or damage?",
+        "question": "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam?",
         "is_question": true,
         "yes_next": "flt_068_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn/damaged belt",
-          "Belt in good condition"
+          "Dây curoa bị mòn/hỏng",
+          "Dây curoa còn tốt"
         ]
       },
       "flt_068_s2": {
         "id": "flt_068_s2",
-        "question": "Check timing marks for alignment?",
+        "question": "Kiểm tra dấu cam?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Misaligned timing marks",
-          "Properly aligned marks"
+          "Dấu cam bị lệch",
+          "Dấu căn chỉnh đúng"
         ]
       }
     }
@@ -2114,26 +2114,26 @@
     "steps": {
       "flt_069_s1": {
         "id": "flt_069_s1",
-        "question": "Inspect valve cover gasket for leaks?",
+        "question": "Kiểm tra rò rỉ gioăng nắp dàn cò?",
         "is_question": true,
         "yes_next": "flt_069_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking gasket",
-          "Good gasket seal"
+          "Rò rỉ gioăng",
+          "Gioăng làm kín tốt"
         ]
       },
       "flt_069_s2": {
         "id": "flt_069_s2",
-        "question": "Check valve cover bolts for tightness?",
+        "question": "Kiểm tra độ chặt bu lông nắp giàn cò?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose bolts",
-          "Tight bolts"
+          "Bu lông lỏng",
+          "Bu lông chặt"
         ]
       }
     }
@@ -2145,26 +2145,26 @@
     "steps": {
       "flt_070_s1": {
         "id": "flt_070_s1",
-        "question": "Inspect fan belt for cuts or wear?",
+        "question": "Kiểm tra cắt hoặc mòn dây curoa quạt?",
         "is_question": true,
         "yes_next": "flt_070_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cut/worn belt",
-          "Belt in good condition"
+          "Dây curoa bị cắt/mòn",
+          "Dây curoa còn tốt"
         ]
       },
       "flt_070_s2": {
         "id": "flt_070_s2",
-        "question": "Check belt tension and alignment?",
+        "question": "Kiểm tra độ căng và căn chỉnh dây curoa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/misaligned belt",
-          "Properly tensioned/aligned belt"
+          "Dây curoa chùng/lệch",
+          "Dây curoa căng/thẳng hàng"
         ]
       }
     }
@@ -2176,26 +2176,26 @@
     "steps": {
       "flt_071_s1": {
         "id": "flt_071_s1",
-        "question": "Check horn fuse?",
+        "question": "Kiểm tra cầu chì còi?",
         "is_question": true,
         "yes_next": "flt_071_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Blown fuse",
-          "Fuse intact"
+          "Đứt cầu chì",
+          "Cầu chì còn tốt"
         ]
       },
       "flt_071_s2": {
         "id": "flt_071_s2",
-        "question": "Test horn relay for operation?",
+        "question": "Kiểm tra hoạt động rơ-le còi?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty relay",
-          "Relay working properly"
+          "Rơ-le lỗi",
+          "Rơ-le hoạt động bình thường"
         ]
       }
     }
@@ -2207,26 +2207,26 @@
     "steps": {
       "flt_072_s1": {
         "id": "flt_072_s1",
-        "question": "Test battery voltage?",
+        "question": "Kiểm tra điện áp ắc quy?",
         "is_question": true,
         "yes_next": "flt_072_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low voltage",
-          "Normal voltage"
+          "Điện áp thấp",
+          "Điện áp bình thường"
         ]
       },
       "flt_072_s2": {
         "id": "flt_072_s2",
-        "question": "Inspect alternator for proper operation?",
+        "question": "Kiểm tra hoạt động của máy phát điện?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty alternator",
-          "Alternator working correctly"
+          "Máy phát điện lỗi",
+          "Máy phát điện hoạt động bình thường"
         ]
       }
     }
@@ -2238,26 +2238,26 @@
     "steps": {
       "flt_073_s1": {
         "id": "flt_073_s1",
-        "question": "Inspect engine belt for cuts or wear?",
+        "question": "Kiểm tra cắt hoặc mòn dây curoa động cơ?",
         "is_question": true,
         "yes_next": "flt_073_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cut/worn belt",
-          "Belt in good condition"
+          "Dây curoa bị cắt/mòn",
+          "Dây curoa còn tốt"
         ]
       },
       "flt_073_s2": {
         "id": "flt_073_s2",
-        "question": "Check belt tension and alignment?",
+        "question": "Kiểm tra độ căng và căn chỉnh dây curoa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/misaligned belt",
-          "Properly tensioned/aligned belt"
+          "Dây curoa chùng/lệch",
+          "Dây curoa căng/thẳng hàng"
         ]
       }
     }
@@ -2269,26 +2269,26 @@
     "steps": {
       "flt_074_s1": {
         "id": "flt_074_s1",
-        "question": "Inspect power steering fluid level?",
+        "question": "Kiểm tra mức dầu trợ lực lái?",
         "is_question": true,
         "yes_next": "flt_074_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low fluid level",
-          "Sufficient fluid level"
+          "Mức dầu/dung dịch thấp",
+          "Mức dầu đủ"
         ]
       },
       "flt_074_s2": {
         "id": "flt_074_s2",
-        "question": "Check power steering pump and hoses for leaks?",
+        "question": "Kiểm tra rò rỉ bơm và ống dầu trợ lực lái?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking pump/hoses",
-          "Pump and hoses in good condition"
+          "Rò rỉ bơm/ống dẫn",
+          "Bơm và ống dẫn tốt"
         ]
       }
     }
@@ -2300,26 +2300,26 @@
     "steps": {
       "flt_075_s1": {
         "id": "flt_075_s1",
-        "question": "Inspect shaft for balance and alignment?",
+        "question": "Kiểm tra độ cân bằng và căn chỉnh trục?",
         "is_question": true,
         "yes_next": "flt_075_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Imbalanced/misaligned shaft",
-          "Properly balanced/aligned shaft"
+          "Trục bị mất cân bằng hoặc lệch tâm",
+          "Trục cân bằng/thẳng hàng"
         ]
       },
       "flt_075_s2": {
         "id": "flt_075_s2",
-        "question": "Check tire pressure and condition?",
+        "question": "Kiểm tra áp suất và tình trạng lốp?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/inappropriate pressure",
-          "Correct tire pressure and condition"
+          "Áp suất thấp/không phù hợp",
+          "Áp suất và tình trạng lốp đạt chuẩn"
         ]
       }
     }
@@ -2331,26 +2331,26 @@
     "steps": {
       "flt_076_s1": {
         "id": "flt_076_s1",
-        "question": "Inspect air filter for clogs or dirt?",
+        "question": "Kiểm tra tắc nghẽn hoặc bụi bẩn lọc gió?",
         "is_question": true,
         "yes_next": "flt_076_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Clogged/dirty filter",
-          "Clean filter"
+          "Lọc bị tắc/bẩn",
+          "Vệ sinh lọc"
         ]
       },
       "flt_076_s2": {
         "id": "flt_076_s2",
-        "question": "Replace air filter if necessary?",
+        "question": "Thay lọc gió nếu cần?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Replace filter",
-          "Filter in good condition"
+          "Thay lọc",
+          "Lọc còn tốt"
         ]
       }
     }
@@ -2362,26 +2362,26 @@
     "steps": {
       "flt_077_s1": {
         "id": "flt_077_s1",
-        "question": "Check ECU for fault codes?",
+        "question": "Kiểm tra mã lỗi trong ECU?",
         "is_question": true,
         "yes_next": "flt_077_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Fault codes present",
-          "No fault codes"
+          "Có mã lỗi",
+          "Không có mã lỗi"
         ]
       },
       "flt_077_s2": {
         "id": "flt_077_s2",
-        "question": "Inspect ECU wiring harness for damage?",
+        "question": "Kiểm tra hư hỏng giắc cắm và dây điện ECU?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged harness",
-          "Intact harness"
+          "Bó dây điện bị hỏng",
+          "Bó dây điện nguyên vẹn"
         ]
       }
     }
@@ -2393,26 +2393,26 @@
     "steps": {
       "flt_078_s1": {
         "id": "flt_078_s1",
-        "question": "Check engine oil level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu động cơ?",
         "is_question": true,
         "yes_next": "flt_078_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty oil",
-          "Clean/sufficient oil"
+          "Dầu máy thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       },
       "flt_078_s2": {
         "id": "flt_078_s2",
-        "question": "Inspect for oil leaks?",
+        "question": "Kiểm tra rò rỉ dầu?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Oil leaks present",
-          "No leaks detected"
+          "Có rò rỉ dầu",
+          "Không phát hiện rò rỉ"
         ]
       }
     }
@@ -2424,26 +2424,26 @@
     "steps": {
       "flt_079_s1": {
         "id": "flt_079_s1",
-        "question": "Inspect fuel filter for clogs or debris?",
+        "question": "Kiểm tra tắc nghẽn hoặc cặn bẩn lọc nhiên liệu?",
         "is_question": true,
         "yes_next": "flt_079_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Clogged/dirty filter",
-          "Clean filter"
+          "Lọc bị tắc/bẩn",
+          "Vệ sinh lọc"
         ]
       },
       "flt_079_s2": {
         "id": "flt_079_s2",
-        "question": "Replace fuel filter if necessary?",
+        "question": "Thay lọc nhiên liệu nếu cần?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Replace filter",
-          "Filter in good condition"
+          "Thay lọc",
+          "Lọc còn tốt"
         ]
       }
     }
@@ -2455,26 +2455,26 @@
     "steps": {
       "flt_080_s1": {
         "id": "flt_080_s1",
-        "question": "Inspect PCV valve for clogs?",
+        "question": "Kiểm tra tắc nghẽn van PCV?",
         "is_question": true,
         "yes_next": "flt_080_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Clogged valve",
-          "Valve clear"
+          "Van bị tắc",
+          "Khe hở xupap chuẩn"
         ]
       },
       "flt_080_s2": {
         "id": "flt_080_s2",
-        "question": "Check PCV valve hose for cracks?",
+        "question": "Kiểm tra ống van PCV xem có nứt không?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked hose",
-          "Intact hose"
+          "Ống dẫn bị nứt",
+          "Ống dẫn nguyên vẹn"
         ]
       }
     }
@@ -2486,26 +2486,26 @@
     "steps": {
       "flt_081_s1": {
         "id": "flt_081_s1",
-        "question": "Inspect throttle body for carbon buildup?",
+        "question": "Kiểm tra muội than họng ga?",
         "is_question": true,
         "yes_next": "flt_081_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Buildup present",
-          "Clean throttle body"
+          "Có đóng cặn/muội than",
+          "Vệ sinh họng ga"
         ]
       },
       "flt_081_s2": {
         "id": "flt_081_s2",
-        "question": "Test throttle position sensor (TPS)?",
+        "question": "Kiểm tra cảm biến vị trí bướm ga?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty TPS",
-          "TPS working correctly"
+          "Cảm biến bướm ga (TPS) lỗi",
+          "Cảm biến bướm ga hoạt động bình thường"
         ]
       }
     }
@@ -2517,26 +2517,26 @@
     "steps": {
       "flt_082_s1": {
         "id": "flt_082_s1",
-        "question": "Test fuel injector spray pattern?",
+        "question": "Kiểm tra tia phun kim phun?",
         "is_question": true,
         "yes_next": "flt_082_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Irregular spray pattern",
-          "Uniform spray pattern"
+          "Tia phun không đều",
+          "Dạng phun đều"
         ]
       },
       "flt_082_s2": {
         "id": "flt_082_s2",
-        "question": "Inspect injector for leaks or clogs?",
+        "question": "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/clogged injector",
-          "Clean/in-tolerance injector"
+          "Kim phun rò rỉ/tắc",
+          "Kim phun sạch/đúng tiêu chuẩn"
         ]
       }
     }
@@ -2548,26 +2548,26 @@
     "steps": {
       "flt_083_s1": {
         "id": "flt_083_s1",
-        "question": "Test fuel pressure regulator operation?",
+        "question": "Kiểm tra hoạt động bộ điều áp nhiên liệu?",
         "is_question": true,
         "yes_next": "flt_083_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Regulator malfunction",
-          "Regulator functions correctly"
+          "Bộ điều áp lỗi",
+          "Bộ điều áp hoạt động bình thường"
         ]
       },
       "flt_083_s2": {
         "id": "flt_083_s2",
-        "question": "Check fuel pressure at regulator?",
+        "question": "Kiểm tra áp suất nhiên liệu tại bộ điều áp?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/high pressure",
-          "Correct pressure"
+          "Áp suất thấp/cao",
+          "Áp suất đúng tiêu chuẩn"
         ]
       }
     }
@@ -2579,26 +2579,26 @@
     "steps": {
       "flt_084_s1": {
         "id": "flt_084_s1",
-        "question": "Test fuel pump pressure?",
+        "question": "Kiểm tra áp suất bơm xăng?",
         "is_question": true,
         "yes_next": "flt_084_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low pressure",
-          "Normal pressure"
+          "Áp suất thấp",
+          "Áp suất bình thường"
         ]
       },
       "flt_084_s2": {
         "id": "flt_084_s2",
-        "question": "Inspect fuel pump for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng bơm nhiên liệu?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged pump",
-          "Intact pump"
+          "Bơm rò rỉ/hư hỏng",
+          "Bơm nguyên vẹn"
         ]
       }
     }
@@ -2610,26 +2610,26 @@
     "steps": {
       "flt_085_s1": {
         "id": "flt_085_s1",
-        "question": "Inspect fuel tank for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng bình nhiên liệu?",
         "is_question": true,
         "yes_next": "flt_085_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged tank",
-          "Tank in good condition"
+          "Bình chứa rò rỉ/hư hỏng",
+          "Bình chứa tốt"
         ]
       },
       "flt_085_s2": {
         "id": "flt_085_s2",
-        "question": "Check fuel filler cap for seal?",
+        "question": "Kiểm tra độ kín nắp bình xăng?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/broken cap",
-          "Cap seals properly"
+          "Nắp đậy lỏng/vỡ",
+          "Nắp đậy kín"
         ]
       }
     }
@@ -2641,26 +2641,26 @@
     "steps": {
       "flt_086_s1": {
         "id": "flt_086_s1",
-        "question": "Test throttle position sensor (TPS) voltage?",
+        "question": "Kiểm tra điện áp cảm biến vị trí bướm ga?",
         "is_question": true,
         "yes_next": "flt_086_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low voltage",
-          "Normal voltage"
+          "Điện áp thấp",
+          "Điện áp bình thường"
         ]
       },
       "flt_086_s2": {
         "id": "flt_086_s2",
-        "question": "Inspect TPS wiring for damage or corrosion?",
+        "question": "Kiểm tra hư hỏng hoặc rỉ sét dây điện cảm biến bướm ga?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged/corroded wiring",
-          "Intact wiring"
+          "Dây điện bị hỏng/oxy hóa",
+          "Dây điện nguyên vẹn"
         ]
       }
     }
@@ -2672,26 +2672,26 @@
     "steps": {
       "flt_087_s1": {
         "id": "flt_087_s1",
-        "question": "Check brake fluid level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu phanh?",
         "is_question": true,
         "yes_next": "flt_087_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       },
       "flt_087_s2": {
         "id": "flt_087_s2",
-        "question": "Inspect brake lines for leaks?",
+        "question": "Kiểm tra rò rỉ đường ống phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking lines",
-          "Lines in good condition"
+          "Rò rỉ đường ống",
+          "Đường ống bình thường"
         ]
       }
     }
@@ -2703,26 +2703,26 @@
     "steps": {
       "flt_088_s1": {
         "id": "flt_088_s1",
-        "question": "Check coolant level in reservoir?",
+        "question": "Kiểm tra mức nước làm mát trong bình phụ?",
         "is_question": true,
         "yes_next": "flt_088_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low coolant level",
-          "Sufficient coolant level"
+          "Mức nước làm mát thấp",
+          "Mức nước làm mát đủ"
         ]
       },
       "flt_088_s2": {
         "id": "flt_088_s2",
-        "question": "Inspect reservoir for cracks or leaks?",
+        "question": "Kiểm tra nứt hoặc rò rỉ bình chứa?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Cracked/leaking reservoir",
-          "Intact reservoir"
+          "Bình chứa bị nứt/rò rỉ",
+          "Bình chứa nguyên vẹn"
         ]
       }
     }
@@ -2734,26 +2734,26 @@
     "steps": {
       "flt_089_s1": {
         "id": "flt_089_s1",
-        "question": "Check power steering fluid level?",
+        "question": "Kiểm tra mức dầu trợ lực lái?",
         "is_question": true,
         "yes_next": "flt_089_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low fluid level",
-          "Sufficient fluid level"
+          "Mức dầu/dung dịch thấp",
+          "Mức dầu đủ"
         ]
       },
       "flt_089_s2": {
         "id": "flt_089_s2",
-        "question": "Inspect power steering hoses for leaks?",
+        "question": "Kiểm tra rò rỉ ống dầu trợ lực lái?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking hoses",
-          "Hoses in good condition"
+          "Các ống dẫn rò rỉ",
+          "Ống dẫn trong tình trạng tốt"
         ]
       }
     }
@@ -2765,26 +2765,26 @@
     "steps": {
       "flt_090_s1": {
         "id": "flt_090_s1",
-        "question": "Inspect radiator for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng két nước?",
         "is_question": true,
         "yes_next": "flt_090_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged radiator",
-          "Radiator in good condition"
+          "Két nước rò rỉ/hư hỏng",
+          "Két nước tốt"
         ]
       },
       "flt_090_s2": {
         "id": "flt_090_s2",
-        "question": "Check radiator cap for proper seal?",
+        "question": "Kiểm tra độ kín nắp két nước?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/broken cap",
-          "Cap seals properly"
+          "Nắp đậy lỏng/vỡ",
+          "Nắp đậy kín"
         ]
       }
     }
@@ -2796,26 +2796,26 @@
     "steps": {
       "flt_091_s1": {
         "id": "flt_091_s1",
-        "question": "Check washer fluid level?",
+        "question": "Kiểm tra mức nước rửa kính?",
         "is_question": true,
         "yes_next": "flt_091_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low fluid level",
-          "Sufficient fluid level"
+          "Mức dầu/dung dịch thấp",
+          "Mức dầu đủ"
         ]
       },
       "flt_091_s2": {
         "id": "flt_091_s2",
-        "question": "Inspect washer fluid pump for operation?",
+        "question": "Kiểm tra hoạt động bơm nước rửa kính?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty pump",
-          "Pump operates correctly"
+          "Bơm lỗi",
+          "Bơm hoạt động bình thường"
         ]
       }
     }
@@ -2827,26 +2827,26 @@
     "steps": {
       "flt_092_s1": {
         "id": "flt_092_s1",
-        "question": "Check clutch fluid level?",
+        "question": "Kiểm tra mức dầu côn?",
         "is_question": true,
         "yes_next": "flt_092_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low fluid level",
-          "Sufficient fluid level"
+          "Mức dầu/dung dịch thấp",
+          "Mức dầu đủ"
         ]
       },
       "flt_092_s2": {
         "id": "flt_092_s2",
-        "question": "Inspect master cylinder for leaks?",
+        "question": "Kiểm tra rò rỉ tổng phanh?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking cylinder",
-          "Cylinder in good condition"
+          "Rò rỉ xi-lanh",
+          "Xi lanh còn tốt"
         ]
       }
     }
@@ -2858,26 +2858,26 @@
     "steps": {
       "flt_093_s1": {
         "id": "flt_093_s1",
-        "question": "Inspect torque converter for leaks or damage?",
+        "question": "Kiểm tra rò rỉ hoặc hư hỏng bộ biến mô?",
         "is_question": true,
         "yes_next": "flt_093_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking/damaged converter",
-          "Converter in good condition"
+          "Bộ biến mô rò rỉ/hư hỏng",
+          "Bộ biến mô còn tốt"
         ]
       },
       "flt_093_s2": {
         "id": "flt_093_s2",
-        "question": "Check transmission fluid level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu hộp số?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       }
     }
@@ -2889,26 +2889,26 @@
     "steps": {
       "flt_094_s1": {
         "id": "flt_094_s1",
-        "question": "Check transmission fluid level and condition?",
+        "question": "Kiểm tra mức và tình trạng dầu hộp số?",
         "is_question": true,
         "yes_next": "flt_094_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/dirty fluid",
-          "Clean/sufficient fluid"
+          "Dầu/dung dịch thấp/bẩn",
+          "Dầu sạch/đủ mức"
         ]
       },
       "flt_094_s2": {
         "id": "flt_094_s2",
-        "question": "Inspect transmission pan and seals for leaks?",
+        "question": "Kiểm tra rò rỉ đáy các-te và phớt hộp số?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Leaking pan/seals",
-          "Pan/seals in good condition"
+          "Rò rỉ đáy các-te/phớt",
+          "Cacte/gioăng ở tình trạng tốt"
         ]
       }
     }
@@ -2920,26 +2920,26 @@
     "steps": {
       "flt_095_s1": {
         "id": "flt_095_s1",
-        "question": "Inspect transmission filter for clogs or debris?",
+        "question": "Kiểm tra tắc nghẽn hoặc cặn bẩn lọc hộp số?",
         "is_question": true,
         "yes_next": "flt_095_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Clogged/dirty filter",
-          "Clean filter"
+          "Lọc bị tắc/bẩn",
+          "Vệ sinh lọc"
         ]
       },
       "flt_095_s2": {
         "id": "flt_095_s2",
-        "question": "Replace transmission filter if necessary?",
+        "question": "Thay lọc hộp số nếu cần?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Replace filter",
-          "Filter in good condition"
+          "Thay lọc",
+          "Lọc còn tốt"
         ]
       }
     }
@@ -2951,26 +2951,26 @@
     "steps": {
       "flt_096_s1": {
         "id": "flt_096_s1",
-        "question": "Test transmission solenoids for electrical continuity?",
+        "question": "Kiểm tra thông mạch solenoid hộp số?",
         "is_question": true,
         "yes_next": "flt_096_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Faulty solenoid",
-          "Solenoid working correctly"
+          "Solenoid lỗi",
+          "Solenoid hoạt động bình thường"
         ]
       },
       "flt_096_s2": {
         "id": "flt_096_s2",
-        "question": "Inspect wiring harness for damage or corrosion?",
+        "question": "Kiểm tra hư hỏng hoặc oxy hóa bó dây điện?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged/corroded wiring",
-          "Intact wiring"
+          "Dây điện bị hỏng/oxy hóa",
+          "Dây điện nguyên vẹn"
         ]
       }
     }
@@ -2982,26 +2982,26 @@
     "steps": {
       "flt_097_s1": {
         "id": "flt_097_s1",
-        "question": "Check wheel bearing for play?",
+        "question": "Kiểm tra độ rơ ổ bi bánh xe?",
         "is_question": true,
         "yes_next": "flt_097_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/worn bearing",
-          "Bearing in good condition"
+          "Ổ bi lỏng/mòn",
+          "Ổ bi còn tốt"
         ]
       },
       "flt_097_s2": {
         "id": "flt_097_s2",
-        "question": "Inspect bearing for signs of damage or corrosion?",
+        "question": "Kiểm tra dấu hiệu hư hỏng hoặc rỉ sét ổ bi?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged/corroded bearing",
-          "Clean/intact bearing"
+          "Ổ bi bị hỏng/oxy hóa",
+          "Ổ bi sạch/nguyên vẹn"
         ]
       }
     }
@@ -3013,26 +3013,26 @@
     "steps": {
       "flt_098_s1": {
         "id": "flt_098_s1",
-        "question": "Check tire pressures with gauge?",
+        "question": "Kiểm tra áp suất lốp bằng đồng hồ đo?",
         "is_question": true,
         "yes_next": "flt_098_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Low/high pressure",
-          "Correct pressure"
+          "Áp suất thấp/cao",
+          "Áp suất đúng tiêu chuẩn"
         ]
       },
       "flt_098_s2": {
         "id": "flt_098_s2",
-        "question": "Inspect TPMS sensors for damage or corrosion?",
+        "question": "Kiểm tra hư hỏng hoặc rỉ sét cảm biến áp suất lốp?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Damaged/corroded sensors",
-          "Clean/intact sensors"
+          "Cảm biến bị hỏng/oxy hóa",
+          "Các cảm biến sạch/nguyên vẹn"
         ]
       }
     }
@@ -3044,26 +3044,26 @@
     "steps": {
       "flt_099_s1": {
         "id": "flt_099_s1",
-        "question": "Inspect wheel hub for play or bearing noise?",
+        "question": "Kiểm tra độ rơ hoặc tiếng ồn ổ bi moay-ơ?",
         "is_question": true,
         "yes_next": "flt_099_s2",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Loose/worn hub",
-          "Hub in good condition"
+          "Moay ơ lỏng/mòn",
+          "Moay ơ trong tình trạng tốt"
         ]
       },
       "flt_099_s2": {
         "id": "flt_099_s2",
-        "question": "Check wheel bearings for wear?",
+        "question": "Kiểm tra độ mòn ổ bi bánh xe?",
         "is_question": true,
         "yes_next": "DIAGNOSED",
         "no_next": "REFUTED",
         "instruction": null,
         "results": [
-          "Worn bearings",
-          "Bearings in good condition"
+          "Ổ bi bị mòn",
+          "Các ổ bi còn tốt"
         ]
       }
     }

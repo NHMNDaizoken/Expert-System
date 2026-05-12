@@ -25,6 +25,13 @@ def extract_rules(data: Any) -> list[dict[str, Any]]:
     return []
 
 
+def slugify(text: Any) -> str:
+    text = str(text or "").lower().strip()
+    text = re.sub(r"[^a-z0-9]+", "_", text)
+    text = re.sub(r"_+", "_", text)
+    return text.strip("_")
+
+
 class KnowledgeBase:
     """Read-only access layer over the staging expert-system data."""
 
@@ -36,12 +43,14 @@ class KnowledgeBase:
         rules: list[dict[str, Any]] | None = None,
         cf_dynamic: dict[str, Any] | None = None,
         procedure_trees: dict[str, Any] | None = None,
+        translations: dict[str, str] | None = None,
     ):
         self.ontology = ontology or {"vehicle_systems": []}
         self.symptom_aliases = symptom_aliases or {}
         self.rules = rules or []
         self.cf_dynamic = cf_dynamic or {}
         self.procedure_trees = procedure_trees or {}
+        self.translations = translations or {}
 
         self.systems = self._index_systems(self.ontology)
         self.faults = {rule.get("fault_id"): rule for rule in self.rules if rule.get("fault_id")}
@@ -58,6 +67,7 @@ class KnowledgeBase:
             rules=extract_rules(load_json(base / "kg_rules_from_dataset.json")),
             cf_dynamic=load_json(base / "cf_dynamic.json"),
             procedure_trees=load_json(base / "procedure_trees.json"),
+            translations=load_json(base / "vi_translations.json") if (base / "vi_translations.json").exists() else {},
         )
 
     @classmethod
@@ -84,7 +94,10 @@ class KnowledgeBase:
 
     def get_procedure_for_fault(self, fault_id: str) -> dict[str, Any] | None:
         rule = self.get_fault(fault_id) or {}
-        return rule.get("procedure") or self.procedure_trees.get(fault_id)
+        if rule.get("symptoms"):
+            return self._symptom_procedure(rule)
+        procedure = rule.get("procedure") or self.procedure_trees.get(fault_id)
+        return self._localized_procedure(procedure) if procedure else None
 
     def get_candidate_faults(self, system_id: str | None, symptom_id: str) -> list[dict[str, Any]]:
         explicit = self._explicit_candidate_faults(symptom_id)
@@ -110,13 +123,132 @@ class KnowledgeBase:
 
     def label_for_symptom(self, symptom_id: str) -> str:
         symptom = self.get_symptom(symptom_id) or {}
-        return symptom.get("display_name") or symptom.get("name") or symptom_id
+        return self.vi_text(symptom.get("label_vi") or symptom.get("display_name") or symptom.get("name") or symptom_id)
+
+    def label_for_fault(self, rule: dict[str, Any], fallback: str | None = None) -> str:
+        return self.vi_text(
+            rule.get("label_vi")
+            or rule.get("display_name")
+            or rule.get("fault_label")
+            or rule.get("fault_name")
+            or fallback
+            or rule.get("fault_id")
+        )
 
     def system_label(self, system_id: str | None) -> str | None:
         if not system_id:
             return None
         system = self.systems.get(system_id) or {}
-        return system.get("display_name") or system.get("name") or system_id
+        return self.vi_text(system.get("label_vi") or system.get("display_name") or system.get("name") or system_id)
+
+    def vi_text(self, value: Any) -> str:
+        text = str(value or "").strip()
+        if not text:
+            return text
+        formatted = self._format_action_label(text)
+        if formatted != text:
+            return formatted
+        return self.translations.get(slugify(text), text)
+
+    def symptom_question(self, symptom_id: str) -> str:
+        label = self.label_for_symptom(symptom_id)
+        searchable = f"{symptom_id} {label}".lower()
+        patterns = [
+            (("hard start", "difficulty starting", "khó nổ", "khó khởi động"), "Xe có khó nổ máy không?"),
+            (("cold", "trời lạnh", "máy nguội"), "Xe có khó nổ khi máy nguội hoặc trời lạnh không?"),
+            (("white smoke", "khói trắng"), "Khi khởi động, xe có khói trắng bất thường không?"),
+            (("rough idle", "garanti", "rung giật", "không đều"), "Khi chạy garanti, động cơ có rung hoặc không đều không?"),
+            (("check engine", "đèn báo lỗi động cơ"), "Đèn báo lỗi động cơ có sáng không?"),
+            (("abs warning", "đèn abs"), "Đèn cảnh báo ABS có sáng không?"),
+            (("grinding", "tiếng nghiến", "tiếng mài"), "Xe có phát ra tiếng nghiến hoặc tiếng mài bất thường không?"),
+            (("vibration", "rung"), "Xe có bị rung bất thường khi vận hành không?"),
+            (("low voltage", "điện áp thấp", "voltage"), "Đèn hoặc thiết bị điện trên xe có yếu bất thường không?"),
+            (("noise", "tiếng ồn", "kêu"), "Xe có tiếng ồn bất thường không?"),
+            (("leak", "rò rỉ", "chảy"), "Bạn có thấy dấu hiệu rò rỉ bất thường không?"),
+            (("smell", "mùi"), "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?"),
+            (("warning light", "đèn cảnh báo"), "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?"),
+        ]
+        for keywords, question in patterns:
+            if any(keyword in searchable for keyword in keywords):
+                return question
+        return f"Xe có dấu hiệu {label.lower()} không?"
+
+    def _localized_procedure(self, procedure: dict[str, Any]) -> dict[str, Any]:
+        localized = {**procedure, "steps": {}}
+        for step_id, step in (procedure.get("steps") or {}).items():
+            question = step.get("question")
+            instruction = step.get("instruction")
+            results = step.get("results") or []
+            localized["steps"][step_id] = {
+                **step,
+                "question": self._as_question_vi(question or instruction),
+                "symptom_id": step.get("symptom_id"),
+                "symptom_label": self.vi_text(step.get("symptom_label")) if step.get("symptom_label") else None,
+                "instruction": self.vi_text(instruction) if instruction else instruction,
+                "results": [self.vi_text(result) for result in results],
+            }
+        return localized
+
+    def _symptom_procedure(self, rule: dict[str, Any]) -> dict[str, Any]:
+        fault_id = rule.get("fault_id")
+        steps = {}
+        step_ids = []
+        for index, symptom in enumerate(rule.get("symptoms") or [], start=1):
+            symptom_id = symptom.get("symptom_id")
+            if not symptom_id:
+                continue
+            step_id = f"{str(fault_id).lower()}_symptom_{index}"
+            step_ids.append(step_id)
+            steps[step_id] = {
+                "id": step_id,
+                "symptom_id": symptom_id,
+                "symptom_label": self.label_for_symptom(symptom_id),
+                "question": self.symptom_question(symptom_id),
+                "is_question": True,
+                "yes_next": None,
+                "no_next": "REFUTED",
+                "instruction": None,
+                "results": [],
+            }
+
+        for index, step_id in enumerate(step_ids):
+            steps[step_id]["yes_next"] = step_ids[index + 1] if index + 1 < len(step_ids) else "DIAGNOSED"
+
+        if not step_ids:
+            return rule.get("procedure") or {}
+
+        return {
+            "fault_id": fault_id,
+            "fault_name": rule.get("fault_name"),
+            "entry_step": step_ids[0],
+            "steps": steps,
+            "source": "symptoms",
+        }
+
+    def _as_question_vi(self, value: Any) -> str:
+        text = self.vi_text(value)
+        if not text:
+            return text
+        if text.endswith("?"):
+            text = text[:-1].strip()
+        return f"{text}?"
+
+    def _format_action_label(self, text: str) -> str:
+        patterns = [
+            (r"^Diagnosis for (.+)$", "Kiểm tra"),
+            (r"^Repair for (.+)$", "Sửa chữa"),
+            (r"^Replace (.+)$", "Thay"),
+            (r"^Inspect (.+)$", "Kiểm tra"),
+            (r"^Clean (.+)$", "Vệ sinh"),
+            (r"^Test (.+)$", "Kiểm tra"),
+            (r"^Adjust (.+)$", "Điều chỉnh"),
+        ]
+        for pattern, verb in patterns:
+            match = re.match(pattern, text, flags=re.IGNORECASE)
+            if match:
+                target = self.translations.get(slugify(match.group(1)), match.group(1).strip())
+                return f"{verb} {target}"
+        return text
 
     def _build_cf_map(self) -> dict[str, dict[str, float]]:
         dynamic = self.cf_dynamic.get("symptoms") if isinstance(self.cf_dynamic, dict) else None

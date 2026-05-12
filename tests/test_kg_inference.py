@@ -53,7 +53,7 @@ class KGInferenceTest(unittest.TestCase):
         self.assertEqual(extract_rules(RULES), RULES)
         self.assertEqual(extract_rules({"rules": RULES}), RULES)
 
-    def test_diagnose_matches_multiple_symptoms_and_keeps_hypotheses_until_clear(self):
+    def test_diagnose_matches_multiple_symptoms_and_returns_result_when_clear(self):
         inference = KGInference(SymptomMatcher(ALIASES), rules=RULES)
 
         response = inference.diagnose(
@@ -61,8 +61,8 @@ class KGInferenceTest(unittest.TestCase):
             top_k=2,
         )
 
-        self.assertEqual(response["status"], "need_more_info")
-        self.assertFalse(response["is_final"])
+        self.assertEqual(response["status"], "diagnosed")
+        self.assertTrue(response["is_final"])
         self.assertEqual(
             {symptom["symptom_id"] for symptom in response["matched_symptoms"]},
             {"SYM_CLICKING_SOUND", "SYM_DIM_LIGHTS"},

@@ -56,6 +56,4 @@ class TestDiagnoseResponse:
         data = client.post("/diagnose", json={"session_id": sid, "step_answer": False}).json()
         progress = data.get("step_progress")
         if progress:
-            current, total = progress.split("/")
-            assert current.isdigit()
-            assert total.isdigit()
+            assert str(progress).isdigit()

@@ -221,7 +221,7 @@ class ExpertSystemEngine:
                     "cf_breakdown": breakdown,
                     "score_breakdown": {
                         "cf_confidence": final_cf,
-                        "note": "Certainty Factor confidence score, not Bayesian probability.",
+                        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                     },
                     "confidence_label": self._confidence_label(final_cf),
                     "decision": "accepted" if final_cf >= 0.5 else "uncertain",
@@ -285,7 +285,7 @@ class ExpertSystemEngine:
             "symptom": symptom_id,
             "symptom_id": symptom_id,
             "label": label,
-            "question": f"Do you also notice {label.lower()}?",
+            "question": f"Bạn có thấy thêm dấu hiệu: {label.lower()} không?",
             "step_id": None,
             "mode": "information_gain",
             "information_gain": result["information_gain"],
@@ -388,12 +388,12 @@ class ExpertSystemEngine:
     @staticmethod
     def _confidence_label(score: float) -> str:
         if score >= 0.8:
-            return "Very likely"
+            return "Rất có khả năng"
         if score >= 0.6:
-            return "Likely"
+            return "Có khả năng"
         if score >= 0.4:
-            return "Possible"
-        return "Uncertain"
+            return "Có thể xảy ra"
+        return "Chưa chắc chắn"
 
 
 # Public API for backward compatibility and tests
@@ -460,7 +460,7 @@ def rank_faults(
                 "cf_breakdown": breakdown,
                 "score_breakdown": {
                     "cf_confidence": final_cf,
-                    "note": "Certainty Factor confidence score, not Bayesian probability.",
+                    "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                 },
                 "confidence_label": ExpertSystemEngine._confidence_label(final_cf),
                 "decision": "accepted" if final_cf >= 0.5 else "uncertain",

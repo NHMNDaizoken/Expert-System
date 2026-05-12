@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import argparse
 
-import _bootstrap  # noqa: F401
+import sys
+from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import _bootstrap  # noqa: F401,E402
 from dataset_rebuild_utils import RAW_PATH, load_records, save_json, symptom_id_for, fault_id_for
 from rebuild_kg import build_primary_candidate_sets
 

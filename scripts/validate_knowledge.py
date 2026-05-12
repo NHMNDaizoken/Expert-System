@@ -3,9 +3,13 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-import _bootstrap  # noqa: F401
-
+try:
+    import _bootstrap  # type: ignore # noqa: F401
+except ModuleNotFoundError:
+    from scripts import _bootstrap  # type: ignore # noqa: F401
 from src.legacy.kg_validator import KGValidationError, validate_all
+from src.expert_system.knowledge_base import KnowledgeBase
+from src.expert_system.schemas import ExpertSystemValidator
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +31,9 @@ def main() -> int:
 
     try:
         validate_all(str(args.ontology), str(args.symptom_aliases), str(args.rules))
+        report = ExpertSystemValidator(KnowledgeBase.from_staging()).validate()
+        if not report.ok:
+            raise KGValidationError("; ".join(report.errors))
     except KGValidationError as error:
         print("Validation failed")
         print(f"- {error}")

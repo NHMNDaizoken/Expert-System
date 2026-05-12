@@ -44,10 +44,10 @@ Tóm tắt nhanh (sau refactoring):
 - Dynamic CF: `data/staging/cf_dynamic.json`.
 - Procedure tree: `data/staging/procedure_trees.json`.
 - Quan hệ graph: `data/staging/ontology.json`, `backend/services/graph_service.py`.
-- **Bộ suy luận chính**: `src/expert_system/inference_engine.py` (ExpertSystemEngine).
-- **Matcher triệu chứng**: `src/expert_system/symptom_matcher.py` (SymptomMatcher).
-- **Chọn câu hỏi**: `src/expert_system/question_selector.py` (QuestionSelector).
-- **Response filtering**: `src/expert_system/response_policy.py` (apply_response_policy).
+- **Bộ suy luận chính**: `src/expert_system/engine.py` (ExpertSystemEngine).
+- **Matcher triệu chứng**: `src/expert_system/matcher.py` (SymptomMatcher).
+- **Procedure tree / câu hỏi**: `src/expert_system/procedure.py` và logic information gain trong `src/expert_system/engine.py`.
+- **Response filtering**: `src/expert_system/policy.py` (apply_response_policy).
 - API hỏi-đáp: `backend/services/diagnosis_service.py`, `backend/services/session_service.py`.
 - UI show luật/quan hệ/trace: `frontend/src/pages/GraphViewer.jsx`, `frontend/src/components/ReasoningTrace.jsx`.
 
@@ -77,14 +77,14 @@ Cách này dùng khi bạn muốn cập nhật thư viện Python, sửa dữ li
 ### 5.1. Tạo môi trường ảo và cài thư viện Python
 
 ```powershell
-python3 -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
 Ý nghĩa:
 
-- `py -m venv .venv`: tạo môi trường Python riêng cho project.
+- `python -m venv .venv`: tạo môi trường Python riêng cho project.
 - `Activate.ps1`: kích hoạt môi trường ảo.
 - `pip install -r requirements.txt`: cài FastAPI, Neo4j driver, pandas, RapidFuzz, dotenv, uvicorn và các thư viện cần thiết.
 
@@ -92,6 +92,12 @@ Nếu sau này có thay đổi trong `requirements.txt`, chỉ cần kích hoạ
 
 ```powershell
 pip install -r requirements.txt
+```
+
+Nếu máy chưa có `python` global nhưng có `uv`, có thể chạy các lệnh Python theo dạng:
+
+```powershell
+uv run python scripts/validate_knowledge.py
 ```
 
 ### 5.2. Chạy Neo4j local bằng Docker
@@ -133,13 +139,25 @@ Password: password123
 Nếu bạn sửa dataset gốc trong `data/raw/automotive_faults.json` và muốn sinh lại staging rules từ đầu, chạy một lệnh consolidate duy nhất:
 
 ```powershell
-python scripts/build_knowledge.py
+python scripts/build_knowledge.py --rebuild-from-raw
 ```
 
 Lệnh này sẽ:
 - Tính dynamic CF từ dataset raw (`data/raw/automotive_faults.json`)
 - Build procedure tree từ diagnosis steps
 - Sinh ra `data/staging/cf_dynamic.json`, `data/staging/procedure_trees.json`, `data/staging/kg_rules_from_dataset.json`, `data/staging/symptom_aliases.json`, `data/staging/expert_tree.json`
+
+Nếu cần cập nhật nhãn tiếng Việt trước khi rebuild, chạy:
+
+```powershell
+python scripts/translate_vi.py
+```
+
+Nếu chỉ muốn sinh lại cây chuyên gia từ staging hiện có:
+
+```powershell
+python scripts/rebuild_hierarchy.py
+```
 
 Sau khi build xong, validate dữ liệu:
 
@@ -150,10 +168,10 @@ python scripts/validate_knowledge.py
 Nếu không sửa dataset raw mà chỉ muốn import staging rules vào Neo4j:
 
 ```powershell
-python scripts/import_neo4j.py
+python scripts/import_graph.py --clear
 ```
 
-Ghi chú: Các script cũ (`compute_cf.py`, `build_expert_tree.py`, `build_procedure.py`, `rebuild_kg.py`, `data_tools.py`) đã được gom vào `scripts/build_knowledge.py`. File cũ vẫn được lưu trong `scripts/legacy/` nếu cần tham khảo.
+Ghi chú: `scripts/import_neo4j.py` vẫn tồn tại như wrapper tương thích và gọi sang `scripts/import_graph.py`. Các script cũ (`compute_cf.py`, `build_expert_tree.py`, `build_procedure.py`, `rebuild_kg.py`, `data_tools.py`) đã được gom vào `scripts/build_knowledge.py`, `scripts/rebuild_hierarchy.py`, hoặc lưu trong `scripts/legacy/` nếu cần tham khảo.
 
 ### 5.4. Chạy backend và frontend local
 
@@ -213,7 +231,7 @@ docker compose logs -f neo4j
 Nếu Docker chạy lần đầu và Neo4j còn trống, import dữ liệu vào KG bằng backend container:
 
 ```powershell
-docker compose exec backend python scripts/import_neo4j.py
+docker compose exec backend python -m scripts.import_graph --clear
 ```
 
 Sau đó mở:
@@ -320,6 +338,8 @@ Chạy evaluation:
 python scripts/evaluate_diagnosis.py
 ```
 
+Baseline hiện tại: 20 test case, Top-1/Top-3/Top-5 đều 100%.
+
 ## 9. API Chính
 
 ```http
@@ -413,9 +433,9 @@ Các API review rule yêu cầu header `X-Admin-API-Key` khớp `ADMIN_API_KEY`.
 
 ## 10. Ghi Chú Lỗi Thường Gặp
 
-- Nếu PowerShell báo không thấy `python`, hãy kích hoạt `.venv` hoặc dùng `py` thay cho `python`.
+- Nếu PowerShell báo không thấy `python`, hãy kích hoạt `.venv`, dùng `py` thay cho `python`, hoặc chạy qua `uv run python ...`.
 - Nếu không chạy được `Activate.ps1`, mở PowerShell bằng quyền phù hợp hoặc chạy `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 - Nếu frontend lỗi thiếu `vite`, chạy lại `npm install` trong thư mục `frontend`.
-- Nếu backend chạy nhưng `/api/graph` trống, hãy chạy lại `rebuild ... --clear` để import dữ liệu vào Neo4j.
+- Nếu backend chạy nhưng `/api/graph` trống, hãy chạy lại `python scripts/import_graph.py --clear` hoặc `docker compose exec backend python -m scripts.import_graph --clear` để import dữ liệu vào Neo4j.
 - `data/app.sqlite3` là file runtime, có thể xóa; backend sẽ tạo lại khi khởi động.
 - Nếu thấy tài liệu/ảnh mở `docs/fixed.md`, file đó không còn nằm trong workspace hiện tại; dùng `docs/Project_Brief.md` và `docs/Expert_System_Map.md`.

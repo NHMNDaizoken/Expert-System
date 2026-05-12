@@ -3,8 +3,11 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 
-import _bootstrap  # noqa: F401
+import sys
+from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import _bootstrap  # noqa: F401,E402
 from dataset_rebuild_utils import (
     ALIASES_PATH,
     CF_PATH,

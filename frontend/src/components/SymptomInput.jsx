@@ -142,7 +142,7 @@ export default function SymptomInput({ value, onChange, onSubmit, loading, error
   return (
     <section className="diagnostic-input">
       <form className="interview-input-card glass-panel" onSubmit={onSubmit}>
-        <label htmlFor="symptom-description">Describe what is happening with your car</label>
+        <label htmlFor="symptom-description">Mô tả hiện tượng đang xảy ra với xe</label>
         <textarea
           id="symptom-description"
           value={value}

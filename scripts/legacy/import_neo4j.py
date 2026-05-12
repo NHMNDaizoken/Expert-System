@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 from typing import Any
 
-import _bootstrap  # noqa: F401
-
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import _bootstrap  # noqa: F401,E402
 from src.config import require_neo4j_config
 from src.legacy.kg_validator import extract_rules, validate_all
 

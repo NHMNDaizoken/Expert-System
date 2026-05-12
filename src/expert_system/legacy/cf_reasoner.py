@@ -15,12 +15,12 @@ def combine_cf(cf_old: float, cf_new: float) -> float:
 
 def confidence_label(score: float) -> str:
     if score >= 0.8:
-        return "Very likely"
+        return "Rất có khả năng"
     if score >= 0.6:
-        return "Likely"
+        return "Có khả năng"
     if score >= 0.4:
-        return "Possible"
-    return "Uncertain"
+        return "Có thể xảy ra"
+    return "Chưa chắc chắn"
 
 
 def load_cf_map(kg_rules: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
@@ -82,7 +82,7 @@ def rank_faults(
                 "cf_breakdown": breakdown,
                 "score_breakdown": {
                     "cf_confidence": final_cf,
-                    "note": "Certainty Factor confidence score, not Bayesian probability.",
+                    "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                 },
                 "confidence_label": confidence_label(final_cf),
                 "decision": "accepted" if final_cf >= 0.5 else "uncertain",

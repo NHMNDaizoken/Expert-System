@@ -70,7 +70,7 @@ def test_cf_ranking_confidence_and_rejected_context():
     assert confirmed[0]["fault_id"] == "FLT_BATTERY"
     assert confirmed[0]["final_cf"] > confirmed[1]["final_cf"]
     assert rejected[0]["fault_id"] == "FLT_STARTER"
-    assert confirmed[0]["score_breakdown"]["note"].endswith("not Bayesian probability.")
+    assert confirmed[0]["score_breakdown"]["note"].endswith("không phải xác suất Bayes.")
 
 
 def test_procedure_reasoner_terminal_and_next_step():
@@ -110,10 +110,9 @@ def test_engine_diagnosed_uses_results_and_resolution():
 
     response = engine.diagnose("clicking noise and dim headlights", top_k=2)
 
-    assert response["status"] == "need_more_info"
-    assert response["results"] == []
-    assert response["next_question"]["mode"] == "procedure_tree"
-    assert response["procedure_terminal"] is None
+    assert response["status"] == "diagnosed"
+    assert response["results"]
+    assert response["next_question"] is None
 
 
 def test_single_primary_symptom_with_100_cf_is_not_final_without_deterministic_rule():
@@ -152,8 +151,86 @@ def test_single_primary_symptom_with_100_cf_is_not_final_without_deterministic_r
     assert {fault["fault_id"] for fault in response["candidate_faults"]} == {"FLT_ABS_MODULE", "FLT_ABS_SENSOR"}
 
 
-def test_multi_step_procedure_leaf_can_diagnose_after_follow_up_answers():
-    aliases = {"SYM_ABS": {"display_name": "ABS warning light on", "aliases": ["ABS warning light on"]}}
+def test_information_gain_questions_stay_inside_current_candidates():
+    aliases = {
+        "SYM_START": {"display_name": "Engine does not start", "aliases": ["engine does not start"]},
+        "SYM_AUX": {"display_name": "Clicking relay", "aliases": ["clicking relay"]},
+        "SYM_B": {"display_name": "Fuel smell", "aliases": ["fuel smell"]},
+        "SYM_OFF_TOPIC": {"display_name": "Brake pedal vibration", "aliases": ["brake pedal vibration"]},
+    }
+    rules = [
+        {
+            "fault_id": "FLT_A",
+            "fault_name": "starter_fault",
+            "display_name": "Starter Fault",
+            "system_id": "SYS_ELECTRICAL",
+            "symptom": "SYM_START",
+            "candidate_fault_ids": ["FLT_A", "FLT_B"],
+            "symptoms": [
+                {"symptom_id": "SYM_START", "cf": 0.8, "priority": 1},
+                {"symptom_id": "SYM_AUX", "cf": 0.7, "priority": 2},
+            ],
+        },
+        {
+            "fault_id": "FLT_B",
+            "fault_name": "fuel_fault",
+            "display_name": "Fuel Fault",
+            "system_id": "SYS_ELECTRICAL",
+            "symptoms": [{"symptom_id": "SYM_B", "cf": 0.6, "priority": 2}],
+        },
+        {
+            "fault_id": "FLT_OFF_TOPIC",
+            "fault_name": "brake_fault",
+            "display_name": "Brake Fault",
+            "system_id": "SYS_BRAKE",
+            "symptoms": [{"symptom_id": "SYM_OFF_TOPIC", "cf": 0.9, "priority": 1}],
+        },
+    ]
+    engine = ExpertSystemEngine(KnowledgeBase.from_data(symptom_aliases=aliases, rules=rules))
+
+    response = engine.diagnose("engine does not start", top_k=3)
+
+    assert response["status"] == "need_more_info"
+    assert response["next_question"]["symptom_id"] in {"SYM_AUX", "SYM_B"}
+    assert response["next_question"]["symptom_id"] != "SYM_OFF_TOPIC"
+
+
+def test_engine_diagnoses_when_no_candidate_questions_remain():
+    aliases = {
+        "SYM_START": {"display_name": "Engine does not start", "aliases": ["engine does not start"]},
+        "SYM_AUX": {"display_name": "Clicking relay", "aliases": ["clicking relay"]},
+    }
+    rules = [
+        {
+            "fault_id": "FLT_A",
+            "fault_name": "starter_fault",
+            "display_name": "Starter Fault",
+            "system_id": "SYS_ELECTRICAL",
+            "symptom": "SYM_START",
+            "symptoms": [
+                {"symptom_id": "SYM_START", "cf": 0.8, "priority": 1},
+                {"symptom_id": "SYM_AUX", "cf": 0.7, "priority": 2},
+            ],
+        }
+    ]
+    engine = ExpertSystemEngine(KnowledgeBase.from_data(symptom_aliases=aliases, rules=rules))
+
+    response = engine.diagnose(
+        "engine does not start",
+        confirmed_symptoms=["SYM_START"],
+        rejected_symptoms=["SYM_AUX"],
+    )
+
+    assert response["status"] == "diagnosed"
+    assert response["next_question"] is None
+    assert response["results"]
+
+
+def test_technician_procedure_steps_are_not_used_as_user_questions():
+    aliases = {
+        "SYM_ABS": {"display_name": "ABS warning light on", "aliases": ["ABS warning light on"]},
+        "SYM_SPEEDOMETER": {"display_name": "Erratic speedometer", "aliases": ["erratic speedometer"]},
+    }
     rules = [
         {
             "fault_id": "FLT_ABS_MODULE",
@@ -161,6 +238,7 @@ def test_multi_step_procedure_leaf_can_diagnose_after_follow_up_answers():
             "display_name": "ABS Control Module",
             "system_id": "SYS_ABS",
             "symptom": "SYM_ABS",
+            "candidate_fault_ids": ["FLT_ABS_MODULE", "FLT_ABS_SENSOR"],
             "symptoms": [{"symptom_id": "SYM_ABS", "cf": 1.0, "priority": 1}],
             "procedure": {
                 "entry_step": "abs_s1",
@@ -169,34 +247,23 @@ def test_multi_step_procedure_leaf_can_diagnose_after_follow_up_answers():
                     "abs_s2": {"id": "abs_s2", "question": "Inspect wiring?", "yes_next": "DIAGNOSED", "no_next": "REFUTED"},
                 },
             },
-        }
+        },
+        {
+            "fault_id": "FLT_ABS_SENSOR",
+            "fault_name": "abs_sensor",
+            "display_name": "ABS Wheel Speed Sensor",
+            "system_id": "SYS_ABS",
+            "symptoms": [{"symptom_id": "SYM_SPEEDOMETER", "cf": 0.9, "priority": 2}],
+        },
     ]
     engine = ExpertSystemEngine(KnowledgeBase.from_data(symptom_aliases=aliases, rules=rules))
 
     first = engine.diagnose("ABS warning light on")
-    second = engine.diagnose(
-        "ABS warning light on",
-        session={
-            "confirmed_symptoms": ["SYM_ABS"],
-            "current_step_id": first["next_question"]["step_id"],
-            "step_history": [first["next_question"]["step_id"]],
-            "last_answer": True,
-        },
-    )
-    final = engine.diagnose(
-        "ABS warning light on",
-        session={
-            "confirmed_symptoms": ["SYM_ABS"],
-            "current_step_id": second["next_question"]["step_id"],
-            "step_history": [first["next_question"]["step_id"], second["next_question"]["step_id"]],
-            "last_answer": True,
-        },
-    )
 
     assert first["status"] == "need_more_info"
-    assert second["status"] == "need_more_info"
-    assert final["status"] == "diagnosed"
-    assert final["is_final"]
+    assert first["next_question"]["symptom_id"] == "SYM_SPEEDOMETER"
+    assert "Check ABS fuse" not in first["next_question"]["question"]
+    assert "Inspect wiring" not in first["next_question"]["question"]
 
 
 def test_validator_reports_missing_cf_and_invalid_procedure_link():

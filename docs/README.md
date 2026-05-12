@@ -29,10 +29,10 @@ data/staging/cf_dynamic.json              Dynamic CF theo symptom/fault
 data/staging/procedure_trees.json         Cây câu hỏi yes/no theo fault
 data/staging/symptom_aliases.json         Alias để match triệu chứng
 data/staging/ontology.json                Ontology system/subsystem/component
-src/expert_system/inference_engine.py     ExpertSystemEngine - bộ suy luận chính
-src/expert_system/symptom_matcher.py      SymptomMatcher - match triệu chứng
-src/expert_system/question_selector.py    QuestionSelector - chọn câu hỏi tiếp theo
-src/expert_system/response_policy.py      apply_response_policy - filter results
+src/expert_system/engine.py               ExpertSystemEngine - bộ suy luận chính và information gain
+src/expert_system/matcher.py              SymptomMatcher - match triệu chứng
+src/expert_system/procedure.py            ProcedureRunner - đi theo cây câu hỏi yes/no
+src/expert_system/policy.py               apply_response_policy - filter results
 backend/services/diagnosis_service.py     Orchestrator API chẩn đoán
 backend/services/session_service.py       Lưu session hỏi đáp SQLite
 backend/services/graph_service.py         Đọc Neo4j hoặc fallback JSON
@@ -77,6 +77,8 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Nếu máy chưa có `python` global nhưng có `uv`, có thể chạy các script Python bằng `uv run python ...`.
+
 Cài frontend:
 
 ```powershell
@@ -96,21 +98,24 @@ docker compose up -d neo4j
 Nếu muốn rebuild staging rules từ dataset raw:
 
 ```powershell
+python scripts/translate_vi.py
 python scripts/build_knowledge.py --rebuild-from-raw
 python scripts/validate_knowledge.py
 ```
 
-Nếu chỉ muốn import staging rules vào Neo4j (sử dụng `import_graph.py` - tên mới, hoặc `import_neo4j.py` - tên cũ):
+Nếu chỉ muốn cập nhật `data/staging/expert_tree.json` từ staging hiện có:
 
 ```powershell
-python scripts/import_graph.py
+python scripts/rebuild_hierarchy.py
 ```
 
-Hoặc sử dụng tên cũ:
+Nếu chỉ muốn import staging rules vào Neo4j:
 
 ```powershell
-python scripts/import_neo4j.py
+python scripts/import_graph.py --clear
 ```
+
+`scripts/import_neo4j.py` vẫn là wrapper tương thích nếu tài liệu cũ hoặc IDE còn gọi tên này.
 
 Chạy backend:
 
@@ -167,7 +172,7 @@ docker compose logs -f neo4j
 Nếu Neo4j trong container chưa có dữ liệu:
 
 ```powershell
-docker compose exec backend python scripts/import_neo4j.py
+docker compose exec backend python -m scripts.import_graph --clear
 ```
 
 Dừng hệ thống:
@@ -235,8 +240,10 @@ Invoke-RestMethod http://localhost:8000/api/diagnose `
 Khi sửa `data/raw/automotive_faults.json`, build lại staging data bằng consolidated script:
 
 ```powershell
+python scripts/translate_vi.py
 python scripts/build_knowledge.py --rebuild-from-raw
 python scripts/validate_knowledge.py
+python scripts/import_graph.py --clear
 ```
 
 **Trước refactoring** (cách cũ - lưu ở `scripts/legacy/` nếu cần):
@@ -246,7 +253,6 @@ python scripts/validate_knowledge.py
 # python scripts/legacy/compute_cf.py
 # python scripts/legacy/build_procedure.py
 # python scripts/legacy/rebuild_kg.py
-```
 ```
 
 ## 7. File Thừa Có Thể Xóa

@@ -3,7 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts._bootstrap import PROJECT_ROOT  # noqa: F401
+try:
+    from _bootstrap import PROJECT_ROOT  # type: ignore
+except ModuleNotFoundError:
+    from scripts._bootstrap import PROJECT_ROOT  # type: ignore
 from src.expert_system.hierarchy import build_hierarchy
 from src.expert_system.knowledge_base import extract_rules, load_json
 

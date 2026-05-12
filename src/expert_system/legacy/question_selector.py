@@ -137,12 +137,12 @@ class QuestionSelector:
             "symptom": symptom_id,
             "symptom_id": symptom_id,
             "label": label,
-            "question": f"Do you also notice {label.lower()}?",
+            "question": f"Bạn có thấy thêm dấu hiệu: {label.lower()} không?",
             "step_id": None,
             "mode": "information_gain",
             "information_gain": result["information_gain"],
             "fault_preview": None,
-            "explanation": "Selected as the best unasked symptom to separate competing fault hypotheses.",
+            "explanation": "Được chọn vì đây là triệu chứng chưa hỏi giúp phân biệt tốt nhất giữa các giả thuyết lỗi.",
         }
 
     def _tree_question(self, step: dict[str, Any], top: dict[str, Any]) -> dict[str, Any]:

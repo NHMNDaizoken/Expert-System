@@ -13,12 +13,13 @@ const SYSTEM_LABELS = {
 };
 
 function parseProgress(progress) {
-  if (!progress || !progress.includes("/")) {
+  if (!progress) {
     return { label: "Bước 1", percent: 15 };
   }
-  const [current, total] = progress.split("/").map((part) => Number(part));
-  const percent = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : 15;
-  return { label: `Bước ${current} / ${total}`, percent };
+  const current = Number(String(progress).split("/")[0]);
+  const step = Number.isFinite(current) && current > 0 ? current : 1;
+  const percent = Math.min(90, 15 + (step - 1) * 15);
+  return { label: `Bước ${step}`, percent };
 }
 
 function friendlyLabel(value) {

@@ -11,8 +11,10 @@ import argparse
 from pathlib import Path
 from typing import Any
 
-import _bootstrap  # noqa: F401
-
+try:
+    import _bootstrap  # type: ignore # noqa: F401
+except ModuleNotFoundError:
+    from scripts import _bootstrap  # type: ignore # noqa: F401
 from src.config import require_neo4j_config
 from src.legacy.kg_validator import extract_rules, validate_all
 

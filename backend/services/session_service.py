@@ -245,7 +245,7 @@ class SessionService:
         if step_id and step_id not in history:
             history.append(step_id)
         branch_path = list(session.get("branch_path", []))
-        if step_id is not None and answer is not None:
+        if step_id is not None:
             branch_path.append({"step_id": step_id, "answer": answer})
 
         with get_sqlite_connection() as connection:

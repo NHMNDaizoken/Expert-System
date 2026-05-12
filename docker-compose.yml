@@ -15,6 +15,8 @@ services:
       dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
       NEO4J_URI: bolt://neo4j:7687
       NEO4J_USER: neo4j
@@ -24,6 +26,8 @@ services:
       SQLITE_DB_PATH: data/app.sqlite3
     volumes:
       - ./data:/app/data
+      - ./scripts:/app/scripts
+      - ./src:/app/src
     depends_on:
       - neo4j
 
@@ -31,6 +35,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
     ports:
       - "5173:5173"
     depends_on:

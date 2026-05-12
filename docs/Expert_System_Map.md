@@ -56,9 +56,10 @@ data/staging/cf_dynamic.json              Dynamic CF: cf_map[symptom_id][fault_i
 data/staging/procedure_trees.json         Cây diagnostic step yes/no cho từng fault
 data/staging/symptom_aliases.json         Từ điển triệu chứng và alias để match input
 data/staging/ontology.json                Ontology: system/subsystem/component
-src/kg_inference.py                       Engine suy luận backend đang dùng
-src/next_question.py                      Information gain + procedure-tree question selection
-src/cf.py                                 Công thức Certainty Factor phụ trợ
+src/expert_system/engine.py               Engine suy luận backend đang dùng, gồm dynamic CF + information gain
+src/expert_system/procedure.py            Procedure-tree question runner
+src/expert_system/matcher.py              Symptom normalization + fuzzy matching
+src/expert_system/policy.py               Gate output cuối
 backend/services/diagnosis_service.py     API gọi engine, enrich response và lưu session hỏi-đáp
 backend/services/session_service.py       SQLite session, current_step_id, step_history, branch_path
 backend/services/graph_service.py         Biến rule/ontology thành graph nodes/edges
@@ -68,7 +69,7 @@ frontend/src/components/DiagnosisResult.jsx    Màn hình kết quả và resolu
 frontend/src/pages/GraphViewer.jsx        Màn hình xem luật và quan hệ trên graph
 ```
 
-Chỉ giữ một luồng suy luận chính: backend, evaluation và dev checks đều đi qua `src/kg_inference.py`.
+Chỉ giữ một luồng suy luận chính: backend, evaluation và dev checks đều đi qua `src/expert_system/engine.py`.
 
 ## 4. Dữ Liệu Và Luật
 
@@ -169,7 +170,10 @@ data/staging/ontology.json
 data/staging/kg_rules_from_dataset.json
 scripts/build_knowledge.py           Consolidate: tính CF, build procedure, expert tree, alias
 scripts/validate_knowledge.py        Validate staging JSON consistency
-scripts/import_neo4j.py              Import staging vào Neo4j
+scripts/import_graph.py              Import staging vào Neo4j
+scripts/import_neo4j.py              Wrapper tương thích gọi sang import_graph.py
+scripts/rebuild_hierarchy.py         Sinh lại expert_tree.json từ staging hiện có
+scripts/translate_vi.py              Cập nhật vi_translations.json từ raw data
 backend/services/graph_service.py
 frontend/src/components/GraphCanvas.jsx
 ```
@@ -178,12 +182,12 @@ Lưu ý: Các script cũ (`compute_cf.py`, `build_procedure.py`, `rebuild_kg.py`
 
 ## 6. Suy Luận Chạy Như Thế Nào?
 
-File chính: `src/kg_inference.py` (engine) + `src/expert_system/response_policy.py` (gating layer)
+File chính: `src/expert_system/engine.py` (engine) + `src/expert_system/policy.py` (gating layer)
 
 Luồng xử lý:
 
 1. `SymptomMatcher.match()` fuzzy-match input với `symptom_aliases.json`.
-2. `KGInference.diagnose()` lấy các symptom đã xác nhận.
+2. `ExpertSystemEngine.diagnose()` lấy các symptom đã xác nhận.
 3. Engine tạo `cf_map[symptom_id][fault_id]` từ `kg_rules_from_dataset.json`.
 4. `rank_faults()` tính điểm:
 
@@ -196,7 +200,7 @@ Sau đó normalize để tổng score của các fault = 1.
 ```
 
 5. `check_diagnosed()` chỉ kết luận khi fault top > 0.70 và cách fault thứ hai > 0.30. Engine output `procedure_terminal` vào response.
-6. **Response Policy Layer** (`src/expert_system/response_policy.py`): Áp dụng `apply_response_policy()` tại `backend/services/diagnosis_service.py` để gate finalization:
+6. **Response Policy Layer** (`src/expert_system/policy.py`): Áp dụng `apply_response_policy()` tại `backend/services/diagnosis_service.py` để gate finalization:
    - Nếu `procedure_terminal != "DIAGNOSED"`: set `status = need_more_info`, `results = []`, `is_final = false` (UI chỉ hiện câu hỏi tiếp theo)
    - Nếu `procedure_terminal == "DIAGNOSED"`: set `status = diagnosed`, `results = [ranking]`, `is_final = true` (UI hiện Final Ranking + resolution)
 
@@ -218,7 +222,7 @@ ranking                Bảng xếp hạng fault
 
 ## 7. Smart Questioning
 
-File chính: `src/next_question.py`
+File chính: `src/expert_system/engine.py` (information gain) và `src/expert_system/procedure.py` (procedure tree)
 
 Khi có nhiều fault gần đúng nhau, engine có 2 mode:
 
@@ -353,7 +357,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 docker compose up -d neo4j
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/import_graph.py --clear
 python -m uvicorn backend.main:app --reload
 ```
 
@@ -383,7 +387,7 @@ docker compose up -d --build
 Nếu Neo4j mới/rỗng, import data bằng:
 
 ```powershell
-docker compose exec backend python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+docker compose exec backend python -m scripts.import_graph --clear
 ```
 
 ## 11. Lệnh Data, Dev Và Test
@@ -392,13 +396,17 @@ Build staging data (consolidated scripts):
 
 ```powershell
 # Build all staging artifacts from data/raw/automotive_faults.json
+uv run python scripts/translate_vi.py
 uv run python scripts/build_knowledge.py --rebuild-from-raw
 
 # Validate staging artifacts
 uv run python scripts/validate_knowledge.py
 
+# Rebuild expert_tree.json only
+uv run python scripts/rebuild_hierarchy.py
+
 # Import into Neo4j
-uv run python scripts/import_graph.py
+uv run python scripts/import_graph.py --clear
 ```
 
 **Legacy** (do not use - scripts consolidated into build_knowledge.py):
@@ -435,7 +443,7 @@ Nếu dùng `uv`, có thể thay `pytest` bằng `uv run pytest`.
 Baseline evaluation gần nhất:
 
 ```text
-Cases: 12
+Cases: 20
 Top-1: 100.00%
 Top-3: 100.00%
 Top-5: 100.00%
@@ -457,7 +465,7 @@ Bước tiếp theo hợp lý:
 1. Kiểm thử thủ công end-to-end luồng diagnostic chat trên browser: nhập triệu chứng, nhận `next_question`, trả lời yes/no, xem result có resolution.
 2. Thêm integration tests sâu hơn cho `/api/graph`, `/api/graph/fault/{fault_id}`, `/api/graph/search`, `/api/graph/stats`.
 3. Mở rộng `data/staging/test_cases.json` khi thêm rule mới.
-4. Cải thiện ontology mapping trong `scripts/data_tools.py`.
+4. Cải thiện ontology mapping trong `scripts/import_graph.py` hoặc `src/expert_system/hierarchy.py`.
 5. Cải thiện câu hỏi tự nhiên theo ngôn ngữ UI, có thể hỗ trợ song ngữ Anh/Việt.
 6. Bổ sung dữ liệu automotive thực tế hơn để KG phong phú hơn.
 
@@ -468,8 +476,8 @@ Nếu cần hiểu nhanh hoặc demo code, đọc theo thứ tự này:
 1. `data/staging/cf_dynamic.json`
 2. `data/staging/procedure_trees.json`
 3. `data/staging/kg_rules_from_dataset.json`
-4. `src/kg_inference.py`
-5. `src/next_question.py`
+4. `src/expert_system/engine.py`
+5. `src/expert_system/procedure.py`
 6. `backend/services/diagnosis_service.py`
 7. `backend/services/session_service.py`
 8. `frontend/src/pages/DiagnosticChat.jsx`
@@ -478,4 +486,4 @@ Nếu cần hiểu nhanh hoặc demo code, đọc theo thứ tự này:
 11. `frontend/src/pages/GraphViewer.jsx`
 12. `scripts/evaluate_diagnosis.py`
 
-Tóm lại: `data/staging` là tri thức, `src/kg_inference.py` là bộ suy luận, `src/next_question.py` là chiến lược hỏi thêm, `backend` là API/session, `frontend` là phần minh họa luật và quan hệ.
+Tóm lại: `data/staging` là tri thức, `src/expert_system/engine.py` là bộ suy luận, `src/expert_system/procedure.py` là phần đi cây hỏi thêm, `backend` là API/session, `frontend` là phần minh họa luật và quan hệ.

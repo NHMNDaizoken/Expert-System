@@ -48,11 +48,14 @@ docs/          Tài liệu project
 ## File Quan Trọng
 
 ```text
-src/kg_inference.py
-  Engine chính. Match symptom, tạo cf_map, rank fault bằng dynamic CF, trả next_question, status.
+src/expert_system/engine.py
+  Engine chính. Match symptom, tạo cf_map, rank fault bằng dynamic CF, chọn information-gain question, trả next_question, status.
 
-src/next_question.py
-  Chọn câu hỏi yes/no tiếp theo bằng information gain hoặc đi theo procedure tree.
+src/expert_system/procedure.py
+  Đi theo procedure tree của từng fault để hỏi yes/no theo bước.
+
+src/expert_system/matcher.py
+  Chuẩn hóa input người dùng và fuzzy-match với symptom aliases.
 
 src/llm_fallback.py
   Nhánh fallback khi KG không match được symptom mới.
@@ -87,8 +90,14 @@ scripts/build_knowledge.py
 scripts/validate_knowledge.py
   Validate staging JSON consistency (ontology, rules, symptoms). Thay thế data_tools.py validate + rebuild.
 
-scripts/import_neo4j.py
-  Import staging files vào Neo4j. Thay thế data_tools.py rebuild.
+scripts/import_graph.py
+  Import staging files vào Neo4j. Đây là lệnh import hiện tại; `scripts/import_neo4j.py` là wrapper tương thích.
+
+scripts/rebuild_hierarchy.py
+  Sinh lại `data/staging/expert_tree.json` từ staging JSON hiện có.
+
+scripts/translate_vi.py
+  Cập nhật `data/staging/vi_translations.json` từ dataset raw bằng Gemini API nếu còn text chưa dịch.
 
 scripts/legacy/
   Archive của các script cũ: compute_cf.py, build_procedure.py, rebuild_kg.py, build_expert_tree.py, data_tools.py.
@@ -109,6 +118,18 @@ data/staging/ontology.json
   Ontology system/subsystem/component.
 ```
 
+## Cấu Trúc Hệ Chuyên Gia Khi Bảo Vệ
+
+```text
+Knowledge base  -> data/staging/*.json chứa triệu chứng, lỗi, linh kiện, ontology và quan hệ.
+Rule base       -> data/staging/kg_rules_from_dataset.json chứa luật IF symptoms THEN fault.
+Inference engine-> src/expert_system/engine.py match triệu chứng, tính CF và xếp hạng lỗi.
+Question flow   -> procedure tree runtime sinh câu hỏi từ symptom, không hỏi bước kỹ thuật.
+Technician steps-> resolution/procedure trong rule, chỉ hiển thị sau khi đã chẩn đoán.
+Graph UI        -> backend/services/graph_service.py và frontend graph pages dùng để giải thích/visualize.
+Neo4j           -> hữu ích cho graph demo, nhưng không bắt buộc vì inference có thể chạy từ JSON staging.
+```
+
 ## Trạng Thái Chẩn Đoán
 
 Backend trả các trạng thái chính:
@@ -127,7 +148,7 @@ llm_fallback
   KG không có symptom phù hợp, dùng Gemini hoặc offline fallback.
 ```
 
-Ghi chú: Response gating được áp dụng tại layer `src/expert_system/response_policy.py`. Chỉ khi `procedure_terminal == "DIAGNOSED"` thì `results` mới được trả về. Nếu chưa, `results = []` và `is_final = false`.
+Ghi chú: Response gating được áp dụng tại layer `src/expert_system/policy.py`. Chỉ khi `procedure_terminal == "DIAGNOSED"` thì `results` mới được trả về. Nếu chưa, `results = []` và `is_final = false`.
 
 Trường response quan trọng:
 
@@ -153,7 +174,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 docker compose up -d neo4j
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/import_graph.py --clear
 python -m uvicorn backend.main:app --reload
 ```
 
@@ -174,14 +195,16 @@ docker compose up -d --build
 Import lại Neo4j nếu graph rỗng:
 
 ```powershell
-python scripts/data_tools.py rebuild data/staging/kg_rules_from_dataset.json --clear
+python scripts/import_graph.py --clear
 ```
 
 Build lại staging data từ dataset raw (consolidated script):
 
 ```powershell
+uv run python scripts/translate_vi.py
 uv run python scripts/build_knowledge.py --rebuild-from-raw
 uv run python scripts/validate_knowledge.py
+uv run python scripts/import_graph.py --clear
 ```
 
 Validate staging data:
@@ -223,13 +246,13 @@ data/staging/ontology.json
 Sửa cách rank/chẩn đoán:
 
 ```text
-src/kg_inference.py
+src/expert_system/engine.py
 ```
 
 Sửa cách hỏi tiếp:
 
 ```text
-src/next_question.py
+src/expert_system/procedure.py
 ```
 
 Sửa flow API/session:

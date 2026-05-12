@@ -5,9 +5,9 @@ import ExpertReview from "./pages/ExpertReview.jsx";
 import GraphViewer from "./pages/GraphViewer.jsx";
 
 const links = [
-  { to: "/diagnosis", label: "Chẩn đoán Lỗi", icon: MessageSquareText },
-  { to: "/graph", label: "Đồ thị Kiến thức", icon: GitBranch },
-  { to: "/review", label: "Kiểm duyệt Luật", icon: ShieldCheck },
+  { to: "/diagnosis", label: "Chẩn đoán lỗi", icon: MessageSquareText },
+  { to: "/graph", label: "Sơ đồ tri thức", icon: GitBranch },
+  { to: "/review", label: "Kiểm duyệt luật", icon: ShieldCheck },
 ];
 
 export default function App() {
@@ -18,7 +18,7 @@ export default function App() {
           <span className="brand-mark">AE</span>
           <div className="brand-text">
             <strong>AutoExpert</strong>
-            <small>Neo4j System</small>
+            <small>Hệ chuyên gia Neo4j</small>
           </div>
         </div>
         <nav>

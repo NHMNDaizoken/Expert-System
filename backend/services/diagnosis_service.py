@@ -7,14 +7,17 @@ from src.expert_system.policy import apply_response_policy
 from src.llm_fallback import diagnose_with_llm
 
 
+MIN_CHAT_STEPS = 3
+
+
 def confidence_label(cf):
     if cf >= 0.8:
-        return "Very likely"
+        return "Rất có khả năng"
     if cf >= 0.6:
-        return "Likely"
+        return "Có khả năng"
     if cf >= 0.5:
-        return "Possible"
-    return "Uncertain"
+        return "Có thể xảy ra"
+    return "Chưa chắc chắn"
 
 
 def parse_answer(answer):
@@ -25,7 +28,7 @@ def parse_answer(answer):
         return False
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
-        detail="Answer must be yes or no.",
+        detail="Câu trả lời phải là có hoặc không.",
     )
 
 
@@ -36,13 +39,36 @@ def enrich_response(response):
     return response
 
 
-def estimate_step_progress(session, top_rule):
-    history = session.get("step_history", []) if session else []
-    if not history:
+def question_key(question):
+    if not question:
         return None
-    total = len((top_rule or {}).get("procedure", {}).get("steps", {}))
-    current = len(history)
-    return f"{current}/{total}" if total > 0 else None
+    return question.get("step_id") or question.get("symptom_id") or question.get("symptom") or question.get("mode")
+
+
+def answered_step_count(session):
+    if not session:
+        return 0
+    branch_path = session.get("branch_path", []) or []
+    if branch_path:
+        return len(branch_path)
+    return len(session.get("step_history", []) or [])
+
+
+def estimate_step_progress(session, response):
+    current = answered_step_count(session)
+    if response.get("status") == "need_more_info" and response.get("next_question"):
+        current += 1
+    return str(current) if current > 0 else None
+
+
+def fallback_follow_up_question():
+    return {
+        "question": "Cần thêm một bước xác nhận trước khi kết luận. Triệu chứng này có xuất hiện liên tục không?",
+        "symptom": "symptom_persistent",
+        "symptom_id": "symptom_persistent",
+        "mode": "safety_follow_up",
+        "tree_level": "secondary_symptom",
+    }
 
 
 def should_use_llm_fallback(response):
@@ -90,7 +116,7 @@ def llm_response(user_input, top_k=5, reason="kg_no_match"):
             "final_decision": {"status": "unknown_symptom", "top_fault": None},
             "ranking": [],
         },
-        "explanation_summary": "Symptom was not mapped to the Knowledge Base; LLM fallback suggestions are non-authoritative.",
+        "explanation_summary": "Triệu chứng chưa được ánh xạ vào cơ sở tri thức; gợi ý từ LLM chỉ để tham khảo.",
         "status": "unknown_symptom",
         "is_final": False,
         "source": "llm_fallback",
@@ -111,6 +137,7 @@ class DiagnosisService:
         try:
             response = ExpertSystemEngine.from_staging().diagnose(user_input, top_k=top_k)
             response = apply_response_policy(response)
+            response = self._force_interview_if_too_early(response, None)
             response = enrich_response(response)
             response["source"] = "staging_files_kg"
         except Exception as exc:
@@ -127,9 +154,8 @@ class DiagnosisService:
     
     def _force_interview_if_too_early(self, response, session=None):
         """
-        Safety guard: prevent one-shot diagnosis from a single primary symptom.
-        The expert system should ask at least one follow-up question unless the
-        engine explicitly marks the diagnosis as deterministic.
+        Keep a diagnosis in interview mode only when the expert engine selected
+        a real next question from the knowledge base.
         """
         if not response:
             return response
@@ -137,37 +163,21 @@ class DiagnosisService:
         if response.get("status") != "diagnosed":
             return response
 
-        if response.get("deterministic") is True:
-            return response
-
-        confirmed = response.get("confirmed_symptoms") or []
         hypotheses = response.get("results") or response.get("current_hypotheses") or []
         next_question = response.get("next_question")
+        if not next_question:
+            return response
 
-        session_question_count = 0
-        if session:
-            session_question_count = len(session.get("step_history", []) or [])
-
-        too_little_evidence = len(confirmed) <= 1 and session_question_count < 1
-
-        if too_little_evidence:
+        if answered_step_count(session) < MIN_CHAT_STEPS:
             response["status"] = "need_more_info"
             response["is_final"] = False
             response["current_hypotheses"] = hypotheses
             response["results"] = []
-
-            if not next_question:
-                response["next_question"] = {
-                    "question": "Cần thêm thông tin để xác nhận nguyên nhân. Triệu chứng này có xuất hiện liên tục không?",
-                    "symptom": "symptom_persistent",
-                    "symptom_id": "symptom_persistent",
-                    "mode": "safety_follow_up",
-                    "tree_level": "secondary_symptom",
-                }
+            response["next_question"] = next_question
 
             response["explanation_summary"] = (
-                "Initial symptom matched the knowledge base, but more evidence is required "
-                "before producing a final diagnosis."
+                "Cơ sở tri thức đã có chẩn đoán khả nghi, nhưng cần thêm vài bước hỏi đáp "
+                "trước khi đưa ra kết luận cuối."
             )
 
         return response
@@ -203,7 +213,7 @@ class DiagnosisService:
         hypotheses = response.get("current_hypotheses") or response.get("diagnoses") or []
         top = hypotheses[0] if hypotheses else None
         top_rule = self._rule_for_fault(top.get("fault_id")) if top else None
-        progress = estimate_step_progress(session or {}, top_rule)
+        progress = estimate_step_progress(session or {}, response)
 
         mode = next_question.get("mode") or "information_gain"
         response.setdefault("mode", mode)
@@ -211,12 +221,12 @@ class DiagnosisService:
         response.setdefault("step_progress", progress)
         response.setdefault("fault_preview", next_question.get("fault_preview"))
         response.setdefault("resolution", None)
-        response["total_steps_est"] = len((top_rule or {}).get("procedure", {}).get("steps", {})) or None
+        response["total_steps_est"] = None
 
         if progress:
-            response["step_context"] = f"Diagnostic procedure · step {progress}"
+            response["step_context"] = f"Quy trình kiểm tra · bước {progress}"
         elif mode == "procedure_tree":
-            response["step_context"] = "Diagnostic procedure"
+            response["step_context"] = "Quy trình kiểm tra"
 
         if response.get("status") == "diagnosed":
             response["results"] = response.get("results") or hypotheses
@@ -231,7 +241,7 @@ class DiagnosisService:
         if session is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Diagnosis session was not found.",
+                detail="Không tìm thấy phiên chẩn đoán.",
             )
 
         user_input = " ".join(part for part in [session.get("user_input", ""), symptom or ""] if part).strip()
@@ -249,7 +259,7 @@ class DiagnosisService:
                 pass  # symptom matching failure is non-critical
 
         if step_answer is not None:
-            if last_question.get("mode") == "information_gain" and last_question.get("symptom_id"):
+            if last_question.get("symptom_id"):
                 symptom_id = last_question["symptom_id"]
                 answers[symptom_id] = bool(step_answer)
                 if step_answer:
@@ -258,7 +268,7 @@ class DiagnosisService:
                 else:
                     rejected_symptoms.add(symptom_id)
                     confirmed_symptoms.discard(symptom_id)
-            self.sessions.update_step_state(session_id, last_question.get("step_id"), step_answer)
+            self.sessions.update_step_state(session_id, question_key(last_question), step_answer)
             session = self.sessions.get(session_id)
 
         response = self._diagnose_with_available_engine(
@@ -269,6 +279,7 @@ class DiagnosisService:
             top_k=top_k,
         )
         response = apply_response_policy(response)
+        response = self._force_interview_if_too_early(response, session)
         if should_use_llm_fallback(response):
             response = llm_response(user_input, reason="kg_no_match_after_answer")
 
@@ -285,17 +296,17 @@ class DiagnosisService:
         if session is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Diagnosis session was not found.",
+                detail="Không tìm thấy phiên chẩn đoán.",
             )
 
         last_question = session.get("last_question")
         if not last_question:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="This session is not waiting for an answer.",
+                detail="Phiên này hiện không chờ câu trả lời.",
             )
 
-        symptom = last_question["symptom"]
+        symptom = last_question.get("symptom_id") or last_question["symptom"]
         answers = dict(session.get("answers", {}))
         answers[symptom] = parse_answer(answer)
         confirmed_symptoms = set(session.get("confirmed_symptoms", []))
@@ -306,6 +317,8 @@ class DiagnosisService:
         else:
             rejected_symptoms.add(symptom)
             confirmed_symptoms.discard(symptom)
+        self.sessions.update_step_state(session_id, question_key(last_question), answers[symptom])
+        session = self.sessions.get(session_id)
 
         response = self._diagnose_with_available_engine(
             session["user_input"],
@@ -314,6 +327,7 @@ class DiagnosisService:
             session=session,
         )
         response = apply_response_policy(response)
+        response = self._force_interview_if_too_early(response, session)
 
         if should_use_llm_fallback(response):
             response = llm_response(

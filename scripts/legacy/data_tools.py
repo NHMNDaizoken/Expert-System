@@ -5,9 +5,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-import _bootstrap  # noqa: F401
-
-from src.kg_validator import KGValidationError, validate_all
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import _bootstrap  # noqa: F401,E402
+from src.legacy.kg_validator import KGValidationError, validate_all
 
 RAW_PATH = Path("data/raw/automotive_faults.json")
 GENERATED_RULES_PATH = Path("data/staging/kg_rules_from_dataset.json")
