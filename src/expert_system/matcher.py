@@ -4,7 +4,7 @@ from typing import Any
 
 from rapidfuzz import fuzz
 
-MATCH_THRESHOLD = 78
+MATCH_THRESHOLD = 88
 
 
 class SymptomMatcher:
@@ -45,7 +45,7 @@ class SymptomMatcher:
                 }
                 continue
 
-            score = max(fuzz.partial_ratio(cleaned, term), fuzz.token_set_ratio(cleaned, term))
+            score = fuzz.token_set_ratio(cleaned, term)
             if score < self.threshold:
                 continue
             current = best_by_symptom.get(symptom_id)
@@ -68,4 +68,4 @@ class SymptomMatcher:
     def _is_exact_phrase_match(cleaned: str, term: str) -> bool:
         if not cleaned or not term:
             return False
-        return term in cleaned or cleaned in term
+        return cleaned == term or f" {term} " in f" {cleaned} "

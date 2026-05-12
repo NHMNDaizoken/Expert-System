@@ -7,7 +7,7 @@ from src.expert_system.policy import apply_response_policy
 from src.expert_system.llm_fallback import diagnose_with_llm
 
 
-MIN_CHAT_STEPS = 3
+MIN_CHAT_STEPS = 1
 
 
 def confidence_label(cf):
@@ -68,46 +68,73 @@ def should_use_llm_fallback(response):
     return response.get("status") in {"unknown_symptom", "no_fault_found"} or not candidates
 
 
+def filter_rejected_faults(response, rejected_faults):
+    rejected_faults = set(rejected_faults or [])
+    if not rejected_faults:
+        return response
+
+    for key in ["diagnoses", "results", "current_hypotheses", "candidate_faults"]:
+        response[key] = [
+            item for item in response.get(key, [])
+            if item.get("fault_id") not in rejected_faults
+        ]
+
+    response["rejected_faults"] = sorted(rejected_faults)
+
+    if not response.get("diagnoses") and not response.get("current_hypotheses"):
+        response["status"] = "no_fault_found"
+        response["is_final"] = False
+        response["next_question"] = None
+        response["results"] = []
+
+    return response
+
+
 def llm_response(user_input, top_k=5, reason="kg_no_match"):
     fallback = diagnose_with_llm(user_input, top_k=top_k)
     diagnoses = fallback.get("diagnoses", [])
+
     return {
         "matched_symptoms": [],
         "confirmed_symptoms": [],
         "rejected_symptoms": [],
+        "rejected_faults": [],
         "detected_systems": [],
         "primary_symptom": None,
         "confirmed_context": [],
         "rejected_context": [],
         "active_fault_path": [],
         "tree_level": "symptom",
-        "diagnoses": diagnoses,
-        "results": diagnoses,
-        "current_hypotheses": diagnoses,
-        "candidate_faults": [
-            {
-                "fault_id": item.get("fault_id"),
-                "fault_name": item.get("fault_name"),
-                "fault_label": item.get("fault_label"),
-                "system": item.get("system"),
-                "final_cf": item.get("final_cf"),
-                "confidence_label": item.get("confidence_label"),
-            }
-            for item in diagnoses
-        ],
+
+        # KHÔNG cho frontend render như kết quả thật
+        "diagnoses": [],
+        "results": [],
+        "current_hypotheses": [],
+        "candidate_faults": [],
+
+        # Chỉ để admin/queue dùng
+        "llm_suggestions": diagnoses,
+
         "next_question": {
-            "question": "Mình chưa có triệu chứng này trong hệ thống. Bạn có thể mô tả thêm: xe xảy ra khi nào, có đèn báo/tiếng kêu/mùi/rò rỉ gì không?",
+            "question": (
+                "Mình chưa có luật phù hợp trong hệ thống. "
+                "Triệu chứng này đã được đưa vào hàng chờ kiểm duyệt."
+            ),
             "type": "free_text",
             "mode": "llm_fallback",
         },
+
         "notes": fallback.get("notes", []),
         "queued_for_review": fallback.get("queued_for_review", False),
         "reasoning_trace": [
             "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
-            "Đã gọi LLM fallback để tạo candidate diagnosis tạm thời.",
-            "Kết quả đã được đưa vào queue review nếu queued_for_review=True.",
+            "Đã gọi LLM fallback để tạo gợi ý tạm thời.",
+            "Gợi ý chỉ dùng cho kiểm duyệt, không hiển thị như kết luận.",
         ],
-        "explanation_summary": "Triệu chứng chưa được ánh xạ vào cơ sở tri thức; gợi ý từ LLM chỉ để tham khảo.",
+        "explanation_summary": (
+            "Triệu chứng chưa được ánh xạ vào cơ sở tri thức; "
+            "gợi ý LLM đang chờ quản trị viên duyệt."
+        ),
         "status": "llm_fallback",
         "is_final": False,
         "source": "llm_fallback",
@@ -141,7 +168,6 @@ class DiagnosisService:
         try:
             response = ExpertSystemEngine.from_staging().diagnose(user_input, top_k=top_k)
             response = apply_response_policy(response)
-            response = self._force_interview_if_too_early(response, None)
             response = enrich_response(response)
             response["source"] = "staging_files_kg"
         except Exception as exc:
@@ -155,34 +181,20 @@ class DiagnosisService:
         session_id = self.sessions.create(user_input, response)
         response["session_id"] = session_id
         return response
-    
-    def _force_interview_if_too_early(self, response, session=None):
-        """
-        Keep a diagnosis in interview mode only when the expert engine selected
-        a real next question from the knowledge base.
-        """
-        if not response:
-            return response
 
+    def _force_interview_if_too_early(self, response, session=None):
         if response.get("status") != "diagnosed":
             return response
 
-        hypotheses = response.get("results") or response.get("current_hypotheses") or []
-        next_question = response.get("next_question")
-        if not next_question:
+        if answered_step_count(session or {}) >= MIN_CHAT_STEPS:
             return response
 
-        if answered_step_count(session) < MIN_CHAT_STEPS:
+        next_question = response.get("next_question")
+        if next_question:
             response["status"] = "need_more_info"
             response["is_final"] = False
-            response["current_hypotheses"] = hypotheses
             response["results"] = []
-            response["next_question"] = next_question
-
-            response["explanation_summary"] = (
-                "Cơ sở tri thức đã có chẩn đoán khả nghi, nhưng cần thêm vài bước hỏi đáp "
-                "trước khi đưa ra kết luận cuối."
-            )
+            return response
 
         return response
 
@@ -191,20 +203,25 @@ class DiagnosisService:
         user_input,
         confirmed_symptoms,
         rejected_symptoms,
+        rejected_faults=None,
         session=None,
         top_k=5,
     ):
+        session_for_engine = dict(session or {})
+        session_for_engine["rejected_faults"] = sorted(rejected_faults or [])
+
         response = enrich_response(
             ExpertSystemEngine.from_staging().diagnose(
                 user_input,
                 top_k=top_k,
                 confirmed_symptoms=sorted(confirmed_symptoms),
                 rejected_symptoms=sorted(rejected_symptoms),
-                session=session,
+                session=session_for_engine,
             )
         )
         response["source"] = "staging_files_kg"
-        return response
+        response["rejected_faults"] = sorted(rejected_faults or [])
+        return filter_rejected_faults(response, rejected_faults)
 
     def _rule_for_fault(self, fault_id):
         try:
@@ -218,8 +235,8 @@ class DiagnosisService:
         top = hypotheses[0] if hypotheses else None
         top_rule = self._rule_for_fault(top.get("fault_id")) if top else None
         progress = estimate_step_progress(session or {}, response)
-
         mode = next_question.get("mode") or "information_gain"
+
         response.setdefault("mode", mode)
         response.setdefault("step_context", None)
         response.setdefault("step_progress", progress)
@@ -238,7 +255,14 @@ class DiagnosisService:
                 response["resolution"] = top_rule.get("resolution")
         else:
             response.setdefault("results", [])
+
         return response
+
+    def _reject_fault_from_last_question(self, last_question, rejected_faults):
+        preview = last_question.get("fault_preview") or {}
+        fault_id = preview.get("fault_id")
+        if fault_id:
+            rejected_faults.add(fault_id)
 
     def continue_session(
         self,
@@ -258,6 +282,7 @@ class DiagnosisService:
         user_input = " ".join(part for part in [session.get("user_input", ""), symptom or ""] if part).strip()
         confirmed_symptoms = set(session.get("confirmed_symptoms", []))
         rejected_symptoms = set(session.get("rejected_symptoms", []))
+        rejected_faults = set(session.get("rejected_faults", []))
         answers = dict(session.get("answers", {}))
         last_question = session.get("last_question") or {}
 
@@ -267,35 +292,46 @@ class DiagnosisService:
                 for match in engine.matcher.match(symptom):
                     confirmed_symptoms.add(match["symptom_id"])
             except Exception:
-                pass  # symptom matching failure is non-critical
+                pass
 
         if step_answer_provided:
-            if last_question.get("symptom_id"):
-                symptom_id = last_question["symptom_id"]
-                if step_answer is not None:
-                    answers[symptom_id] = bool(step_answer)
-                    if step_answer:
-                        confirmed_symptoms.add(symptom_id)
-                        rejected_symptoms.discard(symptom_id)
-                    else:
-                        rejected_symptoms.add(symptom_id)
-                        confirmed_symptoms.discard(symptom_id)
+            symptom_id = last_question.get("symptom_id")
+            if symptom_id and step_answer is not None:
+                answers[symptom_id] = bool(step_answer)
+                if step_answer:
+                    confirmed_symptoms.add(symptom_id)
+                    rejected_symptoms.discard(symptom_id)
+                else:
+                    rejected_symptoms.add(symptom_id)
+                    confirmed_symptoms.discard(symptom_id)
+
+            if step_answer is False:
+                self._reject_fault_from_last_question(last_question, rejected_faults)
+
             self.sessions.update_step_state(session_id, question_key(last_question), step_answer)
-            session = self.sessions.get(session_id)
+
+        session = self.sessions.get(session_id) or session
+        session["rejected_faults"] = sorted(rejected_faults)
 
         response = self._diagnose_with_available_engine(
             user_input,
             confirmed_symptoms,
             rejected_symptoms,
+            rejected_faults=rejected_faults,
             session=session,
             top_k=top_k,
         )
+
         response = apply_response_policy(response)
-        response = self._force_interview_if_too_early(response, session)
+        response = filter_rejected_faults(response, rejected_faults)
+
         if should_use_llm_fallback(response):
             response = llm_response(user_input, reason="kg_no_match_after_answer")
+            response["rejected_faults"] = sorted(rejected_faults)
 
         response = self._add_response_context(response, session)
+        response["rejected_faults"] = sorted(rejected_faults)
+
         self.sessions.update_from_response(session_id, response, answers, user_input=user_input)
         response["session_id"] = session_id
         return response
@@ -315,36 +351,54 @@ class DiagnosisService:
                 detail="Phiên này hiện không chờ câu trả lời.",
             )
 
-        symptom = last_question.get("symptom_id") or last_question["symptom"]
+        parsed_answer = parse_answer(answer)
+        symptom = last_question.get("symptom_id") or last_question.get("symptom")
         answers = dict(session.get("answers", {}))
-        answers[symptom] = parse_answer(answer)
+
+        if symptom:
+            answers[symptom] = parsed_answer
+
         confirmed_symptoms = set(session.get("confirmed_symptoms", []))
         rejected_symptoms = set(session.get("rejected_symptoms", []))
-        if answers[symptom]:
-            confirmed_symptoms.add(symptom)
-            rejected_symptoms.discard(symptom)
-        else:
-            rejected_symptoms.add(symptom)
-            confirmed_symptoms.discard(symptom)
-        self.sessions.update_step_state(session_id, question_key(last_question), answers[symptom])
-        session = self.sessions.get(session_id)
+        rejected_faults = set(session.get("rejected_faults", []))
+
+        if symptom:
+            if parsed_answer:
+                confirmed_symptoms.add(symptom)
+                rejected_symptoms.discard(symptom)
+            else:
+                rejected_symptoms.add(symptom)
+                confirmed_symptoms.discard(symptom)
+
+        if parsed_answer is False:
+            self._reject_fault_from_last_question(last_question, rejected_faults)
+
+        self.sessions.update_step_state(session_id, question_key(last_question), parsed_answer)
+
+        session = self.sessions.get(session_id) or session
+        session["rejected_faults"] = sorted(rejected_faults)
 
         response = self._diagnose_with_available_engine(
             session["user_input"],
             confirmed_symptoms,
             rejected_symptoms,
+            rejected_faults=rejected_faults,
             session=session,
         )
+
         response = apply_response_policy(response)
-        response = self._force_interview_if_too_early(response, session)
+        response = filter_rejected_faults(response, rejected_faults)
 
         if should_use_llm_fallback(response):
             response = llm_response(
                 session["user_input"],
                 reason="kg_no_match_after_answer",
             )
+            response["rejected_faults"] = sorted(rejected_faults)
 
         response = self._add_response_context(response, session)
+        response["rejected_faults"] = sorted(rejected_faults)
+
         self.sessions.update_from_response(session_id, response, answers, user_input=session["user_input"])
         response["session_id"] = session_id
         return response

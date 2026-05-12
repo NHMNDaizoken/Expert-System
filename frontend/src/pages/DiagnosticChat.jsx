@@ -18,7 +18,13 @@ export default function DiagnosticChat({ initialState = "input", initialData = n
       setSessionId(data.session_id);
     }
     if (data.status === "diagnosed" || data.status === "llm_fallback") {
-      setScreenState("result");
+      <div className="result-card warning">
+        <h2>Chưa có luật phù hợp trong cơ sở tri thức</h2>
+        <p>
+          Triệu chứng này đã được đưa vào hàng chờ kiểm duyệt.
+          Quản trị viên cần duyệt trước khi thêm vào luật chẩn đoán.
+        </p>
+      </div>
     } else if (data.status === "need_more_info") {
       setScreenState("questioning");
     } else {

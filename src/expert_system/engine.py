@@ -28,6 +28,7 @@ class WorkingMemory:
     step_history: list[str] = field(default_factory=list)
     question_count: int = 0
     last_answer: bool | None = None
+    rejected_faults: list[str] = field(default_factory=list)
 
     @classmethod
     def from_input(
@@ -50,6 +51,7 @@ class WorkingMemory:
         return cls(
             confirmed_symptoms=list(session.get("confirmed_symptoms") or []),
             rejected_symptoms=list(session.get("rejected_symptoms") or []),
+            rejected_faults=list(session.get("rejected_faults") or []),  # thêm dòng này
             current_hypotheses=list(session.get("current_hypotheses") or []),
             active_fault_id=session.get("active_fault_id"),
             current_step_id=session.get("current_step_id"),
@@ -73,6 +75,7 @@ class WorkingMemory:
         return {
             "confirmed_symptoms": sorted(set(self.confirmed_symptoms)),
             "rejected_symptoms": sorted(set(self.rejected_symptoms)),
+            "rejected_faults": sorted(set(self.rejected_faults)),
             "detected_systems": self.detected_systems,
             "primary_symptom": self.primary_symptom,
             "confirmed_context": sorted(set(self.confirmed_symptoms) - ({self.primary_symptom} if self.primary_symptom else set())),
@@ -577,7 +580,13 @@ class ExpertSystemEngine:
         if not diagnoses:
             return self._select_information_gain_question(memory, diagnoses), None
 
-        top = diagnoses[0]
+        rejected_faults = set(getattr(memory, "rejected_faults", []) or [])
+
+        top = next(
+            (d for d in diagnoses if d.get("fault_id") not in rejected_faults),
+            diagnoses[0],
+        )
+
         procedure = self.kb.get_procedure_for_fault(top.get("fault_id"))
         if procedure:
             step = self._next_procedure_step(procedure, memory)

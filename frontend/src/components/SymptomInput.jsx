@@ -13,11 +13,11 @@ import {
 import { getGraph } from "../api/client.js";
 
 const QUICK_CHIPS = [
-  "Xe khó nổ",
-  "Xe bị rung",
+  "Khó nổ máy khi trời lạnh",
+  "Khó sang số",
   "Xe nóng máy",
-  "Phanh không ăn",
-  "Đèn báo lỗi sáng",
+  "Động cơ quá nhiệt",
+  "Mất công suất",
   "Có tiếng kêu lạ",
   "Xe hao xăng",
   "Điều hòa không lạnh",
