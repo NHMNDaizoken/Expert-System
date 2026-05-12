@@ -41,7 +41,9 @@ describe("Luồng DiagnosticChat", () => {
 
   test("hiển thị màn nhập triệu chứng ban đầu", () => {
     render(<DiagnosticChat />);
-    expect(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(/xe khó nổ/i)).toBeInTheDocument();
   });
 
@@ -49,7 +51,9 @@ describe("Luồng DiagnosticChat", () => {
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
     render(<DiagnosticChat />);
-    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), { target: { value: "xe khó nổ" } });
+    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
+      target: { value: "xe khó nổ" },
+    });
     fireEvent.click(screen.getByText(/bắt đầu chẩn đoán/i));
     await waitFor(() => expect(screen.getByText(/tạch tạch nhanh/i)).toBeInTheDocument());
     expect(screen.getByRole("button", { name: /^có$/i })).toBeInTheDocument();
@@ -60,7 +64,9 @@ describe("Luồng DiagnosticChat", () => {
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
     render(<DiagnosticChat />);
-    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), { target: { value: "xe khó nổ" } });
+    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
+      target: { value: "xe khó nổ" },
+    });
     fireEvent.click(screen.getByText(/bắt đầu chẩn đoán/i));
     await waitFor(() => expect(screen.getByText(/tạch tạch nhanh/i)).toBeInTheDocument());
     expect(screen.queryByText(/ắc quy yếu/i)).not.toBeInTheDocument();
@@ -71,7 +77,9 @@ describe("Luồng DiagnosticChat", () => {
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
     render(<DiagnosticChat />);
-    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), { target: { value: "xe khó nổ" } });
+    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
+      target: { value: "xe khó nổ" },
+    });
     fireEvent.click(screen.getByText(/bắt đầu chẩn đoán/i));
     await waitFor(() => expect(screen.getByText(/^bước 1$/i)).toBeInTheDocument());
   });
@@ -81,7 +89,9 @@ describe("Luồng DiagnosticChat", () => {
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => diagnosedResponse });
     render(<DiagnosticChat />);
-    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), { target: { value: "xe khó nổ" } });
+    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
+      target: { value: "xe khó nổ" },
+    });
     fireEvent.click(screen.getByText(/bắt đầu chẩn đoán/i));
     await waitFor(() => screen.getByRole("button", { name: /^có$/i }));
     fireEvent.click(screen.getByRole("button", { name: /^có$/i }));
@@ -99,7 +109,9 @@ describe("Luồng DiagnosticChat", () => {
   test("nút chẩn đoán lại quay về màn nhập", () => {
     render(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
     fireEvent.click(screen.getByText(/chẩn đoán lỗi khác/i));
-    expect(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)
+    ).toBeInTheDocument();
   });
 
   test("nút sửa mô tả reset kết quả hiện tại và xóa session", async () => {
@@ -108,10 +120,11 @@ describe("Luồng DiagnosticChat", () => {
     expect(screen.getByText(/87%/)).toBeInTheDocument();
     fireEvent.click(screen.getByText(/sửa mô tả/i));
     await waitFor(() => expect(screen.queryByText(/87%/)).not.toBeInTheDocument());
-    expect(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)).toBeInTheDocument();
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining("/session/s1"),
-      { method: "DELETE" },
-    );
+    expect(
+      screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)
+    ).toBeInTheDocument();
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/session/s1"), {
+      method: "DELETE",
+    });
   });
 });

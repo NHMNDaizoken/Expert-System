@@ -195,10 +195,7 @@ function layoutGraph(nodes, edges) {
 }
 
 function GraphCanvasInner({ graph, selectedNodeId, onNodeClick }) {
-  const visualEdges = useMemo(
-    () => (graph.edges || []).map(toVisualEdge),
-    [graph.edges]
-  );
+  const visualEdges = useMemo(() => (graph.edges || []).map(toVisualEdge), [graph.edges]);
 
   const nodes = useMemo(() => {
     const graphNodes = graph.nodes || [];
@@ -269,7 +266,8 @@ export default function GraphCanvas({
 }
 
 function displayLabel(node) {
-  const value = SYSTEM_LABELS[node.label] || SYSTEM_LABELS[node.id] || node.label || node.id;
+  const value =
+    SYSTEM_LABELS[node.label] || SYSTEM_LABELS[node.id] || node.label || node.id;
   return normalizeAutomotiveTerm(value);
 }
 

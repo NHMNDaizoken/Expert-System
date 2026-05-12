@@ -26,7 +26,9 @@ function friendlyLabel(value) {
   if (!value) return "";
   const raw = String(value);
   if (/diagnostic procedure/i.test(raw)) {
-    return raw.replace(/diagnostic procedure/i, "Quy trình kiểm tra").replace(/step/i, "bước");
+    return raw
+      .replace(/diagnostic procedure/i, "Quy trình kiểm tra")
+      .replace(/step/i, "bước");
   }
   if (raw === "procedure_tree") return "Quy trình kiểm tra";
   if (raw === "information_gain") return "Hỏi thêm triệu chứng";
@@ -35,10 +37,14 @@ function friendlyLabel(value) {
 }
 
 function breadcrumbParts(data) {
-  const system = data?.detected_systems?.[0] || data?.reasoning_trace?.normalization?.detected_systems?.[0];
+  const system =
+    data?.detected_systems?.[0] ||
+    data?.reasoning_trace?.normalization?.detected_systems?.[0];
   const primarySymptom = data?.primary_symptom;
   const step = data?.step_context || data?.next_question?.mode;
-  return [friendlyLabel(system), friendlyLabel(primarySymptom), friendlyLabel(step)].filter(Boolean);
+  return [friendlyLabel(system), friendlyLabel(primarySymptom), friendlyLabel(step)].filter(
+    Boolean
+  );
 }
 
 function questionText(data) {
@@ -77,20 +83,31 @@ export default function QuestioningScreen({ data, onAnswer, loading }) {
       <div className="question-card glass-panel">
         <span className="eyebrow">Câu hỏi tiếp theo</span>
         <h2>{questionText(data)}</h2>
-        
+
         <div className="answer-buttons">
-          <button className="answer-btn btn-yes" disabled={loading} onClick={() => onAnswer(true)}>
+          <button
+            className="answer-btn btn-yes"
+            disabled={loading}
+            onClick={() => onAnswer(true)}
+          >
             <CircleCheckBig size={20} />
             Có
           </button>
-          <button className="answer-btn btn-no" disabled={loading} onClick={() => onAnswer(false)}>
+          <button
+            className="answer-btn btn-no"
+            disabled={loading}
+            onClick={() => onAnswer(false)}
+          >
             <CircleX size={20} />
             Không
           </button>
         </div>
-        
+
         <button className="btn-skip" disabled={loading} onClick={() => onAnswer(null)}>
-          <CircleHelp size={16} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '4px' }} />
+          <CircleHelp
+            size={16}
+            style={{ display: "inline", verticalAlign: "text-bottom", marginRight: "4px" }}
+          />
           Không rõ / Bỏ qua câu này
         </button>
       </div>

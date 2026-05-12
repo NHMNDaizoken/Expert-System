@@ -7,8 +7,7 @@ const LABELS = {
 
 export default function ConfidenceBadge({ label = "Chưa chắc chắn", cf = 0 }) {
   const score = Number(cf);
-  const tone =
-    score >= 0.8 ? "high" : score >= 0.6 ? "good" : score >= 0.5 ? "mid" : "low";
+  const tone = score >= 0.8 ? "high" : score >= 0.6 ? "good" : score >= 0.5 ? "mid" : "low";
 
   return (
     <span className={`confidence ${tone}`}>

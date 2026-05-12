@@ -11,10 +11,7 @@ export default defineConfig({
   server: {
     port: 5173,
     fs: {
-      allow: [
-        ".",
-        path.resolve(__dirname, ".."),
-      ],
+      allow: [".", path.resolve(__dirname, "..")],
     },
     proxy: {
       "/data/staging": {

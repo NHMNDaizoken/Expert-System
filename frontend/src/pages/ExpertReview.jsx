@@ -40,6 +40,8 @@ export default function ExpertReview() {
   const [adminApiKey, setAdminApiKey] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selectedId, setSelectedId] = useState("");
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [payloadText, setPayloadText] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [error, setError] = useState("");
@@ -145,19 +147,37 @@ export default function ExpertReview() {
     }
   }, [selected]);
 
+  const filteredSuggestions = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return (suggestions || []).filter((item) => {
+      const statusOk = statusFilter === "all" || item.review_status === statusFilter;
+      if (!statusOk) return false;
+      if (!q) return true;
+      const haystack = `${item.user_input || ""} ${item.reason || ""} ${item.id || ""}`.toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [query, statusFilter, suggestions]);
+
   const diagnoses = selected?.llm_output?.diagnoses || [];
   const notes = selected?.llm_output?.notes || [];
 
   return (
-    <div className="page">
+    <div className="page review-page">
       <header className="toolbar-header">
         <div>
-          <h1>Kiểm duyệt tri thức</h1>
+          <h1>Kiểm duyệt luật</h1>
           <p>Duyệt gợi ý LLM vào staging KG trước khi build/import Neo4j.</p>
         </div>
         <div className="action-row">
+          <input
+            className="admin-key"
+            type="password"
+            value={adminApiKey}
+            onChange={(event) => setAdminApiKey(event.target.value)}
+            placeholder="X-Admin-API-Key"
+          />
           <button onClick={loadSuggestions} disabled={!adminApiKey.trim() || loading}>
-            <RefreshCw size={18} />
+            <RefreshCw size={18} className={loading ? "spin" : ""} />
             Tải gợi ý
           </button>
           <button onClick={rebuildKnowledge} disabled={!adminApiKey.trim()}>
@@ -167,108 +187,162 @@ export default function ExpertReview() {
         </div>
       </header>
 
-      <input
-        className="admin-key"
-        type="password"
-        value={adminApiKey}
-        onChange={(event) => setAdminApiKey(event.target.value)}
-        placeholder="X-Admin-API-Key"
-      />
+      {(error || message) && (
+        <div className="review-messages">
+          {error && <p className="error">{error}</p>}
+          {message && <p className="success">{message}</p>}
+        </div>
+      )}
 
-      {error && <p className="error">{error}</p>}
-      {message && <p className="success">{message}</p>}
-
-      <div className="review-list">
-        {suggestions.map((suggestion) => (
-          <article
-            className={`review-card ${selected?.id === suggestion.id ? "selected" : ""}`}
-            key={suggestion.id}
-            onClick={() => setSelectedId(suggestion.id)}
-          >
+      <section className="review-layout">
+        <aside className="review-sidebar" aria-label="Danh sách gợi ý kiểm duyệt">
+          <div className="review-sidebar-head">
             <div>
-              <h3>{suggestion.user_input}</h3>
-              <p>{suggestion.reason}</p>
-              <code>{suggestion.id}</code>
+              <h2>Hàng chờ</h2>
+              <p>{filteredSuggestions.length} gợi ý</p>
             </div>
-            <div>
-              <strong>{statusText(suggestion)}</strong>
-              <p>{suggestion.promoted_to_kb ? "Đã vào staging KG" : "Chưa promote"}</p>
+            <div className="review-filters">
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Tìm theo triệu chứng / lý do / id"
+              />
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+                aria-label="Lọc theo trạng thái"
+              >
+                <option value="all">Tất cả</option>
+                <option value="pending">Đang chờ</option>
+                <option value="approved">Đã đồng ý</option>
+                <option value="rejected">Đã từ chối</option>
+              </select>
             </div>
-          </article>
-        ))}
-      </div>
-
-      {selected && (
-        <section className="review-card">
-          <div>
-            <h2>{selected.user_input}</h2>
-            <p>{selected.reason}</p>
-            <p>
-              {statusText(selected)} ·{" "}
-              {selected.promoted_to_kb ? "promoted_to_kb=true" : "promoted_to_kb=false"}
-            </p>
           </div>
 
-          <h3>Chẩn đoán LLM</h3>
-          <div className="review-list">
-            {diagnoses.map((diagnosis) => (
-              <article className="review-card" key={diagnosis.fault_id}>
-                <div>
-                  <h3>{diagnosis.fault_label || diagnosis.fault_name}</h3>
-                  <p>{diagnosis.system}</p>
-                  <code>{diagnosis.fault_id}</code>
+          <div className="review-items">
+            {filteredSuggestions.length === 0 && (
+              <p className="muted review-empty">Không có gợi ý phù hợp với bộ lọc hiện tại.</p>
+            )}
+            {filteredSuggestions.map((suggestion) => (
+              <button
+                key={suggestion.id}
+                type="button"
+                className={`review-item ${selected?.id === suggestion.id ? "active" : ""}`}
+                onClick={() => setSelectedId(suggestion.id)}
+              >
+                <div className="review-item-main">
+                  <span className="review-item-title">{suggestion.user_input}</span>
+                  <span className="review-item-reason">{suggestion.reason}</span>
                 </div>
-                <strong>{Number(diagnosis.final_cf ?? 0).toFixed(2)}</strong>
-              </article>
+                <div className="review-item-meta">
+                  <span className={`review-status ${suggestion.review_status || "pending"}`}>
+                    {statusText(suggestion)}
+                  </span>
+                  <span className="review-promote">
+                    {suggestion.promoted_to_kb ? "Đã vào staging" : "Chưa promote"}
+                  </span>
+                </div>
+              </button>
             ))}
           </div>
+        </aside>
 
-          {notes.length > 0 && (
-            <div>
-              <h3>Ghi chú</h3>
-              {notes.map((note) => (
-                <p key={note}>{note}</p>
-              ))}
+        <div className="review-detail" aria-label="Chi tiết gợi ý">
+          {!selected ? (
+            <div className="review-detail-empty">
+              <p className="muted">Chọn một gợi ý ở cột trái để xem chi tiết.</p>
+            </div>
+          ) : (
+            <div className="review-detail-card">
+              <div className="review-detail-head">
+                <div>
+                  <h2>{selected.user_input}</h2>
+                  <p className="muted">{selected.reason}</p>
+                  <div className="review-detail-badges">
+                    <span className={`review-status ${selected.review_status || "pending"}`}>
+                      {statusText(selected)}
+                    </span>
+                    <span className="review-promote">
+                      {selected.promoted_to_kb ? "promoted_to_kb=true" : "promoted_to_kb=false"}
+                    </span>
+                    <code>{selected.id}</code>
+                  </div>
+                </div>
+              </div>
+
+              <section className="review-section">
+                <h3>Chẩn đoán LLM</h3>
+                {diagnoses.length === 0 ? (
+                  <p className="muted">Không có chẩn đoán trong output.</p>
+                ) : (
+                  <div className="review-diagnoses">
+                    {diagnoses.map((diagnosis) => (
+                      <article className="review-diagnosis" key={diagnosis.fault_id}>
+                        <div>
+                          <h4>{diagnosis.fault_label || diagnosis.fault_name}</h4>
+                          <p className="muted">{diagnosis.system}</p>
+                          <code>{diagnosis.fault_id}</code>
+                        </div>
+                        <strong>{Number(diagnosis.final_cf ?? 0).toFixed(2)}</strong>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              {notes.length > 0 && (
+                <section className="review-section">
+                  <h3>Ghi chú</h3>
+                  <div className="review-notes">
+                    {notes.map((note) => (
+                      <p key={note}>{note}</p>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              <section className="review-section">
+                <h3>approved_payload</h3>
+                <textarea
+                  className="json-editor"
+                  value={payloadText}
+                  onChange={(event) => setPayloadText(event.target.value)}
+                  rows={18}
+                />
+              </section>
+
+              <div className="review-actions">
+                <button onClick={approveSuggestion} disabled={!adminApiKey.trim()}>
+                  <Check size={18} />
+                  Đồng ý
+                </button>
+                <input
+                  className="admin-key"
+                  value={rejectReason}
+                  onChange={(event) => setRejectReason(event.target.value)}
+                  placeholder="Lý do từ chối"
+                />
+                <button
+                  className="danger"
+                  onClick={rejectSuggestion}
+                  disabled={!adminApiKey.trim()}
+                >
+                  <X size={18} />
+                  Từ chối
+                </button>
+              </div>
+
+              {rebuildOutput && (
+                <section className="review-section">
+                  <h3>Kết quả build</h3>
+                  <pre>{JSON.stringify(rebuildOutput, null, 2)}</pre>
+                </section>
+              )}
             </div>
           )}
-
-          <h3>approved_payload</h3>
-          <textarea
-            className="json-editor"
-            value={payloadText}
-            onChange={(event) => setPayloadText(event.target.value)}
-            rows={18}
-          />
-
-          <div className="action-row">
-            <button onClick={approveSuggestion} disabled={!adminApiKey.trim()}>
-              <Check size={18} />
-              Đồng ý
-            </button>
-            <input
-              className="admin-key"
-              value={rejectReason}
-              onChange={(event) => setRejectReason(event.target.value)}
-              placeholder="Lý do từ chối"
-            />
-            <button
-              className="danger"
-              onClick={rejectSuggestion}
-              disabled={!adminApiKey.trim()}
-            >
-              <X size={18} />
-              Từ chối
-            </button>
-          </div>
-        </section>
-      )}
-
-      {rebuildOutput && (
-        <section className="review-card">
-          <h3>Kết quả build</h3>
-          <pre>{JSON.stringify(rebuildOutput, null, 2)}</pre>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   );
 }

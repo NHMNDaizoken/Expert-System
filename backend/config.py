@@ -12,7 +12,7 @@ class Settings:
     neo4j_uri = os.getenv("NEO4J_URI")
     neo4j_user = os.getenv("NEO4J_USER")
     neo4j_password = os.getenv("NEO4J_PASSWORD")
-    admin_api_key = os.getenv("ADMIN_API_KEY", "change_me_admin_key")
+    admin_api_key = os.getenv("ADMIN_API_KEY")
     frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
     frontend_origins = [
         origin.strip()

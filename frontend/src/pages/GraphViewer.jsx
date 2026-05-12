@@ -105,6 +105,7 @@ export default function GraphViewer() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState("");
   const [faultBrowserCollapsed, setFaultBrowserCollapsed] = useState(false);
+  const [detailCollapsed, setDetailCollapsed] = useState(false);
 
   async function loadStats() {
     try {
@@ -178,6 +179,14 @@ export default function GraphViewer() {
     setSelectedNode(node);
     if (node?.type === "Fault" && mode === "full") {
       handleOpenFaultGraph(node.id, node);
+    }
+  }
+
+  function selectById(nodeId) {
+    if (!nodeId) return;
+    const target = graph.nodes.find((n) => n.id === nodeId);
+    if (target) {
+      setSelectedNode(target);
     }
   }
 
@@ -350,7 +359,7 @@ export default function GraphViewer() {
           onToggleCollapse={() => setFaultBrowserCollapsed((value) => !value)}
         />
 
-        <div className="graph-main">
+        <div className={`graph-main ${detailCollapsed ? "detail-collapsed" : ""}`}>
           <div className="graph-filterbar">
             <select value={type} onChange={(event) => setType(event.target.value)}>
               {TYPE_OPTIONS.map((option) => (
@@ -375,6 +384,14 @@ export default function GraphViewer() {
                 {selectedNode?.type === "Fault" ? displayLabel(selectedNode) : "Đang xem chi tiết"}
               </span>
             )}
+            <button
+              type="button"
+              className="secondary-toggle"
+              onClick={() => setDetailCollapsed((v) => !v)}
+              aria-pressed={detailCollapsed}
+            >
+              {detailCollapsed ? "Mở chi tiết" : "Thu chi tiết"}
+            </button>
           </div>
 
           {error && (
@@ -417,13 +434,15 @@ export default function GraphViewer() {
           )}
         </div>
 
-        <aside className="node-inspector graph-detail-panel">
+        {!detailCollapsed && (
+          <aside className="node-inspector graph-detail-panel">
           {selectedNode ? (
             <NodeDetails
               node={selectedNode}
               graph={graph}
               onOpenFaultGraph={() => handleOpenFaultGraph(selectedNode.id, selectedNode)}
               loading={loading}
+              onSelectNode={selectById}
             />
           ) : (
             <div className="detail-empty">
@@ -431,7 +450,8 @@ export default function GraphViewer() {
               <p>Chọn một lỗi hoặc hạng mục</p>
             </div>
           )}
-        </aside>
+          </aside>
+        )}
       </section>
     </div>
   );
@@ -510,7 +530,7 @@ function FaultBrowser({
   );
 }
 
-function NodeDetails({ node, graph, onOpenFaultGraph, loading }) {
+function NodeDetails({ node, graph, onOpenFaultGraph, loading, onSelectNode }) {
   const nodesById = useMemo(
     () => new Map((graph?.nodes || []).map((item) => [item.id, item])),
     [graph?.nodes]
@@ -556,7 +576,12 @@ function NodeDetails({ node, graph, onOpenFaultGraph, loading }) {
         </button>
       )}
       {node.type === "Fault" && (
-        <FaultRulePanel node={node} edges={connectedEdges} nodesById={nodesById} />
+        <FaultRulePanel
+          node={node}
+          edges={connectedEdges}
+          nodesById={nodesById}
+          onSelectNode={onSelectNode}
+        />
       )}
       <RelationshipPanel edges={connectedEdges} nodesById={nodesById} />
       {node.type === "Fault" && (
@@ -566,7 +591,7 @@ function NodeDetails({ node, graph, onOpenFaultGraph, loading }) {
   );
 }
 
-function FaultRulePanel({ node, edges, nodesById }) {
+function FaultRulePanel({ node, edges, nodesById, onSelectNode }) {
   const symptomEdges = edges.filter(
     (edge) => edge.type === "HAS_SYMPTOM" && edge.source === node.id
   );
@@ -584,10 +609,16 @@ function FaultRulePanel({ node, edges, nodesById }) {
             <span className="muted">Chưa có dấu hiệu trong sơ đồ hiện tại</span>
           ) : (
             symptomEdges.map((edge) => (
-              <span className="rule-chip" key={edge.id}>
+              <button
+                type="button"
+                className="rule-chip clickable"
+                key={edge.id}
+                onClick={() => onSelectNode?.(edge.target)}
+                title="Chọn dấu hiệu trong sơ đồ"
+              >
                 {nodeLabel(nodesById, edge.target)}
                 {edge.metadata?.priority && <small>P{edge.metadata.priority}</small>}
-              </span>
+              </button>
             ))
           )}
         </div>
@@ -603,9 +634,15 @@ function FaultRulePanel({ node, edges, nodesById }) {
           <strong>LIÊN KẾT</strong>
           <div>
             {componentEdges.map((edge) => (
-              <span className="rule-chip" key={edge.id}>
+              <button
+                type="button"
+                className="rule-chip clickable"
+                key={edge.id}
+                onClick={() => onSelectNode?.(edge.target)}
+                title="Chọn bộ phận trong sơ đồ"
+              >
                 Ảnh hưởng đến {nodeLabel(nodesById, edge.target)}
-              </span>
+              </button>
             ))}
           </div>
         </div>
