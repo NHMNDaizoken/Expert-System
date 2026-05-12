@@ -1,5 +1,7 @@
 import { TriangleAlert, Wrench, RefreshCw, CircleCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import DebugLogsPanel from "./DebugLogsPanel.jsx";
+import TechnicalPayloadPanel from "./TechnicalPayloadPanel.jsx";
 
 function scoreOf(result) {
   return Number(result?.score ?? result?.final_cf ?? 0);
@@ -19,17 +21,44 @@ export default function DiagnosisResult({
 }) {
   const results = data?.results || legacyResults || [];
   const resolution = data?.resolution || results[0]?.resolution || {};
-  const isLlmFallback = data?.status === "llm_fallback";
+  const isReviewNeeded = data?.status === "llm_fallback" || data?.status === "review_needed";
+
+  if (isReviewNeeded) {
+    const question = data?.next_question?.question || "Vui lòng cung cấp thêm thông tin để chuyên gia kiểm duyệt.";
+    const debug = data?.debug || { notes: data?.notes || data?.fallback_notes || [] };
+
+    return (
+      <section className="result-section">
+        <div className="primary-result-card review-needed-card glass-panel">
+          <span className="result-badge">Cần thêm thông tin</span>
+          <h2>Triệu chứng chưa có đủ tri thức đã xác minh</h2>
+          <p className="muted">{data?.explanation_summary || "Hệ thống chưa thể đưa ra chẩn đoán cuối cho triệu chứng này."}</p>
+          <div className="repair-section">
+            <h3>
+              <TriangleAlert size={18} /> Cần hỏi thêm
+            </h3>
+            <p>{question}</p>
+          </div>
+          <div className="action-row action-row-between">
+            <Link className="secondary-btn" to="/review">
+              Mở hàng chờ kiểm duyệt
+            </Link>
+            <button className="secondary-btn" onClick={onRestart}>
+              <RefreshCw size={18} />
+              Chẩn đoán lại
+            </button>
+          </div>
+        </div>
+        <TechnicalPayloadPanel title="Chi tiết kỹ thuật" payload={data?.debug || data} />
+        <DebugLogsPanel logs={debug} />
+      </section>
+    );
+  }
 
   if (!results.length) {
     return (
-      <div
-        className="result-section glass-panel"
-        style={{ padding: "32px", textAlign: "center" }}
-      >
-        <p className="muted">
-          Chưa tìm thấy lỗi phù hợp. Vui lòng thử cung cấp thêm triệu chứng.
-        </p>
+      <div className="result-section glass-panel" style={{ padding: "32px", textAlign: "center" }}>
+        <p className="muted">Chưa tìm thấy lỗi phù hợp. Vui lòng thử cung cấp thêm triệu chứng.</p>
         <button className="primary-btn" onClick={onRestart} style={{ marginTop: "16px" }}>
           <RefreshCw size={18} /> Chẩn đoán lại
         </button>
@@ -40,87 +69,11 @@ export default function DiagnosisResult({
   const [top, ...others] = results.slice(0, 3);
   const confidence = Math.round(scoreOf(top) * 100);
 
-  if (isLlmFallback) {
-    const notes = data?.notes || data?.fallback_notes || [];
-
-    return (
-      <section className="result-section">
-        <div className="primary-result-card glass-panel">
-          <span className="result-badge">Gợi ý LLM cần kiểm duyệt</span>
-          <h2>{top.fault_label || top.fault_name}</h2>
-          <p className="muted">
-            Đây là ứng viên tham khảo từ LLM, chưa phải kết luận cuối của hệ chuyên gia.
-          </p>
-
-          <div className="confidence-row">
-            <div className="confidence-track">
-              <div className="confidence-fill" style={{ width: `${confidence}%` }} />
-            </div>
-            <div className="confidence-text">CF tham khảo: {confidence}%</div>
-          </div>
-
-          {notes.length > 0 && (
-            <div className="repair-section">
-              <h3>
-                <TriangleAlert size={18} /> Ghi chú kiểm duyệt
-              </h3>
-              <ul>
-                {notes.map((note) => (
-                  <li key={note}>{note}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="action-row">
-            <Link className="secondary-btn" to="/review">
-              Mở kiểm duyệt luật
-            </Link>
-            <button className="secondary-btn" onClick={onRestart}>
-              <RefreshCw size={18} />
-              Chẩn đoán lại
-            </button>
-          </div>
-        </div>
-
-        {others.length > 0 && (
-          <div style={{ marginTop: "16px" }}>
-            <h3
-              style={{
-                color: "var(--text-secondary)",
-                fontSize: "1rem",
-                marginBottom: "12px",
-              }}
-            >
-              Ứng viên LLM khác
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              {others.map((result) => (
-                <div
-                  className="secondary-result-card"
-                  key={result.fault_id || result.fault_name}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <TriangleAlert size={18} color="var(--warning-base)" />
-                    <h3>{result.fault_label || result.fault_name}</h3>
-                  </div>
-                  <span className="secondary-result-score">
-                    {Math.round(scoreOf(result) * 100)}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </section>
-    );
-  }
-
   return (
     <section className="result-section">
       <div className="primary-result-card glass-panel">
         <span className="result-badge">Khả năng cao nhất</span>
-        <h2>{top.fault_label || top.fault_name}</h2>
+        <h2>{top.fault_label_vi || top.fault_label || top.fault_name}</h2>
 
         <div className="confidence-row">
           <div className="confidence-track">
@@ -175,7 +128,7 @@ export default function DiagnosisResult({
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <TriangleAlert size={18} color="var(--warning-base)" />
-                  <h3>{result.fault_label || result.fault_name}</h3>
+                  <h3>{result.fault_label_vi || result.fault_label || result.fault_name}</h3>
                 </div>
                 <span className="secondary-result-score">
                   {Math.round(scoreOf(result) * 100)}%

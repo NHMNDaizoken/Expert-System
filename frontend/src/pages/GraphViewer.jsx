@@ -90,6 +90,52 @@ const SYSTEM_LABELS = {
   SYS_EXHAUST_EMISSION: "Khí xả và phát thải",
 };
 
+const FAULT_ITEM_STYLE = {
+  minHeight: 74,
+  height: "auto",
+  padding: "12px 14px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "stretch",
+  justifyContent: "center",
+  gap: 8,
+  overflow: "visible",
+};
+
+const FAULT_TITLE_STYLE = {
+  display: "block",
+  width: "100%",
+  lineHeight: 1.25,
+  whiteSpace: "normal",
+  overflowWrap: "anywhere",
+  wordBreak: "break-word",
+  textAlign: "left",
+};
+
+const FAULT_META_STYLE = {
+  position: "static",
+  display: "flex",
+  width: "100%",
+  minWidth: 0,
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 8,
+  lineHeight: 1.2,
+  whiteSpace: "normal",
+};
+
+const FAULT_META_TEXT_STYLE = {
+  minWidth: 0,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
+
+const FAULT_META_BADGE_STYLE = {
+  flex: "0 0 auto",
+  whiteSpace: "nowrap",
+};
+
 export default function GraphViewer() {
   const [graph, setGraph] = useState({ nodes: [], edges: [] });
   const [selectedNode, setSelectedNode] = useState(null);
@@ -347,7 +393,9 @@ export default function GraphViewer() {
         ))}
       </section>
 
-      <section className={`graph-workspace ${faultBrowserCollapsed ? "fault-collapsed" : ""}`}>
+      <section
+        className={`graph-workspace ${faultBrowserCollapsed ? "fault-collapsed" : ""} ${detailCollapsed ? "detail-collapsed" : ""}`}
+      >
         <FaultBrowser
           faults={faultList}
           loading={faultListLoading}
@@ -485,19 +533,21 @@ function FaultBrowser({
   return (
     <aside className="fault-browser">
       <div className="fault-browser-head">
-        <div>
+        <div className="fault-browser-head-text">
           <h2>Danh sách lỗi</h2>
           <p>Mở từng sơ đồ nhỏ để đọc rõ hơn</p>
         </div>
-        <button
-          className="collapse-button"
-          type="button"
-          onClick={onToggleCollapse}
-          aria-label="Thu gọn danh sách lỗi"
-        >
-          <PanelLeftClose size={18} />
-        </button>
-        {loading && <Loader2 size={17} className="spin" />}
+        <div className="fault-browser-head-actions">
+          {loading && <Loader2 size={17} className="spin" aria-hidden />}
+          <button
+            className="collapse-button"
+            type="button"
+            onClick={onToggleCollapse}
+            aria-label="Thu gọn danh sách lỗi"
+          >
+            <PanelLeftClose size={18} />
+          </button>
+        </div>
       </div>
       <label className="fault-search">
         <Search size={17} />
@@ -516,12 +566,20 @@ function FaultBrowser({
             key={fault.id}
             type="button"
             className={`fault-list-item ${selectedId === fault.id ? "active" : ""}`}
+            style={FAULT_ITEM_STYLE}
             onClick={() => onOpenFault(fault.id, fault)}
+            title={displayLabel(fault)}
           >
-            <span className="fault-card-title">{displayLabel(fault)}</span>
-            <span className="fault-card-meta">
-              <span>{displaySystem(fault.summary?.system)}</span>
-              <span>{fault.summary?.symptom_count ?? 0} dấu hiệu</span>
+            <span className="fault-card-title" style={FAULT_TITLE_STYLE}>
+              {displayLabel(fault)}
+            </span>
+            <span className="fault-card-meta" style={FAULT_META_STYLE}>
+              <span style={FAULT_META_TEXT_STYLE}>
+                {displaySystem(fault.summary?.system)}
+              </span>
+              <span style={FAULT_META_BADGE_STYLE}>
+                {fault.summary?.symptom_count ?? 0} dấu hiệu
+              </span>
             </span>
           </button>
         ))}
@@ -670,7 +728,7 @@ function RelationshipPanel({ edges, nodesById }) {
               </span>
               <span>
                 {nodeLabel(nodesById, edge.source)}
-                {" -> "}
+                {" → "}
                 {nodeLabel(nodesById, edge.target)}
               </span>
             </li>

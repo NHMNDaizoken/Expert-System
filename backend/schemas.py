@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class DiagnoseRequest(BaseModel):
     session_id: str | None = None
     symptom: str | None = Field(default=None, min_length=1)
-    step_answer: bool | None = None
+    step_answer: Any | None = None
     user_input: str | None = Field(default=None, min_length=1)
     text: str | None = Field(default=None, min_length=1)
     top_k: int = Field(default=5, ge=1, le=20)

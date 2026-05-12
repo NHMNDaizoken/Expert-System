@@ -9,13 +9,12 @@ import ReactFlow, {
   Position,
   ReactFlowProvider,
   useReactFlow,
+  useNodesInitialized,
 } from "reactflow";
 
 const minNodeWidth = 196;
 const maxNodeWidth = 276;
 const baseNodeHeight = 88;
-const levelGap = 370;
-const rowGap = 44;
 
 const NODE_LEVEL = {
   Symptom: 0,
@@ -155,9 +154,11 @@ function layoutGraph(nodes, edges) {
   graph.setDefaultEdgeLabel(() => ({}));
   graph.setGraph({
     rankdir: "LR",
-    ranksep: 150,
-    nodesep: 70,
-    edgesep: 30,
+    ranksep: 280,
+    nodesep: 150,
+    edgesep: 60,
+    marginx: 80,
+    marginy: 80,
   });
 
   nodes.forEach((node) => {
@@ -177,9 +178,7 @@ function layoutGraph(nodes, edges) {
 
   return nodes.map((node) => {
     const position = graph.node(node.id) || { x: 0, y: 0 };
-    const level = NODE_LEVEL[node.type] ?? 5;
     const { width, height } = nodeDimensions(node.data || node);
-    const snappedY = Math.round((position.y - height / 2) / rowGap) * rowGap;
 
     return {
       ...node,
@@ -187,8 +186,9 @@ function layoutGraph(nodes, edges) {
         width,
       },
       position: {
-        x: level * levelGap,
-        y: snappedY,
+        // Let Dagre control spacing; ReactFlow expects top-left coords.
+        x: position.x - width / 2,
+        y: position.y - height / 2,
       },
     };
   });
@@ -218,12 +218,19 @@ function GraphCanvasInner({ graph, selectedNodeId, onNodeClick }) {
   }, [graph.nodes, selectedNodeId, visualEdges]);
 
   const { fitView } = useReactFlow();
+  const nodesInitialized = useNodesInitialized();
 
   useEffect(() => {
-    window.requestAnimationFrame(() => {
-      fitView({ padding: 0.18, duration: 450 });
+    if (!nodesInitialized || nodes.length === 0) return;
+
+    requestAnimationFrame(() => {
+      fitView({
+        padding: 0.35,
+        duration: 500,
+        includeHiddenNodes: false,
+      });
     });
-  }, [fitView, nodes.length, visualEdges.length]);
+  }, [nodesInitialized, fitView, nodes.length, visualEdges.length]);
 
   return (
     <div className="graph-canvas">

@@ -1,63 +1,122 @@
-# Docs Index
+# Expert System Documentation
 
 Cập nhật: 2026-05-12
 
-Tài liệu này là điểm vào chính để đọc nhanh và điều hướng toàn bộ tài liệu trong dự án.
+---
 
-## 1. Nên Đọc Theo Thứ Tự Nào?
+## Mục Lục
+1. [Giới thiệu & Mục tiêu](#giới-thiệu--mục-tiêu)
+2. [Kiến trúc hệ thống](#kiến-trúc-hệ-thống)
+3. [Các thành phần & file chính](#các-thành-phần--file-chính)
+4. [Luồng hoạt động](#luồng-hoạt-động)
+5. [Lộ trình refactor & UX](#lộ-trình-refactor--ux)
+6. [Hướng dẫn sử dụng nhanh](#hướng-dẫn-sử-dụng-nhanh)
 
-Nếu là người mới vào dự án:
+---
 
-1. `README.md`: setup và chạy dự án.
-2. `docs/Project_Brief.md`: handoff nhanh, biết file nào cần chỉnh.
-3. `docs/Expert_System_Map.md`: hiểu sâu kiến trúc suy luận và dữ liệu.
-4. `docs/plan.md`: trạng thái cleanup và backlog.
+## Giới thiệu & Mục tiêu
 
-## 2. Mục Tiêu Tài Liệu
-
+Hệ chuyên gia chẩn đoán lỗi ô tô dạng web app. Mục tiêu tài liệu:
 - Mô tả đúng implementation hiện tại.
 - Hỗ trợ chạy local, docker và debug nhanh.
 - Chỉ rõ nơi chứa knowledge base, rule base, inference engine.
 - Làm rõ ranh giới giữa graph visualization và core inference.
 
-## 3. Chỉ Mục Theo Chủ Đề
+---
 
-### 3.1 Chạy Nhanh
+## Kiến trúc hệ thống
 
-Xem `README.md`.
+Hệ thống gồm 4 lớp:
+1. Data layer: raw dataset + staging artifacts + Neo4j graph.
+2. Inference layer: matcher, engine, procedure runner, response policy.
+3. Service/API layer: diagnosis/session/graph/review.
+4. Presentation layer: diagnostic chat, graph viewer, expert review.
 
-### 3.2 Kiến Trúc Tổng Quan
+Sơ đồ luồng khái quát:
 
-Xem `docs/Project_Brief.md`.
+User input → Symptom normalization + fuzzy matching → Hypothesis ranking (dynamic CF) → Question selection (information gain / procedure tree) → Session update (SQLite) → Response policy (final or ask-next) → Frontend rendering
 
-### 3.3 Chi Tiết Kỹ Thuật
+### Data Artifacts (staging files dùng ở runtime):
+- data/staging/kg_rules_from_dataset.json: nguồn rule theo fault
+- data/staging/cf_dynamic.json: ma trận CF động symptom → fault
+- data/staging/procedure_trees.json: cấu trúc cây hỏi nhị phân theo fault
+- data/staging/symptom_aliases.json: từ điển chuẩn hóa symptom
+- data/staging/ontology.json: phân cấp system/subsystem/component
+- data/staging/expert_tree.json: cây phân cấp phục vụ UI/analysis
+- data/staging/test_cases.json: bộ dữ liệu đánh giá
 
-Xem `docs/Expert_System_Map.md`.
+---
 
-### 3.4 Kế Hoạch và Trạng Thái
+## Các thành phần & file chính
 
-Xem `docs/plan.md`.
+### Inference:
+- src/expert_system/engine.py: điều phối suy luận
+- src/expert_system/matcher.py: chuẩn hóa/match symptom
+- src/expert_system/procedure.py: hỏi đáp theo cây bước
+- src/expert_system/policy.py: chỉ cho phép finalization đúng điều kiện
 
-## 4. Các File Kỹ Thuật Quan Trọng
+### Backend:
+- backend/routes/diagnosis.py: endpoints chẩn đoán + session
+- backend/services/diagnosis_service.py: orchestration và fallback
 
-```text
-src/expert_system/engine.py
-src/expert_system/matcher.py
-src/expert_system/procedure.py
-src/expert_system/policy.py
-src/expert_system/llm_fallback.py
-src/llm_fallback.py
-backend/services/diagnosis_service.py
-backend/services/session_service.py
-backend/services/graph_service.py
-```
+### Fallback module layout:
+- src/llm_fallback.py: lớp tương thích để import path cũ không bị vỡ
+- src/expert_system/llm_fallback.py: nơi chứa logic fallback thật
 
-Artifacts tri thức:
+---
 
-```text
-data/staging/kg_rules_from_dataset.json
-data/staging/cf_dynamic.json
-data/staging/procedure_trees.json
+## Luồng hoạt động
+
+1. Nhập triệu chứng tự do
+2. Match triệu chứng với alias/rule
+3. Xếp hạng fault bằng dynamic CF
+4. Nếu chưa đủ chắc chắn thì hỏi tiếp theo từng bước
+5. Đủ điều kiện mới trả kết luận cuối + hướng sửa chữa
+
+---
+
+## Lộ trình refactor & UX
+
+### Final Goal
+Hệ thống phải vận hành như một chuyên gia thực thụ:
+
+User nhập triệu chứng → xác định hệ thống xe → hỏi phân biệt → thu hẹp fault → đề xuất quy trình kiểm tra → xác nhận fault → khuyến nghị sửa chữa/phụ tùng → thiếu tri thức thì gửi lên expert review.
+
+### Vấn đề hiện tại
+1. Diagnosis flow bỏ qua bước hỏi tiếp
+2. Knowledge graph visualization bị vỡ
+3. Expert review khó đọc
+4. Reasoning trace quá kỹ thuật
+5. Schema không nhất quán
+
+### Định hướng kiến trúc đúng
+- Tách biệt rõ frontend, backend, core inference, data
+- Payload trả về phải human-readable, không lẫn debug
+- Review chỉ hiển thị thông tin cần thiết
+
+---
+
+## Hướng dẫn sử dụng nhanh
+
+### 1. Cài đặt & chạy
+- Xem README.md ở thư mục gốc để setup môi trường, cài Python, Node.js, Docker nếu cần.
+- Chạy backend: `uvicorn backend.main:app --reload`
+- Chạy frontend: `cd frontend && npm install && npm run dev`
+
+### 2. Kiểm thử
+- Test backend: `pytest tests/`
+- Test frontend: `npm run test`
+
+### 3. Debug/Phát triển
+- Sửa rule/data: cập nhật file trong data/staging, chạy lại script validate nếu cần.
+- Sửa engine: thay đổi trong src/expert_system/*
+- Sửa UI: frontend/src/components/*
+
+---
+
+## Liên hệ & đóng góp
+- Đọc kỹ mục lục, commit message rõ ràng, tuân thủ cấu trúc repo.
+- Mọi thắc mắc: mở issue hoặc liên hệ maintainer.
 data/staging/symptom_aliases.json
 data/staging/ontology.json
 ```

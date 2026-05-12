@@ -406,29 +406,49 @@ class ExpertSystemEngine:
     ) -> dict[str, Any]:
         fallback = diagnose_with_llm(text, top_k=top_k)
         diagnoses = fallback.get("diagnoses", [])
+        missing_questions = (
+            fallback.get("diagnostic_tree", {})
+            .get("level_3_context", {})
+            .get("missing_questions", [])
+        )
         return {
             "matched_symptoms": matched_symptoms,
-            "candidate_faults": self._candidate_faults_payload(diagnoses),
-            "status": "llm_fallback",
+            "candidate_faults": [],
+            "status": "need_more_info",
             "is_final": False,
             "source": "llm_fallback",
-            "results": diagnoses,
-            "diagnoses": diagnoses,
-            "current_hypotheses": diagnoses,
+            "results": [],
+            "diagnoses": [],
+            "current_hypotheses": [],
+            "llm_suggestions": diagnoses,
             "next_question": {
-                "question": "Mình chưa có triệu chứng này trong hệ thống. Bạn có thể mô tả thêm: xe xảy ra khi nào, có đèn báo/tiếng kêu/mùi/rò rỉ gì không?",
-                "type": "free_text",
+                "question": missing_questions[0]
+                if missing_questions
+                else "Mình chưa có triệu chứng này trong hệ thống. Triệu chứng thường xảy ra khi nào?",
+                "type": "multiple_choice",
                 "mode": "llm_fallback",
+                "choices": [
+                    {"value": "startup", "label": "Lúc khởi động"},
+                    {"value": "accelerating", "label": "Khi tăng tốc"},
+                    {"value": "idle", "label": "Khi chạy không tải"},
+                    {"value": "high_speed", "label": "Ở tốc độ cao"},
+                    {"value": "not_sure", "label": "Không chắc"},
+                ],
+                "why": "Cần thêm context trước khi chuyên gia thêm mapping mới vào Knowledge Graph.",
             },
-            "notes": fallback.get("notes", []),
+            "notes": ["Triệu chứng đã được đưa vào hàng chờ chuyên gia; chưa có kết luận cuối."],
             "queued_for_review": fallback.get("queued_for_review", False),
             "reasoning_trace": [
                 "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
-                "Đã gọi LLM fallback để tạo candidate diagnosis tạm thời.",
-                "Kết quả đã được đưa vào queue review nếu queued_for_review=True.",
+                "Đã đưa case vào hàng chờ chuyên gia.",
+                "Không hiển thị candidate LLM như kết luận chẩn đoán.",
             ],
             "tree_level": "symptom",
-            "explanation_summary": "Triệu chứng chưa có trong cơ sở tri thức; gợi ý fallback chỉ là ứng viên tạm thời để review.",
+            "explanation_summary": "Triệu chứng chưa có trong cơ sở tri thức; cần thêm thông tin và chuyên gia duyệt.",
+            "debug": {
+                "fallback_notes": fallback.get("notes", []),
+                "raw_fallback": fallback,
+            },
             "procedure_terminal": None,
             **memory.to_response_fields(),
         }

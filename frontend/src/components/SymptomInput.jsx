@@ -7,16 +7,14 @@ import {
   Droplet,
   Settings,
   Thermometer,
-  Volume2,
-  Wind,
 } from "lucide-react";
 import { getGraph } from "../api/client.js";
 
 const QUICK_CHIPS = [
-  "Khó nổ máy khi trời lạnh",
-  "Khó sang số",
-  "Xe nóng máy",
-  "Động cơ quá nhiệt",
+  "Mùi nhiên liệu từ xe",
+  "Động cơ hụt hơi ở tốc độ cao",
+  "Gầm xe kêu hoặc rung không đều",
+  "Phanh bị lệch",
   "Mất công suất",
   "Có tiếng kêu lạ",
   "Xe hao xăng",
@@ -24,14 +22,12 @@ const QUICK_CHIPS = [
 ];
 
 const CATEGORY_DEF = [
-  { id: "engine", name: "Động cơ & hiệu suất", icon: Activity, keywords: ["engine", "idle", "acceleration", "power", "stall", "misfire"] },
-  { id: "brakes", name: "Hệ thống phanh", icon: Disc, keywords: ["brake", "abs"] },
-  { id: "electrical", name: "Điện & đèn", icon: Battery, keywords: ["light", "battery", "voltage", "door lock", "headlight", "glow plug"] },
-  { id: "cooling", name: "Làm mát & nhiệt độ", icon: Thermometer, keywords: ["coolant", "overheat"] },
-  { id: "fluids", name: "Rò rỉ & chất lỏng", icon: Droplet, keywords: ["leak", "oil", "fluid", "smoke", "smell", "odor", "exhaust"] },
-  { id: "noise", name: "Tiếng ồn & rung", icon: Volume2, keywords: ["noise", "sound", "vibration", "clunk", "click", "grind", "shudder"] },
-  { id: "hvac", name: "Điều hòa", icon: Wind, keywords: ["ac ", "ac_", "hvac", "vent", "cooling"] },
-  { id: "other", name: "Hệ thống khác", icon: Settings, keywords: [] },
+  { id: "engine", name: "Engine", label: "Động cơ", icon: Activity, keywords: ["engine", "idle", "acceleration", "power", "stall", "misfire", "động cơ", "máy"] },
+  { id: "fuel", name: "Fuel", label: "Nhiên liệu", icon: Droplet, keywords: ["fuel", "xăng", "nhiên liệu", "hao xăng", "mùi xăng"] },
+  { id: "electrical", name: "Electrical", label: "Điện", icon: Battery, keywords: ["light", "battery", "voltage", "door lock", "headlight", "glow plug", "đèn", "ắc quy", "điện"] },
+  { id: "cooling", name: "Cooling", label: "Làm mát", icon: Thermometer, keywords: ["coolant", "overheat", "nóng máy", "quá nhiệt", "két nước"] },
+  { id: "brake", name: "Brake", label: "Phanh", icon: Disc, keywords: ["brake", "abs", "phanh", "thắng"] },
+  { id: "other", name: "Other", label: "Hệ thống khác", icon: Settings, keywords: [] },
 ];
 
 function humanizeId(id = "") {
@@ -49,6 +45,7 @@ function categorize(aliases) {
   const allSymptoms = Object.entries(aliases).map(([id, item]) => ({
     id,
     label: displayLabel(id, item),
+    relatedFaults: item.relatedFaults || 0,
   }));
 
   const result = CATEGORY_DEF.map((cat) => ({ ...cat, symptoms: [] }));
@@ -72,6 +69,14 @@ function categorize(aliases) {
 
 function symptomsFromGraph(data) {
   const symptomsObj = {};
+  const relatedFaults = {};
+  (data.edges || [])
+    .filter((edge) => edge.type === "HAS_SYMPTOM")
+    .forEach((edge) => {
+      relatedFaults[edge.target] = (relatedFaults[edge.target] || 0) + 1;
+      relatedFaults[edge.source] = (relatedFaults[edge.source] || 0) + 1;
+    });
+
   (data.nodes || [])
     .filter((node) => node.type === "Symptom")
     .forEach((node) => {
@@ -79,6 +84,7 @@ function symptomsFromGraph(data) {
         name: node.id,
         display_name: node.label || humanizeId(node.id),
         label_vi: node.metadata?.label_vi,
+        relatedFaults: relatedFaults[node.id] || 0,
       };
     });
   return symptomsObj;
@@ -209,7 +215,7 @@ export default function SymptomInput({ value, onChange, onSubmit, loading, error
                 <div key={cat.id} className="category-card">
                   <div className="category-header">
                     <Icon size={18} />
-                    {cat.name}
+                    <span>{cat.label}</span>
                   </div>
                   <div className="symptom-toggle-list">
                     {filtered.map((sym) => {
@@ -218,13 +224,20 @@ export default function SymptomInput({ value, onChange, onSubmit, loading, error
                         <button
                           type="button"
                           key={sym.id}
-                          className={`symptom-toggle ${isSelected ? "selected" : ""}`}
+                          className={`symptom-toggle symptom-row ${isSelected ? "selected" : ""}`}
                           onClick={() => toggleSymptom(sym.label)}
                         >
                           <span className="checkbox-mark" aria-hidden="true">
                             {isSelected && <Check size={12} color="white" strokeWidth={3} />}
                           </span>
-                          {sym.label}
+                          <span className="symptom-row-text">
+                            <span className="symptom-row-title" title={sym.label}>
+                              {sym.label}
+                            </span>
+                            <span className="symptom-row-meta">
+                              {cat.label} · {sym.relatedFaults} lỗi liên quan trong KG
+                            </span>
+                          </span>
                         </button>
                       );
                     })}

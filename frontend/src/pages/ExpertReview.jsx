@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, RefreshCw, X } from "lucide-react";
+import { Check, Edit3, HelpCircle, RefreshCw, X } from "lucide-react";
 import { adminHeaders, api } from "../api/client.js";
+import DebugLogsPanel from "../components/DebugLogsPanel.jsx";
+import TechnicalPayloadPanel from "../components/TechnicalPayloadPanel.jsx";
 
 function makeSymptomId(text) {
   const slug = String(text || "")
@@ -29,11 +31,64 @@ function buildApprovedPayload(suggestion) {
   };
 }
 
-function statusText(suggestion) {
+function statusText(suggestion = {}) {
   if (suggestion.review_status === "approved") return "Đã đồng ý";
   if (suggestion.review_status === "rejected") return "Đã từ chối";
   if (suggestion.reviewed) return "Đã kiểm duyệt";
   return "Đang chờ";
+}
+
+function systemLabel(value) {
+  const labels = {
+    SYS_ENGINE: "Động cơ",
+    SYS_BRAKE: "Phanh",
+    SYS_ELECTRICAL: "Điện",
+    SYS_COOLING: "Làm mát",
+    SYS_FUEL: "Nhiên liệu",
+    SYS_TRANSMISSION: "Hộp số",
+    "Cooling System": "Làm mát",
+    "Fuel System": "Nhiên liệu",
+  };
+  return labels[value] || value || "Chưa rõ";
+}
+
+function reviewSummary(suggestion) {
+  const tree = suggestion?.llm_output?.diagnostic_tree || {};
+  const symptom = tree.level_2_primary_symptom || {};
+  const root = tree.level_1_root || {};
+  const diagnoses = suggestion?.llm_output?.diagnoses || tree.level_4_possible_faults || [];
+  const top = diagnoses[0] || {};
+
+  return {
+    primary: symptom.symptom_label_vi || suggestion?.user_input || "Chưa rõ triệu chứng",
+    system: root.system_label || top.system || "Chưa rõ",
+    currentDiagnosis:
+      top.fault_label_vi ||
+      top.fault_label_en ||
+      top.fault_label ||
+      "Triệu chứng chưa được KG hiện tại phủ đủ",
+    recommended:
+      top.decision ||
+      "Tạo ánh xạ triệu chứng mới hoặc yêu cầu thêm thông tin từ người dùng.",
+    questions: tree.level_3_context?.missing_questions || [],
+    summaryText: suggestion?.llm_output?.summary_vi,
+  };
+}
+
+function publicError(err) {
+  const detail = err.response?.data?.detail || err.message || "";
+  if (/api[_ -]?key|gemini|llm fallback|module/i.test(detail)) {
+    return "Không tải được dữ liệu kiểm duyệt. Xem Nhật ký gỡ lỗi để biết chi tiết kỹ thuật.";
+  }
+  return detail;
+}
+
+function parsePayloadText(value) {
+  try {
+    return { approved_payload: JSON.parse(value || "{}") };
+  } catch {
+    return { approved_payload: value };
+  }
 }
 
 export default function ExpertReview() {
@@ -45,9 +100,11 @@ export default function ExpertReview() {
   const [payloadText, setPayloadText] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [error, setError] = useState("");
+  const [debugError, setDebugError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [rebuildOutput, setRebuildOutput] = useState(null);
+  const [isEditingPayload, setIsEditingPayload] = useState(false);
 
   const selected = useMemo(
     () => suggestions.find((suggestion) => suggestion.id === selectedId) || suggestions[0],
@@ -56,6 +113,7 @@ export default function ExpertReview() {
 
   async function loadSuggestions() {
     setError("");
+    setDebugError("");
     setMessage("");
     setLoading(true);
     try {
@@ -71,7 +129,8 @@ export default function ExpertReview() {
           : nextSuggestions[0]?.id || ""
       );
     } catch (err) {
-      setError(err.response?.data?.detail || err.message);
+      setError(publicError(err));
+      setDebugError(err.response?.data?.detail || err.message);
     } finally {
       setLoading(false);
     }
@@ -86,7 +145,7 @@ export default function ExpertReview() {
     try {
       approvedPayload = JSON.parse(payloadText);
     } catch {
-      setError("JSON approved_payload không hợp lệ.");
+      setError("Payload JSON không hợp lệ. Mở mục Chi tiết kỹ thuật để chỉnh lại.");
       return;
     }
 
@@ -99,7 +158,8 @@ export default function ExpertReview() {
       setMessage("Đã đồng ý và ghi vào staging KG.");
       await loadSuggestions();
     } catch (err) {
-      setError(err.response?.data?.detail || err.message);
+      setError(publicError(err));
+      setDebugError(err.response?.data?.detail || err.message);
     }
   }
 
@@ -117,7 +177,8 @@ export default function ExpertReview() {
       setMessage("Đã từ chối gợi ý.");
       await loadSuggestions();
     } catch (err) {
-      setError(err.response?.data?.detail || err.message);
+      setError(publicError(err));
+      setDebugError(err.response?.data?.detail || err.message);
     }
   }
 
@@ -134,7 +195,8 @@ export default function ExpertReview() {
       setRebuildOutput(response.data);
       setMessage(response.data.success ? "Build lại KG hoàn tất." : "Build lại KG có lỗi.");
     } catch (err) {
-      setError(err.response?.data?.detail || err.message);
+      setError(publicError(err));
+      setDebugError(err.response?.data?.detail || err.message);
     }
   }
 
@@ -142,6 +204,7 @@ export default function ExpertReview() {
     if (selected) {
       setPayloadText(JSON.stringify(buildApprovedPayload(selected), null, 2));
       setRejectReason("");
+      setIsEditingPayload(false);
     } else {
       setPayloadText("");
     }
@@ -160,13 +223,14 @@ export default function ExpertReview() {
 
   const diagnoses = selected?.llm_output?.diagnoses || [];
   const notes = selected?.llm_output?.notes || [];
+  const summary = reviewSummary(selected);
 
   return (
     <div className="page review-page">
       <header className="toolbar-header">
         <div>
           <h1>Kiểm duyệt luật</h1>
-          <p>Duyệt gợi ý LLM vào staging KG trước khi build/import Neo4j.</p>
+          <p>Duyệt gợi ý của LLM trước khi ghi vào đồ thị tri thức.</p>
         </div>
         <div className="action-row">
           <input
@@ -174,7 +238,7 @@ export default function ExpertReview() {
             type="password"
             value={adminApiKey}
             onChange={(event) => setAdminApiKey(event.target.value)}
-            placeholder="X-Admin-API-Key"
+            placeholder="Khóa quản trị (X-Admin-API-Key)"
           />
           <button onClick={loadSuggestions} disabled={!adminApiKey.trim() || loading}>
             <RefreshCw size={18} className={loading ? "spin" : ""} />
@@ -199,13 +263,13 @@ export default function ExpertReview() {
           <div className="review-sidebar-head">
             <div>
               <h2>Hàng chờ</h2>
-              <p>{filteredSuggestions.length} gợi ý</p>
+              <p>{loading ? "Đang tải..." : `${filteredSuggestions.length} gợi ý`}</p>
             </div>
             <div className="review-filters">
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Tìm theo triệu chứng / lý do / id"
+                placeholder="Tìm triệu chứng hoặc lý do"
               />
               <select
                 value={statusFilter}
@@ -221,7 +285,8 @@ export default function ExpertReview() {
           </div>
 
           <div className="review-items">
-            {filteredSuggestions.length === 0 && (
+            {loading && <p className="muted review-empty">Đang tải hàng chờ kiểm duyệt...</p>}
+            {!loading && filteredSuggestions.length === 0 && (
               <p className="muted review-empty">Không có gợi ý phù hợp với bộ lọc hiện tại.</p>
             )}
             {filteredSuggestions.map((suggestion) => (
@@ -233,14 +298,14 @@ export default function ExpertReview() {
               >
                 <div className="review-item-main">
                   <span className="review-item-title">{suggestion.user_input}</span>
-                  <span className="review-item-reason">{suggestion.reason}</span>
+                  <span className="review-item-reason">
+                    Lý do:{" "}
+                    {suggestion.reason || "Không khớp triệu chứng trong đồ thị tri thức"}
+                  </span>
                 </div>
                 <div className="review-item-meta">
                   <span className={`review-status ${suggestion.review_status || "pending"}`}>
                     {statusText(suggestion)}
-                  </span>
-                  <span className="review-promote">
-                    {suggestion.promoted_to_kb ? "Đã vào staging" : "Chưa promote"}
                   </span>
                 </div>
               </button>
@@ -258,42 +323,32 @@ export default function ExpertReview() {
               <div className="review-detail-head">
                 <div>
                   <h2>{selected.user_input}</h2>
-                  <p className="muted">{selected.reason}</p>
+                  <p className="muted">Xem xét và chỉnh sửa nội dung trước khi đưa vào đồ thị tri thức.</p>
                   <div className="review-detail-badges">
                     <span className={`review-status ${selected.review_status || "pending"}`}>
                       {statusText(selected)}
                     </span>
                     <span className="review-promote">
-                      {selected.promoted_to_kb ? "promoted_to_kb=true" : "promoted_to_kb=false"}
+                      {selected.promoted_to_kb ? "Đã thêm vào staging" : "Chưa thêm vào staging"}
                     </span>
-                    <code>{selected.id}</code>
                   </div>
                 </div>
               </div>
 
-              <section className="review-section">
-                <h3>Chẩn đoán LLM</h3>
-                {diagnoses.length === 0 ? (
-                  <p className="muted">Không có chẩn đoán trong output.</p>
-                ) : (
-                  <div className="review-diagnoses">
-                    {diagnoses.map((diagnosis) => (
-                      <article className="review-diagnosis" key={diagnosis.fault_id}>
-                        <div>
-                          <h4>{diagnosis.fault_label || diagnosis.fault_name}</h4>
-                          <p className="muted">{diagnosis.system}</p>
-                          <code>{diagnosis.fault_id}</code>
-                        </div>
-                        <strong>{Number(diagnosis.final_cf ?? 0).toFixed(2)}</strong>
-                      </article>
-                    ))}
-                  </div>
-                )}
+              <section className="review-summary-grid">
+                <ReviewSummaryCard title="Triệu chứng chính" value={summary.primary} />
+                <ReviewSummaryCard title="Hệ thống phát hiện" value={systemLabel(summary.system)} />
+                <ReviewSummaryCard title="Chẩn đoán hiện tại" value={summary.currentDiagnosis} />
+                <ReviewSummaryCard title="Gợi ý xử lý" value={summary.recommended} />
               </section>
 
+              <SymptomInfoCard summary={summary} />
+              <DiagnosisCandidateCard diagnoses={diagnoses} />
+              <SuggestedActionCard />
+
               {notes.length > 0 && (
-                <section className="review-section">
-                  <h3>Ghi chú</h3>
+                <section className="review-section reviewer-notes">
+                  <h3>Ghi chú kiểm duyệt</h3>
                   <div className="review-notes">
                     {notes.map((note) => (
                       <p key={note}>{note}</p>
@@ -302,20 +357,37 @@ export default function ExpertReview() {
                 </section>
               )}
 
-              <section className="review-section">
-                <h3>approved_payload</h3>
-                <textarea
-                  className="json-editor"
-                  value={payloadText}
-                  onChange={(event) => setPayloadText(event.target.value)}
-                  rows={18}
-                />
-              </section>
+              <TechnicalPayloadPanel
+                title="Chi tiết kỹ thuật (payload)"
+                editable={isEditingPayload}
+                value={payloadText}
+                onChange={setPayloadText}
+                payload={parsePayloadText(payloadText)}
+              />
+              <DebugLogsPanel
+                logs={{
+                  error: debugError,
+                  review_record: selected,
+                  rebuild_output: rebuildOutput,
+                }}
+              />
 
               <div className="review-actions">
                 <button onClick={approveSuggestion} disabled={!adminApiKey.trim()}>
                   <Check size={18} />
-                  Đồng ý
+                  Phê duyệt và thêm vào KG
+                </button>
+                <button
+                  type="button"
+                  className="secondary-btn"
+                  onClick={() => setIsEditingPayload((value) => !value)}
+                >
+                  <Edit3 size={18} />
+                  {isEditingPayload ? "Đóng chỉnh sửa" : "Chỉnh sửa trước khi duyệt"}
+                </button>
+                <button type="button" className="secondary-btn" disabled title="Liên hệ người dùng để bổ sung thông tin ngoài ứng dụng">
+                  <HelpCircle size={18} />
+                  Yêu cầu thêm dữ liệu
                 </button>
                 <input
                   className="admin-key"
@@ -332,17 +404,77 @@ export default function ExpertReview() {
                   Từ chối
                 </button>
               </div>
-
-              {rebuildOutput && (
-                <section className="review-section">
-                  <h3>Kết quả build</h3>
-                  <pre>{JSON.stringify(rebuildOutput, null, 2)}</pre>
-                </section>
-              )}
             </div>
           )}
         </div>
       </section>
     </div>
+  );
+}
+
+function ReviewSummaryCard({ title, value }) {
+  return (
+    <article className="review-info-card">
+      <span>{title}</span>
+      <strong>{value || "Chưa rõ"}</strong>
+    </article>
+  );
+}
+
+function SymptomInfoCard({ summary }) {
+  return (
+    <section className="review-section review-readable-card">
+      <h3>Thông tin triệu chứng</h3>
+      <p>{summary.summaryText || summary.primary}</p>
+      {summary.questions.length > 0 && (
+        <ul>
+          {summary.questions.slice(0, 4).map((question) => (
+            <li key={question}>{question}</li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function DiagnosisCandidateCard({ diagnoses }) {
+  return (
+    <section className="review-section review-readable-card">
+      <h3>Ứng viên chẩn đoán</h3>
+      {diagnoses.length === 0 ? (
+        <p className="muted">Chưa có chẩn đoán đã xác minh. Nên giữ trong hàng chờ kiểm duyệt.</p>
+      ) : (
+        <div className="review-diagnoses">
+          {diagnoses.map((diagnosis, index) => (
+            <article className="review-diagnosis" key={diagnosis.fault_id || index}>
+              <div>
+                <h4>
+                  {diagnosis.fault_label_vi ||
+                    diagnosis.fault_label ||
+                    diagnosis.fault_name ||
+                    "Triệu chứng chưa ánh xạ"}
+                </h4>
+                <p className="muted">{systemLabel(diagnosis.system)}</p>
+              </div>
+              <strong>
+                {Math.round(Number(diagnosis.confidence ?? diagnosis.final_cf ?? 0) * 100)}%
+              </strong>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function SuggestedActionCard() {
+  return (
+    <section className="review-section review-readable-card">
+      <h3>Gợi ý thao tác</h3>
+      <p>
+        Xác nhận triệu chứng, hệ thống, lỗi ứng viên và các bước kiểm tra. Nếu tình huống còn mơ hồ,
+        hãy thu thập thêm bối cảnh từ người lái trước khi thêm luật vào KG.
+      </p>
+    </section>
   );
 }

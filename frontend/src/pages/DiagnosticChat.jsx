@@ -17,20 +17,26 @@ export default function DiagnosticChat({ initialState = "input", initialData = n
     if (data.session_id) {
       setSessionId(data.session_id);
     }
-    if (data.status === "diagnosed" || data.status === "llm_fallback") {
-      <div className="result-card warning">
-        <h2>Chưa có luật phù hợp trong cơ sở tri thức</h2>
-        <p>
-          Triệu chứng này đã được đưa vào hàng chờ kiểm duyệt. Quản trị viên cần duyệt trước
-          khi thêm vào luật chẩn đoán.
-        </p>
-      </div>;
-    } else if (data.status === "need_more_info") {
+
+    // Restore the expert-system loop: if the backend provides a next question,
+    // we keep asking instead of jumping to a result screen.
+    if (data?.next_question || data?.status === "need_more_info" || data?.status === "collecting_context") {
       setScreenState("questioning");
-    } else {
-      setScreenState("input");
-      setError("Không thể tìm thấy triệu chứng này. Vui lòng thử mô tả khác.");
+      return;
     }
+
+    if (data?.status === "diagnosed") {
+      setScreenState("result");
+      return;
+    }
+
+    if (data?.status === "llm_fallback" || data?.status === "review_needed") {
+      setScreenState("review_needed");
+      return;
+    }
+
+    setScreenState("input");
+    setError("Không thể tìm thấy triệu chứng này. Vui lòng thử mô tả khác.");
   }
 
   async function ensureSession() {
@@ -133,6 +139,10 @@ export default function DiagnosticChat({ initialState = "input", initialData = n
       )}
 
       {screenState === "result" && (
+        <DiagnosisResult data={apiData} onRestart={handleRestart} />
+      )}
+
+      {screenState === "review_needed" && (
         <DiagnosisResult data={apiData} onRestart={handleRestart} />
       )}
     </div>

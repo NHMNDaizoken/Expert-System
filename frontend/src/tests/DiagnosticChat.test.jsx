@@ -44,7 +44,7 @@ describe("Luồng DiagnosticChat", () => {
     expect(
       screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)
     ).toBeInTheDocument();
-    expect(screen.getByText(/xe khó nổ/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/xe khó nổ/i)).toBeInTheDocument();
   });
 
   test("chuyển sang màn hỏi thêm khi API trả need_more_info", async () => {

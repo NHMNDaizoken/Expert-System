@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 
+from backend.services.diagnosis_normalizer import normalize_diagnosis_response
 from backend.services.session_service import SessionService
 from src.expert_system.engine import ExpertSystemEngine
 from src.expert_system.knowledge_base import KnowledgeBase
@@ -65,7 +66,7 @@ def should_use_llm_fallback(response):
     if response is None:
         return True
     candidates = response.get("diagnoses") or response.get("current_hypotheses") or []
-    return response.get("status") in {"unknown_symptom", "no_fault_found"} or not candidates
+    return response.get("status") in {"unknown_symptom", "no_fault_found", "llm_fallback"} or not candidates
 
 
 def filter_rejected_faults(response, rejected_faults):
@@ -93,8 +94,13 @@ def filter_rejected_faults(response, rejected_faults):
 def llm_response(user_input, top_k=5, reason="kg_no_match"):
     fallback = diagnose_with_llm(user_input, top_k=top_k)
     diagnoses = fallback.get("diagnoses", [])
+    missing_questions = (
+        fallback.get("diagnostic_tree", {})
+        .get("level_3_context", {})
+        .get("missing_questions", [])
+    )
 
-    return {
+    response = {
         "matched_symptoms": [],
         "confirmed_symptoms": [],
         "rejected_symptoms": [],
@@ -116,31 +122,47 @@ def llm_response(user_input, top_k=5, reason="kg_no_match"):
         "llm_suggestions": diagnoses,
 
         "next_question": {
-            "question": (
-                "Mình chưa có luật phù hợp trong hệ thống. "
-                "Triệu chứng này đã được đưa vào hàng chờ kiểm duyệt."
-            ),
-            "type": "free_text",
+            "question": missing_questions[0]
+            if missing_questions
+            else "Hệ thống chưa có đủ kiến thức đã kiểm duyệt cho triệu chứng này. Triệu chứng này thường xuất hiện khi nào?",
+            "type": "multiple_choice",
             "mode": "llm_fallback",
+            "choices": [
+                {"value": "startup", "label": "Lúc khởi động"},
+                {"value": "accelerating", "label": "Khi tăng tốc"},
+                {"value": "idle", "label": "Khi chạy không tải"},
+                {"value": "high_speed", "label": "Ở tốc độ cao"},
+                {"value": "not_sure", "label": "Không chắc"},
+            ],
+            "why": [
+                "Thông tin này giúp chuyên gia xác định hệ thống liên quan trước khi thêm luật mới vào Knowledge Graph."
+            ],
         },
 
-        "notes": fallback.get("notes", []),
+        "notes": ["Triệu chứng đã được đưa vào hàng chờ chuyên gia; chưa có kết luận cuối."],
         "queued_for_review": fallback.get("queued_for_review", False),
         "reasoning_trace": [
             "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
-            "Đã gọi LLM fallback để tạo gợi ý tạm thời.",
-            "Gợi ý chỉ dùng cho kiểm duyệt, không hiển thị như kết luận.",
+            "Đã đưa case vào hàng chờ chuyên gia.",
+            "Cần hỏi thêm trước khi có thể chẩn đoán.",
         ],
         "explanation_summary": (
             "Triệu chứng chưa được ánh xạ vào cơ sở tri thức; "
-            "gợi ý LLM đang chờ quản trị viên duyệt."
+            "cần thêm thông tin và chuyên gia duyệt."
         ),
-        "status": "llm_fallback",
+        "status": "need_more_info",
         "is_final": False,
         "source": "llm_fallback",
         "fallback_reason": reason,
-        "fallback_notes": fallback.get("notes", []),
+        "fallback_notes": [],
+        "debug": {
+            "fallback_reason": reason,
+            "fallback_notes": fallback.get("notes", []),
+            "raw_fallback": fallback,
+        },
     }
+    response.update(normalize_diagnosis_response(response, raw_payload=fallback))
+    return response
 
 
 class DiagnosisService:
@@ -256,6 +278,7 @@ class DiagnosisService:
         else:
             response.setdefault("results", [])
 
+        response["normalized"] = normalize_diagnosis_response(response)
         return response
 
     def _reject_fault_from_last_question(self, last_question, rejected_faults):
