@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import settings
 from backend.database import ensure_database
-from backend.routes import diagnosis, graph, health, review
+from backend.routes import diagnosis, expert_review, graph, health, review
 
 
 ensure_database()
@@ -22,3 +22,4 @@ app.include_router(health.router)
 app.include_router(diagnosis.router)
 app.include_router(graph.router)
 app.include_router(review.router)
+app.include_router(expert_review.router)

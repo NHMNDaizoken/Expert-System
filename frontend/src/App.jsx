@@ -18,7 +18,6 @@ export default function App() {
           <span className="brand-mark">AE</span>
           <div className="brand-text">
             <strong>AutoExpert</strong>
-            <small>Hệ chuyên gia Neo4j</small>
           </div>
         </div>
         <nav>

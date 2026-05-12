@@ -1,4 +1,5 @@
 import { TriangleAlert, Wrench, RefreshCw, CircleCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function scoreOf(result) {
   return Number(result?.score ?? result?.final_cf ?? 0);
@@ -14,6 +15,7 @@ function procedureSteps(text = "") {
 export default function DiagnosisResult({ data, results: legacyResults, onRestart = () => {} }) {
   const results = data?.results || legacyResults || [];
   const resolution = data?.resolution || results[0]?.resolution || {};
+  const isLlmFallback = data?.status === "llm_fallback";
 
   if (!results.length) {
     return (
@@ -28,6 +30,67 @@ export default function DiagnosisResult({ data, results: legacyResults, onRestar
 
   const [top, ...others] = results.slice(0, 3);
   const confidence = Math.round(scoreOf(top) * 100);
+
+  if (isLlmFallback) {
+    const notes = data?.notes || data?.fallback_notes || [];
+
+    return (
+      <section className="result-section">
+        <div className="primary-result-card glass-panel">
+          <span className="result-badge">Gợi ý LLM cần kiểm duyệt</span>
+          <h2>{top.fault_label || top.fault_name}</h2>
+          <p className="muted">
+            Đây là ứng viên tham khảo từ LLM, chưa phải kết luận cuối của hệ chuyên gia.
+          </p>
+
+          <div className="confidence-row">
+            <div className="confidence-track">
+              <div className="confidence-fill" style={{ width: `${confidence}%` }} />
+            </div>
+            <div className="confidence-text">CF tham khảo: {confidence}%</div>
+          </div>
+
+          {notes.length > 0 && (
+            <div className="repair-section">
+              <h3><TriangleAlert size={18} /> Ghi chú kiểm duyệt</h3>
+              <ul>
+                {notes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="action-row">
+            <Link className="secondary-btn" to="/review">Mở kiểm duyệt luật</Link>
+            <button className="secondary-btn" onClick={onRestart}>
+              <RefreshCw size={18} />
+              Chẩn đoán lại
+            </button>
+          </div>
+        </div>
+
+        {others.length > 0 && (
+          <div style={{ marginTop: "16px" }}>
+            <h3 style={{ color: "var(--text-secondary)", fontSize: "1rem", marginBottom: "12px" }}>
+              Ứng viên LLM khác
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {others.map((result) => (
+                <div className="secondary-result-card" key={result.fault_id || result.fault_name}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <TriangleAlert size={18} color="var(--warning-base)" />
+                    <h3>{result.fault_label || result.fault_name}</h3>
+                  </div>
+                  <span className="secondary-result-score">{Math.round(scoreOf(result) * 100)}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    );
+  }
 
   return (
     <section className="result-section">

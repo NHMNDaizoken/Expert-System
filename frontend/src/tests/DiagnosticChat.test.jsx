@@ -101,4 +101,17 @@ describe("Luồng DiagnosticChat", () => {
     fireEvent.click(screen.getByText(/chẩn đoán lỗi khác/i));
     expect(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)).toBeInTheDocument();
   });
+
+  test("nút sửa mô tả reset kết quả hiện tại và xóa session", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ deleted: true }) });
+    render(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
+    expect(screen.getByText(/87%/)).toBeInTheDocument();
+    fireEvent.click(screen.getByText(/sửa mô tả/i));
+    await waitFor(() => expect(screen.queryByText(/87%/)).not.toBeInTheDocument());
+    expect(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)).toBeInTheDocument();
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining("/session/s1"),
+      { method: "DELETE" },
+    );
+  });
 });

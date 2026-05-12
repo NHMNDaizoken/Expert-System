@@ -1,207 +1,161 @@
 # Docs Index
 
-Cập nhật: 2026-05-11
+Cập nhật: 2026-05-12
 
-Tài liệu này là điểm bắt đầu khi cần hiểu, chạy và test hệ chuyên gia chẩn đoán lỗi ô tô.
+Tài liệu này là điểm vào chính để đọc nhanh và điều hướng toàn bộ tài liệu trong dự án.
 
-## 1. Hệ Chuyên Gia Gồm Những Gì?
+## 1. Nên Đọc Theo Thứ Tự Nào?
 
-Project là web app hệ chuyên gia chẩn đoán lỗi ô tô. Người dùng nhập triệu chứng, hệ thống chuẩn hóa input, match triệu chứng, suy luận lỗi, hỏi thêm nếu chưa đủ chắc chắn, rồi trả kết quả cuối kèm hướng kiểm tra/sửa chữa.
+Nếu là người mới vào dự án:
 
-Luồng chính (sau refactoring):
+1. `README.md`: setup và chạy dự án.
+2. `docs/Project_Brief.md`: handoff nhanh, biết file nào cần chỉnh.
+3. `docs/Expert_System_Map.md`: hiểu sâu kiến trúc suy luận và dữ liệu.
+4. `docs/plan.md`: trạng thái cleanup và backlog.
 
-```text
-Triệu chứng người dùng
--> ExpertSystemEngine.diagnose() -> SymptomMatcher chuẩn hóa và fuzzy-match alias
--> Suy luận lỗi từ rule/Knowledge Graph
--> Dynamic Certainty Factor xếp hạng lỗi
--> QuestionSelector chọn câu hỏi yes/no nếu còn mơ hồ
--> ResponsePolicy filter results dựa vào status và procedure_terminal
--> Backend lưu session hỏi đáp
--> Frontend hiển thị kết quả cuối và reasoning trace
-```
+## 2. Mục Tiêu Tài Liệu
 
-File quan trọng:
+- Mô tả đúng implementation hiện tại.
+- Hỗ trợ chạy local, docker và debug nhanh.
+- Chỉ rõ nơi chứa knowledge base, rule base, inference engine.
+- Làm rõ ranh giới giữa graph visualization và core inference.
 
-```text
-data/staging/kg_rules_from_dataset.json   Luật chẩn đoán chính
-data/staging/cf_dynamic.json              Dynamic CF theo symptom/fault
-data/staging/procedure_trees.json         Cây câu hỏi yes/no theo fault
-data/staging/symptom_aliases.json         Alias để match triệu chứng
-data/staging/ontology.json                Ontology system/subsystem/component
-src/expert_system/engine.py               ExpertSystemEngine - bộ suy luận chính và information gain
-src/expert_system/matcher.py              SymptomMatcher - match triệu chứng
-src/expert_system/procedure.py            ProcedureRunner - đi theo cây câu hỏi yes/no
-src/expert_system/policy.py               apply_response_policy - filter results
-backend/services/diagnosis_service.py     Orchestrator API chẩn đoán
-backend/services/session_service.py       Lưu session hỏi đáp SQLite
-backend/services/graph_service.py         Đọc Neo4j hoặc fallback JSON
-frontend/src/pages/DiagnosticChat.jsx     Luồng UI input -> question -> result
-frontend/src/pages/GraphViewer.jsx        Xem Knowledge Graph
-```
+## 3. Chỉ Mục Theo Chủ Đề
 
-**Legacy modules** (lưu tại `src/legacy/` cho backward compatibility):
-- `src/legacy/kg_inference.py` - cầu nối cũ
-- `src/legacy/next_question.py` - chọn câu hỏi cũ
-- `src/legacy/cf.py` - tính CF cũ
-- `src/legacy/kg_validator.py` - validate knowledge graph
+### 3.1 Chạy Nhanh
 
-Đọc thêm:
+Xem `README.md`.
+
+### 3.2 Kiến Trúc Tổng Quan
+
+Xem `docs/Project_Brief.md`.
+
+### 3.3 Chi Tiết Kỹ Thuật
+
+Xem `docs/Expert_System_Map.md`.
+
+### 3.4 Kế Hoạch và Trạng Thái
+
+Xem `docs/plan.md`.
+
+## 4. Các File Kỹ Thuật Quan Trọng
 
 ```text
-docs/Project_Brief.md       Bản tóm tắt nhanh để handoff/demo
-docs/Expert_System_Map.md   Bản đồ chi tiết hệ chuyên gia, data, API, UI
+src/expert_system/engine.py
+src/expert_system/matcher.py
+src/expert_system/procedure.py
+src/expert_system/policy.py
+src/expert_system/llm_fallback.py
+src/llm_fallback.py
+backend/services/diagnosis_service.py
+backend/services/session_service.py
+backend/services/graph_service.py
 ```
 
-## 2. Cài Đặt Lần Đầu
-
-Yêu cầu:
+Artifacts tri thức:
 
 ```text
-Python 3.11+
-Node.js 20+
-Docker Desktop
+data/staging/kg_rules_from_dataset.json
+data/staging/cf_dynamic.json
+data/staging/procedure_trees.json
+data/staging/symptom_aliases.json
+data/staging/ontology.json
 ```
 
-Tạo file môi trường:
+## 5. API Surface Hiện Tại
 
-```powershell
-Copy-Item .env.example .env
+Diagnosis/session:
+
+```text
+POST /diagnose
+POST /api/diagnose
+POST /api/answer
+POST /session/new
+POST /api/session/new
+GET  /session/{session_id}
+GET  /api/session/{session_id}
 ```
 
-Tạo môi trường Python:
+Graph:
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+```text
+GET /api/graph
+GET /api/graph/search
+GET /api/graph/faults
+GET /api/graph/fault/{fault_id}
+GET /api/graph/stats
 ```
 
-Nếu máy chưa có `python` global nhưng có `uv`, có thể chạy các script Python bằng `uv run python ...`.
+Review:
 
-Cài frontend:
-
-```powershell
-cd frontend
-npm install
-cd ..
+```text
+GET  /api/pending-rules
+POST /api/rules/{rule_id}/approve
+POST /api/rules/{rule_id}/reject
 ```
 
-## 3. Chạy Local
+Health:
 
-Chạy Neo4j:
-
-```powershell
-docker compose up -d neo4j
+```text
+GET /health
 ```
 
-Nếu muốn rebuild staging rules từ dataset raw:
+## 6. Quy Ước Status Trong Luồng Chẩn Đoán
+
+- `need_more_info`: còn phải hỏi thêm.
+- `diagnosed`: đã đủ điều kiện kết luận.
+- `unknown_symptom`: không match được tri thức hiện có.
+- `no_fault_found`: match symptom nhưng không đủ tạo candidate đáng tin cậy.
+- `llm_fallback`: dùng gợi ý LLM tham khảo, chưa phải chẩn đoán cuối.
+
+Lưu ý:
+
+- `results` chỉ nên dùng khi final.
+- `current_hypotheses` dùng cho trạng thái trung gian.
+- `next_question` điều khiển màn hình hỏi đáp.
+- `src/llm_fallback.py` là wrapper; logic fallback thực tế ở `src/expert_system/llm_fallback.py`.
+
+## 7. Build Tri Thức và Import Graph
+
+Chuỗi chuẩn:
 
 ```powershell
 python scripts/translate_vi.py
 python scripts/build_knowledge.py --rebuild-from-raw
 python scripts/validate_knowledge.py
-```
-
-Nếu chỉ muốn cập nhật `data/staging/expert_tree.json` từ staging hiện có:
-
-```powershell
-python scripts/rebuild_hierarchy.py
-```
-
-Nếu chỉ muốn import staging rules vào Neo4j:
-
-```powershell
 python scripts/import_graph.py --clear
 ```
 
-`scripts/import_neo4j.py` vẫn là wrapper tương thích nếu tài liệu cũ hoặc IDE còn gọi tên này.
+Mô tả ngắn:
 
-Chạy backend:
+- `build_knowledge.py`: script tổng hợp sinh artifact chính.
+- `validate_knowledge.py`: phát hiện lỗi dữ liệu trước khi chạy app.
+- `import_graph.py`: đồng bộ staging sang Neo4j.
+- `rebuild_hierarchy.py`: tái tạo `expert_tree.json` khi cần.
 
-```powershell
-python -m uvicorn backend.main:app --reload
-```
+## 8. Test Matrix
 
-Mở terminal khác, chạy frontend:
-
-```powershell
-cd frontend
-npm run dev
-```
-
-URL mặc định:
-
-```text
-Frontend:      http://localhost:5173
-Backend API:   http://localhost:8000
-API docs:      http://localhost:8000/docs
-Health check:  http://localhost:8000/health
-Neo4j Browser: http://localhost:7474
-```
-
-Đăng nhập Neo4j Browser:
-
-```text
-Username: neo4j
-Password: password123
-```
-
-## 4. Chạy Bằng Docker Compose
-
-Chạy toàn bộ backend, frontend, Neo4j:
-
-```powershell
-docker compose up -d --build
-```
-
-Kiểm tra container:
-
-```powershell
-docker compose ps
-```
-
-Xem log:
-
-```powershell
-docker compose logs -f backend
-docker compose logs -f frontend
-docker compose logs -f neo4j
-```
-
-Nếu Neo4j trong container chưa có dữ liệu:
-
-```powershell
-docker compose exec backend python -m scripts.import_graph --clear
-```
-
-Dừng hệ thống:
-
-```powershell
-docker compose down
-```
-
-Xóa luôn volume Neo4j để import lại từ đầu:
-
-```powershell
-docker compose down -v
-```
-
-## 5. Test Và Kiểm Tra
-
-Chạy unit test backend/core:
+Backend/core:
 
 ```powershell
 pytest
 ```
 
-Nếu dùng `uv`:
+Frontend:
 
 ```powershell
-uv run pytest
+cd frontend
+npm run test -- --reporter=verbose
+npm run build
 ```
 
-Chạy dev check nhanh:
+Evaluation:
+
+```powershell
+python scripts/evaluate_diagnosis.py
+```
+
+Dev checks:
 
 ```powershell
 python scripts/dev_checks.py neo4j
@@ -210,87 +164,18 @@ python scripts/dev_checks.py rules SYM_ABS_WARNING_LIGHT_ON
 python scripts/dev_checks.py inference "dim headlights and clicking noise when starting"
 ```
 
-Chạy frontend test và build:
+## 9. Ghi Chú Vận Hành
 
-```powershell
-cd frontend
-npm run test -- --reporter=verbose
-npm run build
-cd ..
-```
+- Session runtime nằm ở `data/app.sqlite3`.
+- Nếu file SQLite lỗi trạng thái: dừng backend cũ, xóa file DB, khởi động lại.
+- Neo4j chỉ bắt buộc cho visualization/query graph; inference vẫn có thể dùng staging JSON.
+- Fallback LLM chỉ kích hoạt khi có cấu hình API key hợp lệ.
 
-Chạy evaluation bộ test case chẩn đoán:
+## 10. Khi Cập Nhật Tài Liệu
 
-```powershell
-python scripts/evaluate_diagnosis.py
-```
+Checklist ngắn trước khi commit:
 
-Test thủ công API:
-
-```powershell
-Invoke-RestMethod http://localhost:8000/health
-Invoke-RestMethod http://localhost:8000/api/diagnose `
-  -Method Post `
-  -ContentType "application/json" `
-  -Body '{"text":"clicking noise when starting and dim headlights","top_k":5}'
-```
-
-## 6. Build Lại Data/Rule
-
-Khi sửa `data/raw/automotive_faults.json`, build lại staging data bằng consolidated script:
-
-```powershell
-python scripts/translate_vi.py
-python scripts/build_knowledge.py --rebuild-from-raw
-python scripts/validate_knowledge.py
-python scripts/import_graph.py --clear
-```
-
-**Trước refactoring** (cách cũ - lưu ở `scripts/legacy/` nếu cần):
-
-```powershell
-# Không nên dùng nữa - đã gộp vào build_knowledge.py
-# python scripts/legacy/compute_cf.py
-# python scripts/legacy/build_procedure.py
-# python scripts/legacy/rebuild_kg.py
-```
-
-## 7. File Thừa Có Thể Xóa
-
-Các file/thư mục sau là dependency, cache, build output hoặc runtime state. Có thể xóa an toàn; khi chạy lại, project sẽ tự tạo hoặc cài lại:
-
-```text
-.pytest_cache/
-.uv-cache/
-.venv/
-.venv-win/
-**/__pycache__/
-**/*.pyc
-frontend/node_modules/
-frontend/dist/
-data/app.sqlite3
-```
-
-Sau khi xóa:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-cd frontend
-npm install
-```
-
-Không xóa các thư mục/file này vì đây là mã nguồn hoặc dữ liệu chính:
-
-```text
-backend/
-frontend/src/
-src/
-scripts/
-tests/
-data/raw/
-data/staging/
-docs/Project_Brief.md
-docs/Expert_System_Map.md
-```
+1. Đảm bảo endpoint trong docs khớp file route hiện tại.
+2. Đảm bảo tên script khớp file thực tế trong `scripts/`.
+3. Đảm bảo thuật ngữ status đồng bộ backend/frontend.
+4. Cập nhật ngày ở đầu file.

@@ -1,177 +1,161 @@
 # Project Brief
 
-Cập nhật: 2026-05-11
+Cập nhật: 2026-05-12
 
-Đây là bản tóm tắt ngắn để đưa cho người khác đọc nhanh, hiểu project đang làm gì và biết nên sửa file nào. Nếu cần hướng dẫn chạy/test/dọn file thừa, đọc `docs/README.md`.
+Mục tiêu của file này là handoff nhanh: đọc 10-15 phút là biết hệ thống làm gì, chạy ra sao, và cần sửa file nào cho từng loại yêu cầu.
 
-## Project Là Gì?
+## 1. Project Là Gì?
 
-Project là web app hệ chuyên gia chẩn đoán lỗi ô tô. Người dùng nhập triệu chứng, hệ thống match triệu chứng với Knowledge Graph/rule, tính xác suất động `P(fault | symptom)`, hỏi thêm từng bước nếu chưa đủ rõ, rồi mới đưa ra ranking lỗi cuối cùng và hướng kiểm tra/sửa chữa.
+Đây là hệ chuyên gia chẩn đoán lỗi ô tô dạng web app.
 
-Luồng hiện tại:
+Luồng cốt lõi:
 
-```text
-Nhập triệu chứng
--> match symptom trong KG/rule
--> rank fault bằng dynamic CF
--> nếu còn mơ hồ: hỏi yes/no bằng information gain hoặc procedure tree
--> cập nhật confirmed/rejected symptoms
--> đủ ngưỡng chẩn đoán
--> trả Final Ranking + resolution
-```
+1. Nhập triệu chứng tự do.
+2. Match triệu chứng với alias/rule.
+3. Xếp hạng fault bằng dynamic CF.
+4. Nếu chưa đủ chắc chắn thì hỏi tiếp theo từng bước.
+5. Đủ điều kiện mới trả kết luận cuối + hướng sửa chữa.
 
-Khi đang hỏi thêm, UI không hiện ranking cuối. Ranking tạm chỉ nằm trong `current_hypotheses` để backend/session dùng nội bộ.
-
-## Stack Chính
+## 2. Tech Stack
 
 ```text
 Backend:  FastAPI
 Frontend: React + Vite
-Graph:    Neo4j
-Runtime:  SQLite session + Docker Compose
+Graph:    Neo4j (phục vụ visualization/query)
+Storage:  SQLite cho session
 Core:     Python rule-based inference
-Fallback: Gemini LLM nếu KG không có symptom mới
+Fallback: LLM fallback khi symptom chưa map trong tri thức
 ```
 
-## Cấu Trúc Cần Biết
+Fallback module layout:
+
+- `src/llm_fallback.py`: lớp tương thích để import path cũ không bị vỡ.
+- `src/expert_system/llm_fallback.py`: nơi chứa logic fallback thật.
+
+## 3. Cấu Trúc Chính
 
 ```text
-backend/       API routes, services, SQLite session
-frontend/      UI diagnostic chat, graph viewer, expert review
-src/           Core inference, validator, next-question logic
-scripts/       Data build/import/dev/evaluation tools
-data/raw/      Dataset gốc
-data/staging/  Ontology, dynamic CF, procedure trees, rules, aliases, test cases
-docs/          Tài liệu project
+backend/       Routes, services, schemas, database
+frontend/      UI diagnosis/graph/review
+src/           Engine, matcher, procedure, policy
+scripts/       Build/validate/import/evaluate
+data/raw/      Dữ liệu nguồn
+data/staging/  Tri thức đã chuẩn hóa để runtime dùng
+tests/         Test backend + engine
+docs/          Tài liệu
 ```
 
-## File Quan Trọng
+## 4. Các File Cần Nhớ
 
-```text
-src/expert_system/engine.py
-  Engine chính. Match symptom, tạo cf_map, rank fault bằng dynamic CF, chọn information-gain question, trả next_question, status.
+Inference:
 
-src/expert_system/procedure.py
-  Đi theo procedure tree của từng fault để hỏi yes/no theo bước.
-
-src/expert_system/matcher.py
-  Chuẩn hóa input người dùng và fuzzy-match với symptom aliases.
-
-src/llm_fallback.py
-  Nhánh fallback khi KG không match được symptom mới.
-
-backend/services/diagnosis_service.py
-  Orchestrator API: Neo4j KG -> staging JSON -> LLM fallback.
-
-backend/services/session_service.py
-  Lưu session hỏi đáp, confirmed/rejected symptoms, last_question, current_step_id, step_history, branch_path.
-
-backend/services/graph_service.py
-  Trả graph cho frontend, ưu tiên Neo4j và fallback sang data/staging.
-
-frontend/src/pages/DiagnosticChat.jsx
-  State machine 3 màn hình: input -> questioning -> result.
-
-frontend/src/components/ChatBox.jsx
-  Compatibility export sang QuestioningScreen.
-
-frontend/src/components/SymptomInput.jsx
-  Màn hình nhập triệu chứng ban đầu với textarea và common symptom chips.
-
-frontend/src/components/QuestioningScreen.jsx
-  Màn hình hỏi yes/no lớn cho thợ sửa xe, có progress và fault preview.
-
-frontend/src/components/DiagnosisResult.jsx
-  Hiển thị Final Ranking, parts cần chuẩn bị và repair procedure.
-
-scripts/build_knowledge.py
-  Consolidate knowledge pipeline: tính dynamic CF, build procedure tree, sinh expert tree, extract alias. Output tất cả staging artifacts. Thay thế compute_cf.py, build_procedure.py, rebuild_kg.py, build_expert_tree.py.
-
-scripts/validate_knowledge.py
-  Validate staging JSON consistency (ontology, rules, symptoms). Thay thế data_tools.py validate + rebuild.
-
-scripts/import_graph.py
-  Import staging files vào Neo4j. Đây là lệnh import hiện tại; `scripts/import_neo4j.py` là wrapper tương thích.
-
-scripts/rebuild_hierarchy.py
-  Sinh lại `data/staging/expert_tree.json` từ staging JSON hiện có.
-
-scripts/translate_vi.py
-  Cập nhật `data/staging/vi_translations.json` từ dataset raw bằng Gemini API nếu còn text chưa dịch.
-
-scripts/legacy/
-  Archive của các script cũ: compute_cf.py, build_procedure.py, rebuild_kg.py, build_expert_tree.py, data_tools.py.
-
-data/staging/kg_rules_from_dataset.json
-  Rule chẩn đoán chính, giữ field cũ và bổ sung symptoms/procedure/resolution.
-
-data/staging/cf_dynamic.json
-  Bảng dynamic CF: cf_map[symptom_id][fault_id].
-
-data/staging/procedure_trees.json
-  Cây bước chẩn đoán theo từng fault.
-
-data/staging/symptom_aliases.json
-  Alias để fuzzy-match input.
-
-data/staging/ontology.json
-  Ontology system/subsystem/component.
-```
-
-## Cấu Trúc Hệ Chuyên Gia Khi Bảo Vệ
-
-```text
-Knowledge base  -> data/staging/*.json chứa triệu chứng, lỗi, linh kiện, ontology và quan hệ.
-Rule base       -> data/staging/kg_rules_from_dataset.json chứa luật IF symptoms THEN fault.
-Inference engine-> src/expert_system/engine.py match triệu chứng, tính CF và xếp hạng lỗi.
-Question flow   -> procedure tree runtime sinh câu hỏi từ symptom, không hỏi bước kỹ thuật.
-Technician steps-> resolution/procedure trong rule, chỉ hiển thị sau khi đã chẩn đoán.
-Graph UI        -> backend/services/graph_service.py và frontend graph pages dùng để giải thích/visualize.
-Neo4j           -> hữu ích cho graph demo, nhưng không bắt buộc vì inference có thể chạy từ JSON staging.
-```
-
-## Trạng Thái Chẩn Đoán
-
-Backend trả các trạng thái chính:
-
-```text
-unknown_symptom
-  Không match symptom trong KG/rule.
-
-need_more_info
-  Có giả thuyết nhưng cần hỏi thêm. Procedure tree chưa đi tới DIAGNOSED. UI chỉ hiện câu hỏi tiếp theo, chưa hiện Final Ranking.
-
-diagnosed
-  Procedure tree đã đi tới DIAGNOSED terminal. UI hiện Final Ranking + resolution.
-
-llm_fallback
-  KG không có symptom phù hợp, dùng Gemini hoặc offline fallback.
-```
-
-Ghi chú: Response gating được áp dụng tại layer `src/expert_system/policy.py`. Chỉ khi `procedure_terminal == "DIAGNOSED"` thì `results` mới được trả về. Nếu chưa, `results = []` và `is_final = false`.
-
-Trường response quan trọng:
-
-```text
-next_question         Câu hỏi yes/no tiếp theo
-current_hypotheses    Ranking tạm, dùng nội bộ khi need_more_info
-results               Ranking cuối, chỉ dùng khi diagnosed/final
-mode                  information_gain / procedure_tree
-step_context          Mô tả ngắn ngữ cảnh bước hiện tại
-step_progress         Tiến độ dạng 1/3 để UI vẽ progress
-fault_preview         Fault đang nghi ngờ cao nhất khi còn cần xác nhận
-resolution            Parts/tools/procedure khi diagnosed
-reasoning_trace       Giải thích match, hypothesis, CF, question selection
-source                neo4j_kg / staging_files_kg / llm_fallback
-```
-
-## Cách Chạy Nhanh
+- `src/expert_system/engine.py`: điều phối suy luận.
+- `src/expert_system/matcher.py`: chuẩn hóa/match symptom.
+- `src/expert_system/procedure.py`: hỏi đáp theo cây bước.
+- `src/expert_system/policy.py`: chỉ cho phép finalization đúng điều kiện.
 
 Backend:
 
+- `backend/routes/diagnosis.py`: endpoints chẩn đoán + session.
+- `backend/services/diagnosis_service.py`: orchestration và fallback.
+- `backend/services/session_service.py`: lưu trạng thái phiên theo bước.
+- `backend/services/graph_service.py`: dữ liệu graph và fallback.
+
+Data/scripts:
+
+- `data/staging/kg_rules_from_dataset.json`
+- `data/staging/cf_dynamic.json`
+- `data/staging/procedure_trees.json`
+- `data/staging/symptom_aliases.json`
+- `data/staging/ontology.json`
+- `scripts/build_knowledge.py`
+- `scripts/validate_knowledge.py`
+- `scripts/import_graph.py`
+
+UI:
+
+- `frontend/src/pages/DiagnosticChat.jsx`
+- `frontend/src/components/SymptomInput.jsx`
+- `frontend/src/components/QuestioningScreen.jsx`
+- `frontend/src/components/DiagnosisResult.jsx`
+- `frontend/src/pages/GraphViewer.jsx`
+
+## 5. API Quan Trọng
+
+Diagnosis/session:
+
+```text
+POST /diagnose
+POST /api/diagnose
+POST /api/answer
+POST /session/new
+POST /api/session/new
+GET  /session/{session_id}
+GET  /api/session/{session_id}
+```
+
+Graph:
+
+```text
+GET /api/graph
+GET /api/graph/search
+GET /api/graph/faults
+GET /api/graph/fault/{fault_id}
+GET /api/graph/stats
+```
+
+Review:
+
+```text
+GET  /api/pending-rules
+POST /api/rules/{rule_id}/approve
+POST /api/rules/{rule_id}/reject
+```
+
+## 6. Trạng Thái Chẩn Đoán
+
+- `need_more_info`: còn phải hỏi thêm.
+- `diagnosed`: đủ điều kiện kết luận.
+- `unknown_symptom`: không match symptom hiện có.
+- `no_fault_found`: match được symptom nhưng không tạo được candidate đủ tốt.
+- `llm_fallback`: đang trả gợi ý tham khảo từ LLM, chưa phải final diagnosis.
+
+Trường response cần chú ý:
+
+- `next_question`
+- `current_hypotheses`
+- `results`
+- `reasoning_trace`
+- `mode`
+- `step_context`
+- `step_progress`
+- `fault_preview`
+- `resolution`
+- `source`
+
+## 7. Ranh Giới Kiến Trúc Khi Thuyết Trình
+
+```text
+Knowledge base   -> data/staging/*.json
+Rule base        -> data/staging/kg_rules_from_dataset.json
+Inference engine -> src/expert_system/engine.py
+Question flow    -> procedure tree + information gain
+Session state    -> backend/services/session_service.py (SQLite)
+Graph layer      -> Neo4j + backend/services/graph_service.py
+UI layer         -> frontend/src/pages + components
+```
+
+Điểm quan trọng:
+
+- Neo4j hữu ích cho visualize và query graph.
+- Inference cốt lõi vẫn dựa vào tri thức đã staging.
+- Graph không thay thế inference engine.
+
+## 8. Chạy Nhanh
+
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 docker compose up -d neo4j
 python scripts/import_graph.py --clear
@@ -186,105 +170,51 @@ npm install
 npm run dev
 ```
 
-Docker full stack:
+## 9. Build Lại Tri Thức
 
 ```powershell
-docker compose up -d --build
-```
-
-Import lại Neo4j nếu graph rỗng:
-
-```powershell
+python scripts/translate_vi.py
+python scripts/build_knowledge.py --rebuild-from-raw
+python scripts/validate_knowledge.py
 python scripts/import_graph.py --clear
 ```
 
-Build lại staging data từ dataset raw (consolidated script):
+## 10. Khi Cần Sửa Theo Từng Loại Yêu Cầu
 
-```powershell
-uv run python scripts/translate_vi.py
-uv run python scripts/build_knowledge.py --rebuild-from-raw
-uv run python scripts/validate_knowledge.py
-uv run python scripts/import_graph.py --clear
-```
+Sửa rule/tri thức:
 
-Validate staging data:
+- `data/staging/kg_rules_from_dataset.json`
+- `data/staging/symptom_aliases.json`
+- `data/staging/ontology.json`
 
-```powershell
-uv run python scripts/validate_knowledge.py
-```
+Sửa logic suy luận:
 
-**Legacy** (không nên dùng nữa):
+- `src/expert_system/engine.py`
+- `src/expert_system/procedure.py`
+- `src/expert_system/policy.py`
 
-```powershell
-# Cách cũ - các script riêng lẻ (đã gộp vào build_knowledge.py)
-# uv run python scripts/legacy/compute_cf.py
-# uv run python scripts/legacy/build_procedure.py
-# uv run python scripts/legacy/rebuild_kg.py
-```
+Sửa session/API:
 
-## Test
+- `backend/routes/diagnosis.py`
+- `backend/services/diagnosis_service.py`
+- `backend/services/session_service.py`
 
-```powershell
-pytest
-cd frontend
-npm run test -- --reporter=verbose
-npm run build
-```
+Sửa UI:
 
-Nếu dùng `uv`, có thể thay `pytest` bằng `uv run pytest`.
+- `frontend/src/pages/DiagnosticChat.jsx`
+- `frontend/src/components/QuestioningScreen.jsx`
+- `frontend/src/components/DiagnosisResult.jsx`
 
-## Khi Muốn Sửa
+Sửa graph:
 
-Thêm/sửa rule:
+- `backend/services/graph_service.py`
+- `frontend/src/pages/GraphViewer.jsx`
+- `frontend/src/components/GraphCanvas.jsx`
 
-```text
-data/staging/kg_rules_from_dataset.json
-data/staging/symptom_aliases.json
-data/staging/ontology.json
-```
+## 11. Chỗ Cần Cẩn Trọng
 
-Sửa cách rank/chẩn đoán:
-
-```text
-src/expert_system/engine.py
-```
-
-Sửa cách hỏi tiếp:
-
-```text
-src/expert_system/procedure.py
-```
-
-Sửa flow API/session:
-
-```text
-backend/services/diagnosis_service.py
-backend/services/session_service.py
-```
-
-Sửa UI hỏi đáp:
-
-```text
-frontend/src/pages/DiagnosticChat.jsx
-frontend/src/components/SymptomInput.jsx
-frontend/src/components/QuestioningScreen.jsx
-frontend/src/components/DiagnosisResult.jsx
-frontend/src/styles.css
-```
-
-Sửa graph viewer:
-
-```text
-backend/services/graph_service.py
-frontend/src/pages/GraphViewer.jsx
-frontend/src/components/GraphCanvas.jsx
-```
-
-## Ghi Chú Quan Trọng
-
-- CF cũ `0.7` đã được thay bằng dynamic CF sinh từ dataset raw.
-- Diagnostic Chat được thiết kế hỏi từng bước và chỉ hiện kết quả cuối khi `status = diagnosed`.
-- `step_answer: null` là skip: backend không tính là confirmed/rejected symptom.
-- Neo4j không bắt buộc cho demo cơ bản vì backend fallback sang `data/staging`.
-- LLM fallback chỉ chạy thật khi `.env` có `GEMINI_API_KEY`; nếu không, hệ thống trả `UNMAPPED_SYMPTOM` để báo cần bổ sung rule.
-- Tài liệu chạy/test/dọn file thừa nằm ở `docs/README.md`; tài liệu chi tiết hơn nằm ở `docs/Expert_System_Map.md`.
+- Không trả `results` final khi chưa đủ điều kiện chẩn đoán.
+- Nhánh `llm_fallback` luôn phải giữ `is_final = false`.
+- Khi tiếp tục session, giữ đúng `confirmed/rejected_symptoms` và lịch sử step.
+- Tránh sửa logic làm mất backward compatibility của endpoint `/api/diagnose` và `/diagnose`.
+- Nếu đổi schema staging, phải cập nhật cả build, validate, import và tests.

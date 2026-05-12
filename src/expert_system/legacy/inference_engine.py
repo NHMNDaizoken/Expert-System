@@ -285,7 +285,7 @@ class ExpertSystemEngine:
             "symptom": symptom_id,
             "symptom_id": symptom_id,
             "label": label,
-            "question": f"Bạn có thấy thêm dấu hiệu: {label.lower()} không?",
+            "question": self._symptom_question(symptom_id, label),
             "step_id": None,
             "mode": "information_gain",
             "information_gain": result["information_gain"],

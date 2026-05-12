@@ -4,7 +4,7 @@ from backend.services.session_service import SessionService
 from src.expert_system.engine import ExpertSystemEngine
 from src.expert_system.knowledge_base import KnowledgeBase
 from src.expert_system.policy import apply_response_policy
-from src.llm_fallback import diagnose_with_llm
+from src.expert_system.llm_fallback import diagnose_with_llm
 
 
 MIN_CHAT_STEPS = 3
@@ -61,16 +61,6 @@ def estimate_step_progress(session, response):
     return str(current) if current > 0 else None
 
 
-def fallback_follow_up_question():
-    return {
-        "question": "Cần thêm một bước xác nhận trước khi kết luận. Triệu chứng này có xuất hiện liên tục không?",
-        "symptom": "symptom_persistent",
-        "symptom_id": "symptom_persistent",
-        "mode": "safety_follow_up",
-        "tree_level": "secondary_symptom",
-    }
-
-
 def should_use_llm_fallback(response):
     if response is None:
         return True
@@ -91,33 +81,34 @@ def llm_response(user_input, top_k=5, reason="kg_no_match"):
         "rejected_context": [],
         "active_fault_path": [],
         "tree_level": "symptom",
-        "diagnoses": [],
-        "results": [],
-        "current_hypotheses": [],
-        "fallback_suggestions": diagnoses,
-        "next_question": None,
-        "reasoning_trace": {
-            "normalization": {
-                "input": user_input,
-                "status": "not_matched_by_kg",
-                "source": "llm_fallback",
-            },
-            "hypothesis_generation": [
-                {
-                    "source": "llm_fallback",
-                    "reason": reason,
-                    "notes": fallback.get("notes", []),
-                    "authority": "not_diagnostic",
-                }
-            ],
-            "question_selection": {"status": "not_selected"},
-            "backward_chaining": [],
-            "cf_calculation_steps": [],
-            "final_decision": {"status": "unknown_symptom", "top_fault": None},
-            "ranking": [],
+        "diagnoses": diagnoses,
+        "results": diagnoses,
+        "current_hypotheses": diagnoses,
+        "candidate_faults": [
+            {
+                "fault_id": item.get("fault_id"),
+                "fault_name": item.get("fault_name"),
+                "fault_label": item.get("fault_label"),
+                "system": item.get("system"),
+                "final_cf": item.get("final_cf"),
+                "confidence_label": item.get("confidence_label"),
+            }
+            for item in diagnoses
+        ],
+        "next_question": {
+            "question": "Mình chưa có triệu chứng này trong hệ thống. Bạn có thể mô tả thêm: xe xảy ra khi nào, có đèn báo/tiếng kêu/mùi/rò rỉ gì không?",
+            "type": "free_text",
+            "mode": "llm_fallback",
         },
+        "notes": fallback.get("notes", []),
+        "queued_for_review": fallback.get("queued_for_review", False),
+        "reasoning_trace": [
+            "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
+            "Đã gọi LLM fallback để tạo candidate diagnosis tạm thời.",
+            "Kết quả đã được đưa vào queue review nếu queued_for_review=True.",
+        ],
         "explanation_summary": "Triệu chứng chưa được ánh xạ vào cơ sở tri thức; gợi ý từ LLM chỉ để tham khảo.",
-        "status": "unknown_symptom",
+        "status": "llm_fallback",
         "is_final": False,
         "source": "llm_fallback",
         "fallback_reason": reason,
@@ -129,9 +120,22 @@ class DiagnosisService:
     def __init__(self):
         self.sessions = SessionService()
 
-    def diagnose(self, user_input=None, top_k=5, session_id=None, step_answer=None):
+    def diagnose(
+        self,
+        user_input=None,
+        top_k=5,
+        session_id=None,
+        step_answer=None,
+        step_answer_provided=False,
+    ):
         if session_id:
-            return self.continue_session(session_id, symptom=user_input, step_answer=step_answer, top_k=top_k)
+            return self.continue_session(
+                session_id,
+                symptom=user_input,
+                step_answer=step_answer,
+                step_answer_provided=step_answer_provided,
+                top_k=top_k,
+            )
 
         reason = "kg_no_match"
         try:
@@ -236,7 +240,14 @@ class DiagnosisService:
             response.setdefault("results", [])
         return response
 
-    def continue_session(self, session_id, symptom=None, step_answer=None, top_k=5):
+    def continue_session(
+        self,
+        session_id,
+        symptom=None,
+        step_answer=None,
+        step_answer_provided=False,
+        top_k=5,
+    ):
         session = self.sessions.get(session_id)
         if session is None:
             raise HTTPException(
@@ -258,16 +269,17 @@ class DiagnosisService:
             except Exception:
                 pass  # symptom matching failure is non-critical
 
-        if step_answer is not None:
+        if step_answer_provided:
             if last_question.get("symptom_id"):
                 symptom_id = last_question["symptom_id"]
-                answers[symptom_id] = bool(step_answer)
-                if step_answer:
-                    confirmed_symptoms.add(symptom_id)
-                    rejected_symptoms.discard(symptom_id)
-                else:
-                    rejected_symptoms.add(symptom_id)
-                    confirmed_symptoms.discard(symptom_id)
+                if step_answer is not None:
+                    answers[symptom_id] = bool(step_answer)
+                    if step_answer:
+                        confirmed_symptoms.add(symptom_id)
+                        rejected_symptoms.discard(symptom_id)
+                    else:
+                        rejected_symptoms.add(symptom_id)
+                        confirmed_symptoms.discard(symptom_id)
             self.sessions.update_step_state(session_id, question_key(last_question), step_answer)
             session = self.sessions.get(session_id)
 
@@ -284,10 +296,7 @@ class DiagnosisService:
             response = llm_response(user_input, reason="kg_no_match_after_answer")
 
         response = self._add_response_context(response, session)
-        self.sessions.update_from_response(session_id, response, answers)
-        if user_input and user_input != session.get("user_input"):
-            # Preserve old schema while allowing the initial /session/new flow.
-            pass
+        self.sessions.update_from_response(session_id, response, answers, user_input=user_input)
         response["session_id"] = session_id
         return response
 
@@ -336,6 +345,6 @@ class DiagnosisService:
             )
 
         response = self._add_response_context(response, session)
-        self.sessions.update_from_response(session_id, response, answers)
+        self.sessions.update_from_response(session_id, response, answers, user_input=session["user_input"])
         response["session_id"] = session_id
         return response

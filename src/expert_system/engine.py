@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from src.expert_system.knowledge_base import KnowledgeBase
+from src.expert_system.llm_fallback import diagnose_with_llm
 from src.expert_system.procedure import ProcedureRunner
 from src.expert_system.matcher import SymptomMatcher
 
@@ -280,24 +281,35 @@ class ExpertSystemEngine:
                 memory.reject(symptom_id)
 
         if not memory.confirmed_symptoms:
-            return self._unknown_response(text, matched_symptoms, memory)
+            return self._llm_fallback_response(text, matched_symptoms, memory, top_k)
 
         memory.primary_symptom = self._select_primary_symptom(memory.confirmed_symptoms)
         memory.detected_systems = self._detect_systems(memory.confirmed_symptoms)
         candidate_rules = self._candidate_rules(memory)
         diagnoses = self._rank(candidate_rules, memory.confirmed_symptoms, memory.rejected_symptoms, top_k)
+        if not diagnoses:
+            return self._llm_fallback_response(text, matched_symptoms, memory, top_k)
+
+        # Stop early when the top diagnosis is confident enough.
+        if self._confident_enough(diagnoses, memory):
+            next_question = None
+            procedure_terminal = "DIAGNOSED"
+        else:
+            next_question, procedure_terminal = self._select_next_step(memory, diagnoses)
+
         memory.current_hypotheses = diagnoses
         memory.active_fault_id = diagnoses[0]["fault_id"] if diagnoses else None
 
-        next_question, procedure_terminal = self._select_next_step(memory, diagnoses)
         if procedure_terminal and procedure_terminal != "DIAGNOSED" and not next_question:
             next_question = self._select_information_gain_question(memory, diagnoses)
 
         if procedure_terminal == "DIAGNOSED" or (diagnoses and not next_question):
             status = "diagnosed"
             next_question = None
-        else:
+        elif next_question:
             status = "need_more_info"
+        else:
+            status = "unknown_symptom"
 
         trace = self.explanations.build(
             user_input=text,
@@ -326,6 +338,30 @@ class ExpertSystemEngine:
         if status == "diagnosed" and diagnoses:
             response["resolution"] = diagnoses[0].get("resolution")
         return dict(response)
+    
+    def _confident_enough(self, diagnoses: list[dict[str, Any]], memory: WorkingMemory) -> bool:
+        if not diagnoses:
+            return False
+
+        top = diagnoses[0]
+        second = diagnoses[1] if len(diagnoses) > 1 else None
+
+        top_cf = float(top.get("final_cf", top.get("confidence", 0)) or 0)
+        second_cf = float(second.get("final_cf", second.get("confidence", 0)) or 0) if second else 0.0
+        gap = top_cf - second_cf
+
+        evidence_count = len(set(memory.confirmed_symptoms or []))
+
+        # Chỉ kết luận sớm khi có ít nhất hai bằng chứng đã xác nhận.
+        if evidence_count >= 2 and top_cf >= 0.75 and gap >= 0.20:
+            return True
+
+        # Nếu đã hỏi 3-4 câu rồi và top fault tương đối chắc thì dừng
+        question_count = getattr(memory, "question_count", 0)
+        if question_count >= 4 and top_cf >= 0.60:
+            return True
+
+        return False
 
     def _unknown_response(
         self,
@@ -354,6 +390,42 @@ class ExpertSystemEngine:
             "tree_level": "symptom",
             "explanation_summary": "Cơ sở tri thức chưa ánh xạ được triệu chứng đã mô tả.",
             "source": "staging_files_kg",
+            "procedure_terminal": None,
+            **memory.to_response_fields(),
+        }
+
+    def _llm_fallback_response(
+        self,
+        text: str,
+        matched_symptoms: list[dict[str, Any]],
+        memory: WorkingMemory,
+        top_k: int,
+    ) -> dict[str, Any]:
+        fallback = diagnose_with_llm(text, top_k=top_k)
+        diagnoses = fallback.get("diagnoses", [])
+        return {
+            "matched_symptoms": matched_symptoms,
+            "candidate_faults": self._candidate_faults_payload(diagnoses),
+            "status": "llm_fallback",
+            "is_final": False,
+            "source": "llm_fallback",
+            "results": diagnoses,
+            "diagnoses": diagnoses,
+            "current_hypotheses": diagnoses,
+            "next_question": {
+                "question": "Mình chưa có triệu chứng này trong hệ thống. Bạn có thể mô tả thêm: xe xảy ra khi nào, có đèn báo/tiếng kêu/mùi/rò rỉ gì không?",
+                "type": "free_text",
+                "mode": "llm_fallback",
+            },
+            "notes": fallback.get("notes", []),
+            "queued_for_review": fallback.get("queued_for_review", False),
+            "reasoning_trace": [
+                "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
+                "Đã gọi LLM fallback để tạo candidate diagnosis tạm thời.",
+                "Kết quả đã được đưa vào queue review nếu queued_for_review=True.",
+            ],
+            "tree_level": "symptom",
+            "explanation_summary": "Triệu chứng chưa có trong cơ sở tri thức; gợi ý fallback chỉ là ứng viên tạm thời để review.",
             "procedure_terminal": None,
             **memory.to_response_fields(),
         }
@@ -403,6 +475,36 @@ class ExpertSystemEngine:
                 symptom_id = rule.get("symptom_id")
                 rule["symptom_label"] = self.kb.label_for_symptom(symptom_id) if symptom_id else None
         return ranked
+    
+    def _related_symptoms(self, symptom_id: str) -> set[str]:
+        label = (self.kb.label_for_symptom(symptom_id) or symptom_id).lower()
+
+        groups = [
+            ("warning_light", ["warning", "light", "đèn", "cảnh báo", "abs"]),
+            ("noise", ["noise", "tiếng", "kêu", "ồn"]),
+            ("leak", ["leak", "rò", "rỉ", "chảy"]),
+            ("overheat", ["overheat", "quá nhiệt", "nhiệt"]),
+            ("vibration", ["vibration", "rung"]),
+        ]
+
+        active_group = None
+        for group_name, keywords in groups:
+            if any(k in label or k in symptom_id.lower() for k in keywords):
+                active_group = keywords
+                break
+
+        if not active_group:
+            return {symptom_id}
+
+        related = {symptom_id}
+        for rule in self.kb.rules:
+            for symptom in rule.get("symptoms", []):
+                sid = symptom.get("symptom_id")
+                slabel = (self.kb.label_for_symptom(sid) or sid or "").lower()
+                if sid and any(k in slabel or k in sid.lower() for k in active_group):
+                    related.add(sid)
+
+        return related
 
     def _rank_faults(
         self,
@@ -540,6 +642,26 @@ class ExpertSystemEngine:
                 max_depth=self.max_questions,
             )
         return step
+    
+    def _symptom_question(self, symptom_id: str, label: str | None) -> str:
+        label = (label or symptom_id).strip()
+        text = f"{symptom_id} {label}".lower()
+
+        patterns = [
+            (("leak", "rò rỉ", "chảy"), f"Bạn có thấy dấu hiệu rò rỉ liên quan đến {label.lower()} không?"),
+            (("noise", "tiếng", "kêu", "grinding"), f"Bạn có nghe thấy {label.lower()} không?"),
+            (("smoke", "khói"), f"Bạn có thấy {label.lower()} không?"),
+            (("warning", "light", "đèn"), f"Có cảnh báo hoặc đèn báo liên quan đến {label.lower()} không?"),
+            (("vibration", "rung"), f"Xe có bị {label.lower()} không?"),
+            (("temperature", "nhiệt", "overheat"), f"Nhiệt độ động cơ có biểu hiện {label.lower()} không?"),
+            (("level", "mức"), f"Mức chất lỏng/dầu/nước có biểu hiện {label.lower()} không?"),
+        ]
+
+        for keywords, question in patterns:
+            if any(key in text for key in keywords):
+                return question
+
+        return f"Bạn có nhận thấy dấu hiệu này không: {label.lower()}?"
 
     def _select_information_gain_question(
         self,
@@ -549,7 +671,12 @@ class ExpertSystemEngine:
         if memory.question_count >= self.max_questions:
             return None
 
-        candidate_fault_ids = {diagnosis.get("fault_id") for diagnosis in ranked if diagnosis.get("fault_id")}
+        top_ranked = ranked[:3]
+        candidate_fault_ids = {
+            diagnosis.get("fault_id")
+            for diagnosis in top_ranked
+            if diagnosis.get("fault_id")
+        }
         all_symptoms = [
             symptom.get("symptom_id")
             for rule in self.kb.rules
@@ -564,7 +691,15 @@ class ExpertSystemEngine:
                 for symptom in rule.get("symptoms", [])
                 if symptom.get("symptom_id")
             ]
-        asked = set(memory.confirmed_symptoms) | set(memory.rejected_symptoms)
+        asked = (
+            set(memory.confirmed_symptoms)
+            | set(memory.rejected_symptoms)
+            | set(memory.step_history or [])
+        )
+
+        # Chặn hỏi lại các symptom cùng nhóm với primary symptom
+        if memory.primary_symptom:
+            asked |= self._related_symptoms(memory.primary_symptom)
         result = self._select_by_information_gain(ranked, asked, all_symptoms, self.kb.cf_map)
         if not result:
             return None
@@ -574,7 +709,7 @@ class ExpertSystemEngine:
             "symptom": symptom_id,
             "symptom_id": symptom_id,
             "label": label,
-            "question": f"Bạn có thấy thêm dấu hiệu: {label.lower()} không?",
+            "question": self._symptom_question(symptom_id, label),
             "step_id": None,
             "mode": "information_gain",
             "information_gain": result["information_gain"],

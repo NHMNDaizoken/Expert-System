@@ -22,6 +22,15 @@ class RuleDecisionRequest(BaseModel):
     note: str | None = None
 
 
+class ExpertReviewApproveRequest(BaseModel):
+    approved_payload: dict[str, Any]
+
+
+class ExpertReviewRejectRequest(BaseModel):
+    reason: str | None = None
+    reject_reason: str | None = None
+
+
 class ApiResponse(BaseModel):
     session_id: str | None = None
     status: str

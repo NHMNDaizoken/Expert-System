@@ -23,11 +23,16 @@ def _input_text(payload: DiagnoseRequest):
 @router.post("/diagnose")
 def diagnose(payload: DiagnoseRequest):
     if payload.session_id:
+        if hasattr(payload, "model_fields_set"):
+            fields_set = payload.model_fields_set
+        else:
+            fields_set = getattr(payload, "__fields_set__", set())
         return DiagnosisService().diagnose(
             payload.symptom or payload.user_input or payload.text,
             payload.top_k,
             session_id=payload.session_id,
             step_answer=payload.step_answer,
+            step_answer_provided="step_answer" in fields_set,
         )
     return DiagnosisService().diagnose(_input_text(payload), payload.top_k)
 
@@ -53,3 +58,15 @@ def get_session(session_id: str):
             detail="Diagnosis session was not found.",
         )
     return session
+
+
+@router.delete("/session/{session_id}")
+@router.delete("/api/session/{session_id}")
+def delete_session(session_id: str):
+    deleted = SessionService().delete(session_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Diagnosis session was not found.",
+        )
+    return {"deleted": True, "session_id": session_id}

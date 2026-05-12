@@ -124,7 +124,15 @@ class SessionService:
                 data["last_answer"] = None
         return data
 
-    def update_from_response(self, session_id, response, answers):
+    def delete(self, session_id):
+        with get_sqlite_connection() as connection:
+            cursor = connection.execute(
+                "DELETE FROM diagnosis_sessions WHERE session_id = ?",
+                (session_id,),
+            )
+        return cursor.rowcount > 0
+
+    def update_from_response(self, session_id, response, answers, user_input=None):
         confirmed = list(response.get("confirmed_symptoms") or matched_symptom_ids(response))
         rejected = list(response.get("rejected_symptoms") or [])
 
@@ -141,7 +149,15 @@ class SessionService:
 
         if response.get("status") == "need_more_info":
             if not next_question:
-                next_question = previous_question
+                response["status"] = "diagnosed"
+                response["is_final"] = True
+                response["results"] = (
+                    response.get("results")
+                    or response.get("current_hypotheses")
+                    or response.get("diagnoses")
+                    or []
+                )
+                next_question = None
         else:
             next_question = None
 
@@ -170,6 +186,7 @@ class SessionService:
                 UPDATE diagnosis_sessions
                 SET updated_at = ?,
                     status = ?,
+                    user_input = ?,
                     confirmed_symptoms = ?,
                     rejected_symptoms = ?,
                     current_hypotheses = ?,
@@ -186,6 +203,7 @@ class SessionService:
                 (
                     utc_now(),
                     response["status"],
+                    user_input if user_input is not None else previous.get("user_input", ""),
                     json.dumps(sorted(set(confirmed))),
                     json.dumps(sorted(set(rejected))),
                     json.dumps(current_hypotheses),

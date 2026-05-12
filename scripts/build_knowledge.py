@@ -113,12 +113,16 @@ def symptom_to_question_vi(symptom: Any, translations: dict[str, str] | None = N
         (("leak", "rò rỉ", "chảy"), "Bạn có thấy dấu hiệu rò rỉ bất thường không?"),
         (("smell", "mùi"), "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?"),
         (("warning light", "đèn cảnh báo"), "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?"),
+        (("overheat", "quá nhiệt", "nhiệt độ cao"), "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?"),
+        (("coolant", "nước làm mát"), "Mức nước làm mát có thấp hoặc có dấu hiệu rò rỉ không?"),
+        (("brake pedal", "bàn đạp phanh"), "Bàn đạp phanh có cảm giác bất thường không?"),
+        (("battery", "ắc quy", "ac quy"), "Ắc quy hoặc hệ thống điện có dấu hiệu yếu không?"),
     ]
     for keywords, question in patterns:
         if any(keyword in searchable for keyword in keywords):
             return question
 
-    return f"Xe có dấu hiệu {label_lower} không?"
+    return f"Bạn có nhận thấy dấu hiệu này không: {label_lower}?"
 
 
 def slugify(text: Any) -> str:
@@ -588,7 +592,7 @@ def build_knowledge(rebuild_from_raw: bool = False) -> dict[str, Path]:
         procedure_trees = load_existing_artifact(PROCEDURE_PATH) or build_procedure_trees(records, translations)
         rules = load_existing_artifact(KG_PATH) or build_rules(records, cf_data, procedure_trees, translations)
         expert_tree = build_expert_tree(records, rules.get("rules", []), translations)
-        aliases = build_aliases(records, translations)
+        aliases = load_existing_artifact(ALIASES_PATH) or build_aliases(records, translations)
 
     save_json(CF_PATH, cf_data)
     save_json(PROCEDURE_PATH, procedure_trees)

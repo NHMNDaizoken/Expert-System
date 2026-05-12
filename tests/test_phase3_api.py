@@ -40,6 +40,25 @@ class TestDiagnoseResponse:
         session = client.get(f"/session/{sid}").json()
         assert len(session.get("step_history", [])) > 0 or session.get("last_answer") is not None
 
+    def test_session_keeps_initial_user_input(self):
+        sid = new_session()
+        response = client.post("/diagnose", json={"session_id": sid, "symptom": "blue smoke from exhaust"})
+        assert response.status_code == 200
+        session = client.get(f"/session/{sid}").json()
+        assert "blue smoke from exhaust" in session.get("user_input", "")
+
+    def test_skip_answer_does_not_repeat_same_question(self):
+        sid = new_session()
+        first = client.post("/diagnose", json={"session_id": sid, "symptom": "blue smoke from exhaust"}).json()
+        if first.get("status") != "need_more_info":
+            pytest.skip("Dataset did not produce a follow-up question for this symptom")
+
+        first_question = first.get("next_question", {}).get("question")
+        second = client.post("/diagnose", json={"session_id": sid, "step_answer": None}).json()
+        second_question = (second.get("next_question") or {}).get("question")
+
+        assert second.get("status") != "need_more_info" or second_question != first_question
+
     def test_diagnosed_response_has_resolution(self):
         pytest.skip("Full end-to-end diagnostic path depends on dataset question flow")
 

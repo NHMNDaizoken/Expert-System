@@ -6,7 +6,7 @@ import { API_ROOT } from "../api/client.js";
 
 export default function DiagnosticChat({ initialState = "input", initialData = null }) {
   const [screenState, setScreenState] = useState(initialState);
-  const [sessionId, setSessionId] = useState(null);
+  const [sessionId, setSessionId] = useState(initialData?.session_id ?? null);
   const [apiData, setApiData] = useState(initialData);
   const [symptom, setSymptom] = useState("");
   const [loading, setLoading] = useState(false);
@@ -74,9 +74,26 @@ export default function DiagnosticChat({ initialState = "input", initialData = n
     }
   }
 
+  async function deleteSession(sid) {
+    if (!sid) {
+      return;
+    }
+    try {
+      await fetch(`${API_ROOT}/session/${encodeURIComponent(sid)}`, {
+        method: "DELETE",
+      });
+    } catch {
+      // Reset UI even if the old server-side session was already gone.
+    }
+  }
+
   function handleUnlock() {
+    const sid = sessionId;
     setScreenState("input");
-    // We intentionally don't clear the session or data so they can just edit symptoms
+    setSessionId(null);
+    setApiData(null);
+    setError("");
+    void deleteSession(sid);
   }
 
   function handleRestart() {
