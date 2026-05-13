@@ -1,3 +1,4 @@
+import re
 from fastapi import HTTPException, status
 
 from backend.services.diagnosis_normalizer import normalize_diagnosis_response
@@ -24,6 +25,59 @@ def parse_answer(answer):
         status_code=status.HTTP_400_BAD_REQUEST,
         detail="Câu trả lời phải là có hoặc không.",
     )
+
+
+def build_repair_plan(top_result, top_rule, resolution):
+    if not top_result or not resolution:
+        return None
+        
+    procedure_text = resolution.get("procedure", "")
+    parts_to_inspect = resolution.get("parts", [])
+    
+    checks = []
+    current_action = None
+    
+    sentences = [s.strip() for s in re.split(r'[\.\n]', procedure_text) if s.strip()]
+    
+    for sentence in sentences:
+        lower_sentence = sentence.lower()
+        if lower_sentence.startswith("kết quả có thể:"):
+            res = sentence.split(":", 1)[1].strip()
+            if current_action:
+                meaning = "Cần kiểm tra thêm hoặc thay thế nếu hỏng"
+                recommended_fix = "Thực hiện sửa chữa hoặc thay thế linh kiện liên quan"
+                
+                if any(word in res.lower() for word in ["nguyên vẹn", "tốt", "bình thường", "sạch", "không rò rỉ", "đạt", "phẳng", "chắc chắn", "đủ"]):
+                    meaning = "Hệ thống/linh kiện hoạt động bình thường"
+                    recommended_fix = "Chuyển sang bước kiểm tra tiếp theo"
+                elif any(word in res.lower() for word in ["lỏng", "cháy", "thổi", "lỗi", "hỏng", "bẩn", "rò rỉ", "kẹt", "mòn", "thấp", "xước", "vênh", "không đạt", "đứt"]):
+                    meaning = "Phát hiện dấu hiệu bất thường hoặc hư hỏng"
+                    recommended_fix = "Thay thế hoặc sửa chữa theo tiêu chuẩn của nhà sản xuất"
+                
+                checks.append({
+                    "action": current_action,
+                    "possible_result": res,
+                    "meaning": meaning,
+                    "recommended_fix": recommended_fix
+                })
+        else:
+            current_action = sentence
+            
+    if not checks and current_action:
+        checks.append({
+            "action": current_action,
+            "possible_result": "Không xác định",
+            "meaning": "Quan sát và đánh giá tình trạng thực tế",
+            "recommended_fix": "Xử lý theo tình trạng thực tế"
+        })
+        
+    return {
+        "fault": top_result.get("fault_label_vi") or top_result.get("fault_label") or top_result.get("fault_name") or top_result.get("fault_id"),
+        "confidence": round(float(top_result.get("final_cf", 0)) * 100),
+        "affected_area": top_rule.get("system") or top_rule.get("subsystem") if top_rule else "",
+        "inspect_or_replace": parts_to_inspect,
+        "checks": checks
+    }
 
 
 def enrich_response(response):
@@ -300,7 +354,9 @@ class DiagnosisService:
         if response.get("status") == "diagnosed":
             response["results"] = response.get("results") or hypotheses
             if top_rule:
-                response["resolution"] = top_rule.get("resolution")
+                res = top_rule.get("resolution")
+                response["resolution"] = res
+                response["repair_plan"] = build_repair_plan(top, top_rule, res)
         else:
             response.setdefault("results", [])
 

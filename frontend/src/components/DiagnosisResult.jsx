@@ -82,30 +82,84 @@ export default function DiagnosisResult({
           <div className="confidence-text">Độ tin cậy: {confidence}%</div>
         </div>
 
-        {resolution.parts && resolution.parts.length > 0 && (
-          <div className="repair-section">
-            <h3>
-              <Wrench size={18} /> Linh kiện cần kiểm tra/thay thế
-            </h3>
-            <ul>
-              {resolution.parts.map((part) => (
-                <li key={part}>{part}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {data?.repair_plan ? (
+          <>
+            {data.repair_plan.inspect_or_replace && data.repair_plan.inspect_or_replace.length > 0 && (
+              <div className="repair-section">
+                <h3>
+                  <Wrench size={18} /> Linh kiện cần kiểm tra/thay thế
+                </h3>
+                <ul>
+                  {data.repair_plan.inspect_or_replace.map((part) => (
+                    <li key={part}>{part}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-        {resolution.procedure && (
-          <div className="repair-section">
-            <h3>
-              <CircleCheck size={18} /> Các bước kiểm tra & Sửa chữa
-            </h3>
-            <ol>
-              {procedureSteps(resolution.procedure).map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ol>
-          </div>
+            {data.repair_plan.checks && data.repair_plan.checks.length > 0 && (
+              <div className="repair-section">
+                <h3>
+                  <CircleCheck size={18} /> Kế hoạch kiểm tra
+                </h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {data.repair_plan.checks.map((check, idx) => (
+                    <div key={idx} style={{ 
+                      padding: "12px 16px", 
+                      borderRadius: "8px", 
+                      backgroundColor: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(255, 255, 255, 0.1)"
+                    }}>
+                      <h4 style={{ margin: "0 0 8px 0", color: "var(--text-primary)", fontSize: "1rem" }}>
+                        {check.action}
+                      </h4>
+                      {check.possible_result && check.possible_result !== "Không xác định" && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.9rem" }}>
+                          <div style={{ color: "var(--warning-light)" }}>
+                            <strong>Trạng thái:</strong> {check.possible_result}
+                          </div>
+                          <div style={{ color: "var(--text-secondary)" }}>
+                            <strong>Ý nghĩa:</strong> {check.meaning}
+                          </div>
+                          <div style={{ color: "var(--primary-light)" }}>
+                            <strong>Xử lý:</strong> {check.recommended_fix}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {resolution.parts && resolution.parts.length > 0 && (
+              <div className="repair-section">
+                <h3>
+                  <Wrench size={18} /> Linh kiện cần kiểm tra/thay thế
+                </h3>
+                <ul>
+                  {resolution.parts.map((part) => (
+                    <li key={part}>{part}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {resolution.procedure && (
+              <div className="repair-section">
+                <h3>
+                  <CircleCheck size={18} /> Các bước kiểm tra & Sửa chữa
+                </h3>
+                <ol>
+                  {procedureSteps(resolution.procedure).map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </>
         )}
       </div>
 
