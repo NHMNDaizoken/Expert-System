@@ -13,6 +13,7 @@ STAGING_DIR = PROJECT_ROOT / "data" / "staging"
 ALIASES_PATH = STAGING_DIR / "symptom_aliases.json"
 RULES_PATH = STAGING_DIR / "kg_rules_from_dataset.json"
 PROCEDURES_PATH = STAGING_DIR / "procedure_trees.json"
+EXPERT_TREE_PATH = STAGING_DIR / "expert_tree.json"
 
 
 SYSTEM_DEFAULTS = {
@@ -223,9 +224,243 @@ def _symptom_refs(diagnosis: dict[str, Any], primary_symptom: str, default_cf: f
     return deduped
 
 
+def _check_alias_conflicts(aliases: dict, symptom_id: str, new_aliases: list[str]) -> list[str]:
+    """Check if any alias already maps to a different symptom. Returns error list."""
+    errors: list[str] = []
+    for alias in new_aliases:
+        alias_lower = str(alias).strip().lower()
+        if not alias_lower:
+            continue
+        for existing_id, entry in aliases.items():
+            if existing_id == symptom_id:
+                continue
+            if not isinstance(entry, dict):
+                continue
+            existing_aliases = [a.lower() for a in entry.get("aliases", []) if isinstance(a, str)]
+            if alias_lower in existing_aliases:
+                errors.append(f"Alias '{alias}' already mapped to {existing_id}, cannot assign to {symptom_id}")
+    return errors
+
+
+def _update_expert_tree(
+    expert_tree: dict[str, Any],
+    system_id: str,
+    symptom_id: str,
+    symptom_label: str,
+    fault: dict[str, Any],
+    procedure_tree: dict[str, Any] | None,
+) -> None:
+    """Insert a fault entry into expert_tree.json under the correct system/symptom."""
+    systems = expert_tree.setdefault("systems", {})
+    sys_entry = systems.setdefault(system_id, {
+        "system_id": system_id,
+        "display_name": system_id,
+        "label_vi": system_id,
+        "primary_symptoms": {},
+    })
+    symptoms = sys_entry.setdefault("primary_symptoms", {})
+    sym_entry = symptoms.setdefault(symptom_id, {
+        "symptom_id": symptom_id,
+        "name": _slug(symptom_id.removeprefix("SYM_")),
+        "display_name": symptom_label,
+        "label_vi": symptom_label,
+        "secondary_symptoms": [],
+        "possible_faults": [],
+    })
+
+    fault_id = fault.get("fault_id", "")
+    existing_ids = {f.get("fault_id") for f in sym_entry.get("possible_faults", []) if isinstance(f, dict)}
+    if fault_id in existing_ids:
+        return
+
+    resolution = fault.get("resolution") or {}
+    proc_text = resolution.get("procedure", "")
+    steps_list = []
+    if procedure_tree and isinstance(procedure_tree.get("steps"), dict):
+        for step in procedure_tree["steps"].values():
+            if isinstance(step, dict) and step.get("question"):
+                steps_list.append(step["question"])
+
+    sym_refs = fault.get("symptoms", [])
+    fault_entry = {
+        "fault_id": fault_id,
+        "fault_name": fault.get("fault_name", _slug(fault_id)),
+        "display_name": fault.get("fault_label") or fault.get("display_name") or fault_id,
+        "label_vi": fault.get("fault_label") or fault.get("display_name") or fault_id,
+        "system_id": system_id,
+        "subsystem_id": "SUB_UNKNOWN",
+        "affected_components": [],
+        "confidence": _clamp_cf(fault.get("cf", 0.35)),
+        "diagnosis_procedures": steps_list,
+        "confirmation_tests": [],
+        "required_parts": resolution.get("parts", []),
+        "tools": resolution.get("tools", []),
+        "resolution": {
+            "procedure": proc_text,
+            "difficulty": resolution.get("difficulty", "expert_review"),
+            "labor_hours": resolution.get("labor_hours"),
+            "steps": steps_list,
+        },
+    }
+    sym_entry["possible_faults"].append(fault_entry)
+
+
+def promote_llm_kb_patch(payload: dict[str, Any], allow_overwrite: bool = False) -> dict[str, Any]:
+    """Promote an llm_kb_patch into all four KB files. Returns result dict."""
+    mapping = payload.get("suggested_mapping") or {}
+    faults = payload.get("candidate_faults") or []
+    trees = payload.get("procedure_trees") or {}
+
+    symptom_id = mapping.get("primary_symptom_id", "")
+    symptom_label = mapping.get("primary_symptom_label", "")
+    system_id = mapping.get("system_id", "SYS_UNKNOWN")
+    new_aliases = mapping.get("aliases", [])
+
+    if not symptom_id or not faults:
+        raise ValueError("llm_kb_patch requires suggested_mapping.primary_symptom_id and candidate_faults.")
+
+    # Load existing files
+    aliases = _load_json(ALIASES_PATH, {})
+    rules_doc = _load_json(RULES_PATH, {"meta": {}, "rules": []})
+    procedures = _load_json(PROCEDURES_PATH, {})
+    expert_tree = _load_json(EXPERT_TREE_PATH, {"meta": {}, "systems": {}})
+
+    rules = rules_doc.setdefault("rules", [])
+
+    # Duplicate checks (Plan step 8)
+    errors: list[str] = []
+    alias_conflicts = _check_alias_conflicts(aliases, symptom_id, new_aliases)
+    if alias_conflicts:
+        errors.extend(alias_conflicts)
+
+    existing_fault_ids = {r.get("fault_id") for r in rules if isinstance(r, dict)}
+    existing_proc_ids = set(procedures.keys())
+
+    for fault in faults:
+        if not isinstance(fault, dict):
+            continue
+        fid = fault.get("fault_id", "")
+        if fid in existing_fault_ids and not allow_overwrite:
+            errors.append(f"fault_id '{fid}' already exists in rules. Set allow_overwrite=True to replace.")
+        if fid in existing_proc_ids and not allow_overwrite:
+            errors.append(f"procedure_tree '{fid}' already exists. Set allow_overwrite=True to replace.")
+
+    # Validate procedure step links
+    for fid, tree in trees.items():
+        if not isinstance(tree, dict):
+            continue
+        entry = tree.get("entry_step")
+        steps = tree.get("steps", {})
+        if entry and entry not in steps:
+            errors.append(f"procedure_trees[{fid}]: entry_step '{entry}' not in steps")
+        for sid, step in steps.items():
+            if not isinstance(step, dict):
+                continue
+            for branch in ("yes_next", "no_next"):
+                target = step.get(branch)
+                if target and target not in {"DIAGNOSED", "REFUTED", "END"} and target not in steps:
+                    errors.append(f"procedure_trees[{fid}].steps[{sid}].{branch}='{target}' is invalid")
+
+    if errors:
+        return {"imported": False, "errors": errors}
+
+    # --- Write aliases ---
+    alias_entry = aliases.get(symptom_id, {})
+    symptom_name = _slug(symptom_id.removeprefix("SYM_"))
+    aliases[symptom_id] = {
+        "symptom_id": symptom_id,
+        "name": alias_entry.get("name") or symptom_name,
+        "display_name": symptom_label or alias_entry.get("display_name", symptom_name),
+        "label_vi": symptom_label or alias_entry.get("label_vi", symptom_name),
+        "aliases": _merge_unique(alias_entry.get("aliases", []), [symptom_label, *new_aliases]),
+    }
+
+    # --- Write rules + procedures + expert_tree per fault ---
+    existing_by_key = {
+        (str(r.get("fault_id")), str(r.get("primary_symptom") or r.get("symptom"))): i
+        for i, r in enumerate(rules) if isinstance(r, dict)
+    }
+    candidate_fault_ids = [f.get("fault_id") for f in faults if isinstance(f, dict)]
+
+    for fault in faults:
+        if not isinstance(fault, dict):
+            continue
+        fid = fault.get("fault_id", "")
+        if not fid:
+            continue
+
+        fault_name = fault.get("fault_name") or _slug(fid)
+        fault_label = fault.get("fault_label") or fault.get("display_name") or fault_name
+        cf = _clamp_cf(fault.get("cf", 0.35))
+        resolution = fault.get("resolution") or {}
+        sym_refs = fault.get("symptoms", [])
+        if not sym_refs:
+            sym_refs = [{"symptom_id": symptom_id, "cf": cf, "priority": 1}]
+
+        proc_tree = trees.get(fid)
+        sys_id_resolved, subsystem_id, components = _normalise_system(None, system_id)
+
+        rule = {
+            "fault_id": fid,
+            "fault_name": fault_name,
+            "fault": fault_name,
+            "display_name": fault_label,
+            "label_vi": fault_label,
+            "system": sys_id_resolved,
+            "system_id": sys_id_resolved,
+            "subsystem": subsystem_id,
+            "subsystem_id": subsystem_id,
+            "affected_components": components,
+            "symptom": symptom_id,
+            "primary_symptom": symptom_id,
+            "candidate_fault_ids": candidate_fault_ids or [fid],
+            "cf": cf,
+            "final_cf": cf,
+            "symptoms": sym_refs,
+            "resolution": {
+                "parts": resolution.get("parts", [fault_label]),
+                "tools": resolution.get("tools", []),
+                "procedure": resolution.get("procedure", "Kiểm tra theo xác nhận của chuyên gia."),
+                "difficulty": resolution.get("difficulty", "expert_review"),
+                "labor_hours": resolution.get("labor_hours"),
+            },
+            "repairs": [],
+            "status": "approved",
+            "source": "llm_expert_review",
+        }
+        if proc_tree:
+            rule["procedure"] = proc_tree
+            procedures[fid] = proc_tree
+
+        key = (fid, symptom_id)
+        if key in existing_by_key:
+            rules[existing_by_key[key]] = rule
+        else:
+            existing_by_key[key] = len(rules)
+            rules.append(rule)
+
+        _update_expert_tree(expert_tree, sys_id_resolved, symptom_id, symptom_label, fault, proc_tree)
+
+    rules_doc.setdefault("meta", {})["total_rules"] = len(rules)
+    _write_json_files_atomic({
+        ALIASES_PATH: aliases,
+        RULES_PATH: rules_doc,
+        PROCEDURES_PATH: procedures,
+        EXPERT_TREE_PATH: expert_tree,
+    })
+    return {"imported": True, "errors": []}
+
+
 def promote_approved_payload(approved_payload: dict[str, Any]) -> bool:
     if not isinstance(approved_payload, dict):
         raise ValueError("approved_payload must be a dict.")
+
+    # Route llm_kb_patch to the new promotion path
+    if approved_payload.get("review_type") == "llm_kb_patch":
+        result = promote_llm_kb_patch(approved_payload)
+        if not result.get("imported"):
+            raise ValueError(f"llm_kb_patch promotion failed: {result.get('errors')}")
+        return True
 
     diagnoses = _diagnoses_from_payload(approved_payload)
     if not diagnoses:

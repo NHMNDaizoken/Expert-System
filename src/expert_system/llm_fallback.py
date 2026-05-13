@@ -24,6 +24,13 @@ DECISION_NEEDS_REVIEW = "Cần chuyên gia xác nhận"
 SOURCE_LLM_FALLBACK = "fallback_llm_ngoai_kb"
 SOURCE_OFFLINE_FALLBACK = "fallback_offline_ngoai_kb"
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+STAGING_DIR = PROJECT_ROOT / "data" / "staging"
+ALIASES_PATH = STAGING_DIR / "symptom_aliases.json"
+RULES_PATH = STAGING_DIR / "kg_rules_from_dataset.json"
+PROCEDURES_PATH = STAGING_DIR / "procedure_trees.json"
+EXPERT_TREE_PATH = STAGING_DIR / "expert_tree.json"
+
 SYSTEM_CANDIDATES = [
     "Engine",
     "Brake",
@@ -82,6 +89,12 @@ SYSTEM_KEYWORDS = {
     "HVAC": ["điều hòa", "máy lạnh", "ac", "hvac"],
 }
 
+PROCEDURE_TERMINALS = {"DIAGNOSED", "REFUTED", "END"}
+
+
+# ---------------------------------------------------------------------------
+# Utility helpers
+# ---------------------------------------------------------------------------
 
 def _slugify(value: str, default: str = "unknown") -> str:
     value = re.sub(r"[^a-zA-Z0-9]+", "_", value.strip().lower()).strip("_")
@@ -118,6 +131,182 @@ def _level_id(prefix: str, label: str) -> str:
     return f"{prefix}_{_slugify(label).upper()}"
 
 
+def _load_json_safe(path: Path, default: Any = None) -> Any:
+    """Load JSON file, return *default* on any failure."""
+    if default is None:
+        default = {}
+    if not path.exists():
+        return default
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+
+def _clamp_cf(value: Any, cap: float = MAX_LLM_CONFIDENCE) -> float:
+    try:
+        cf = float(value)
+    except (TypeError, ValueError):
+        cf = 0.35
+    return round(max(0.0, min(cf, cap)), 4)
+
+
+# ---------------------------------------------------------------------------
+# KB context loader  (Plan step 3)
+# ---------------------------------------------------------------------------
+
+def build_kb_context(user_input: str) -> dict[str, Any]:
+    """Load existing staging data and find nearby aliases / faults by keyword.
+
+    Purpose: give the LLM prompt context so it extends the *current* tree
+    style instead of inventing unrelated IDs/schema.
+    """
+    text = user_input.strip().lower()
+    context: dict[str, Any] = {
+        "existing_symptom_ids": [],
+        "existing_fault_ids": [],
+        "nearby_aliases": [],
+        "inferred_system": _infer_system(user_input),
+        "sample_procedure_tree": None,
+    }
+
+    # --- symptom aliases ---
+    aliases = _load_json_safe(ALIASES_PATH, {})
+    for sym_id, entry in aliases.items():
+        if not isinstance(entry, dict):
+            continue
+        alias_list = entry.get("aliases", [])
+        name = (entry.get("display_name") or entry.get("label_vi") or "").lower()
+        if any(kw in text for kw in [name] + [a.lower() for a in alias_list if isinstance(a, str)] if kw):
+            context["nearby_aliases"].append({
+                "symptom_id": sym_id,
+                "display_name": entry.get("display_name") or entry.get("label_vi"),
+                "aliases": alias_list[:5],
+            })
+        if len(context["nearby_aliases"]) >= 5:
+            break
+
+    # --- existing fault/symptom IDs for reference ---
+    rules_doc = _load_json_safe(RULES_PATH, {"rules": []})
+    rules = rules_doc.get("rules", []) if isinstance(rules_doc, dict) else []
+    seen_faults: set[str] = set()
+    for rule in rules[:200]:
+        if not isinstance(rule, dict):
+            continue
+        fid = rule.get("fault_id", "")
+        if fid and fid not in seen_faults:
+            context["existing_fault_ids"].append(fid)
+            seen_faults.add(fid)
+        sid = rule.get("primary_symptom") or rule.get("symptom")
+        if sid and sid not in context["existing_symptom_ids"]:
+            context["existing_symptom_ids"].append(sid)
+
+    context["existing_fault_ids"] = context["existing_fault_ids"][:20]
+    context["existing_symptom_ids"] = context["existing_symptom_ids"][:20]
+
+    # --- sample procedure tree so LLM can mimic structure ---
+    procedures = _load_json_safe(PROCEDURES_PATH, {})
+    if isinstance(procedures, dict):
+        for _fid, tree in list(procedures.items())[:1]:
+            context["sample_procedure_tree"] = tree
+            break
+
+    return context
+
+
+# ---------------------------------------------------------------------------
+# Validation helpers  (Plan step 2)
+# ---------------------------------------------------------------------------
+
+def validate_procedure_tree(tree: dict[str, Any]) -> tuple[bool, list[str]]:
+    """Validate a single procedure tree dict.  Returns (ok, errors)."""
+    errors: list[str] = []
+    if not isinstance(tree, dict):
+        return False, ["procedure_tree is not a dict"]
+
+    entry = tree.get("entry_step")
+    if not entry:
+        errors.append("procedure_tree missing entry_step")
+
+    steps = tree.get("steps")
+    if not isinstance(steps, dict) or not steps:
+        errors.append("procedure_tree missing or empty steps")
+        return False, errors
+
+    if entry and entry not in steps:
+        errors.append(f"entry_step '{entry}' not found in steps")
+
+    for step_id, step in steps.items():
+        if not isinstance(step, dict):
+            errors.append(f"step '{step_id}' is not a dict")
+            continue
+        if not step.get("question"):
+            errors.append(f"step '{step_id}' missing question")
+        for branch in ("yes_next", "no_next"):
+            target = step.get(branch)
+            if target is None:
+                errors.append(f"step '{step_id}' missing {branch}")
+            elif target not in PROCEDURE_TERMINALS and target not in steps:
+                errors.append(f"step '{step_id}' {branch}='{target}' is neither a terminal nor a valid step")
+
+    return len(errors) == 0, errors
+
+
+def validate_llm_kb_patch(payload: dict[str, Any]) -> tuple[bool, list[str]]:
+    """Validate an llm_kb_patch payload.  Returns (ok, errors)."""
+    errors: list[str] = []
+
+    if not isinstance(payload, dict):
+        return False, ["payload is not a dict"]
+
+    if payload.get("review_type") != "llm_kb_patch":
+        errors.append("review_type must be 'llm_kb_patch'")
+
+    if payload.get("needs_expert_review") is not True:
+        errors.append("needs_expert_review must be true")
+
+    # suggested_mapping
+    mapping = payload.get("suggested_mapping")
+    if not isinstance(mapping, dict):
+        errors.append("missing suggested_mapping")
+    else:
+        if not mapping.get("primary_symptom_id"):
+            errors.append("suggested_mapping missing primary_symptom_id")
+
+    # candidate_faults
+    faults = payload.get("candidate_faults")
+    if not isinstance(faults, list) or not faults:
+        errors.append("missing or empty candidate_faults")
+    else:
+        for i, fault in enumerate(faults):
+            if not isinstance(fault, dict):
+                errors.append(f"candidate_faults[{i}] is not a dict")
+                continue
+            cf = fault.get("cf", 0)
+            try:
+                if float(cf) > MAX_LLM_CONFIDENCE:
+                    errors.append(f"candidate_faults[{i}] cf={cf} exceeds {MAX_LLM_CONFIDENCE}")
+            except (TypeError, ValueError):
+                errors.append(f"candidate_faults[{i}] cf is not a number")
+
+    # procedure_trees
+    trees = payload.get("procedure_trees")
+    if not isinstance(trees, dict) or not trees:
+        errors.append("missing or empty procedure_trees")
+    else:
+        for fault_id, tree in trees.items():
+            ok, tree_errors = validate_procedure_tree(tree)
+            if not ok:
+                errors.extend(f"procedure_trees[{fault_id}]: {e}" for e in tree_errors)
+
+    return len(errors) == 0, errors
+
+
+# ---------------------------------------------------------------------------
+# Suggestion queue
+# ---------------------------------------------------------------------------
+
 def enqueue_llm_suggestion(
     user_input: str,
     llm_output: dict[str, Any],
@@ -138,103 +327,111 @@ def enqueue_llm_suggestion(
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
-def _prompt(user_input: str, top_k: int) -> str:
+# ---------------------------------------------------------------------------
+# Prompt — outputs llm_kb_patch JSON  (Plan step 1)
+# ---------------------------------------------------------------------------
+
+def _prompt(user_input: str, top_k: int, kb_context: dict[str, Any]) -> str:
     systems = ", ".join(SYSTEM_CANDIDATES)
+    inferred = kb_context.get("inferred_system", "Unknown")
+    nearby = json.dumps(kb_context.get("nearby_aliases", [])[:3], ensure_ascii=False)
+    sample_tree = json.dumps(kb_context.get("sample_procedure_tree") or {}, ensure_ascii=False, indent=2)
+
     return f"""
 Bạn là trợ lý chẩn đoán ô tô thận trọng, chỉ dùng làm fallback khi
 Knowledge Graph dạng rule-based chưa có symptom khớp.
 
 Chỉ trả về JSON hợp lệ. Không dùng markdown. Không giải thích ngoài JSON.
-Toàn bộ giá trị hiển thị cho người dùng phải là tiếng Việt dễ hiểu.
-Các key JSON giữ nguyên theo schema bên dưới để backend/UI dễ xử lý.
 
 Triệu chứng người dùng nhập:
 {user_input}
 
-Chuẩn hóa kết quả thành cây chẩn đoán 6 tầng:
-Tầng 1: hệ thống xe.
-Tầng 2: triệu chứng chính.
-Tầng 3: triệu chứng phụ và điều kiện xuất hiện.
-Tầng 4: lỗi có thể xảy ra, sắp xếp theo confidence giảm dần.
-Tầng 5: quy trình kiểm tra từng bước.
-Tầng 6: test xác nhận, linh kiện cần thay nếu đủ điều kiện, và hướng xử lý.
+Hệ thống suy luận từ keyword: {inferred}
+Alias gần nhất trong KB hiện tại: {nearby}
 
-System label kỹ thuật được phép dùng trong system_id hoặc system_code: {systems}
-Nhưng các field hiển thị như system_label, fault_label_vi, reason_vi,
-step_label_vi, expected_evidence, pass_condition, replace_when,
-resolution_steps, notes phải viết bằng tiếng Việt.
+Tham khảo cấu trúc procedure tree hiện có (mẫu):
+{sample_tree}
 
-Tạo tối đa {top_k} candidate chẩn đoán. Ưu tiên lỗi ô tô phổ biến.
-Giữ confidence thận trọng vì đây không phải kết quả từ KG đã duyệt.
-Không bao giờ đặt confidence cao hơn {MAX_LLM_CONFIDENCE}.
+Hệ thống xe hợp lệ: {systems}
 
-JSON shape:
+Quy tắc bắt buộc:
+- Confidence tối đa là {MAX_LLM_CONFIDENCE}.
+- needs_expert_review luôn là true.
+- Tạo tối đa {top_k} candidate_faults.
+- procedure_trees phải có entry_step, steps, mỗi step có question, yes_next, no_next.
+- yes_next/no_next chỉ trỏ đến step_id khác hoặc terminal: DIAGNOSED, REFUTED, END.
+- Giá trị hiển thị bằng tiếng Việt, key JSON giữ nguyên tiếng Anh.
+
+JSON shape bắt buộc:
 {{
-  "diagnostic_tree": {{
-    "level_1_root": {{
-      "system_id": "SYS_FUEL_SYSTEM_OR_UNKNOWN",
-      "system_code": "Fuel System or Unknown",
-      "system_label": "Tên hệ thống bằng tiếng Việt"
-    }},
-    "level_2_primary_symptom": {{
-      "symptom_id": "SYM_SNAKE_CASE_ID",
-      "symptom_name": "snake_case_name",
-      "symptom_label_vi": "Tên triệu chứng ngắn gọn bằng tiếng Việt",
-      "aliases": ["cách gọi khác bằng tiếng Việt"]
-    }},
-    "level_3_context": {{
-      "secondary_symptoms": [
-        {{"symptom_label_vi": "Triệu chứng phụ", "cf": 0.0}}
+  "review_type": "llm_kb_patch",
+  "needs_expert_review": true,
+  "source": "llm_fallback",
+  "user_input": "{user_input}",
+  "suggested_mapping": {{
+    "system_id": "SYS_<SYSTEM>",
+    "primary_symptom_id": "SYM_<SNAKE_CASE>",
+    "primary_symptom_label": "Tên triệu chứng tiếng Việt",
+    "aliases": ["alias tiếng Việt 1", "alias tiếng Việt 2"]
+  }},
+  "candidate_faults": [
+    {{
+      "fault_id": "FAULT_<SNAKE_CASE>",
+      "fault_name": "snake_case_name",
+      "fault_label": "Tên lỗi tiếng Việt",
+      "cf": 0.35,
+      "symptoms": [
+        {{"symptom_id": "SYM_...", "cf": 0.35, "priority": 1}}
       ],
-      "conditions": [
-        {{"condition_label_vi": "Điều kiện xuất hiện triệu chứng", "cf": 0.0}}
-      ],
-      "missing_questions": ["Câu hỏi cần hỏi thêm tài xế bằng tiếng Việt"]
-    }},
-    "level_4_possible_faults": [
-      {{
-        "fault_id": "LLM_SNAKE_CASE_ID",
-        "fault_name": "snake_case_name",
-        "fault_label_vi": "Tên lỗi dễ đọc bằng tiếng Việt",
-        "system": "Tên hệ thống bằng tiếng Việt",
-        "confidence": 0.0,
-        "reason_vi": "Lý do ngắn gọn và thận trọng bằng tiếng Việt",
-        "decision": "Cần chuyên gia xác nhận",
-        "matched_rules": [
-          {{
-            "symptom_id": "USER_REPORTED_SYMPTOM",
-            "symptom_name": "user_reported_symptom",
-            "symptom_label": "Triệu chứng người dùng báo bằng tiếng Việt",
-            "cf": 0.0,
-            "priority": 1,
-            "source": "fallback_llm_ngoai_kb"
-          }}
-        ]
+      "resolution": {{
+        "parts": ["linh kiện"],
+        "tools": [],
+        "procedure": "Mô tả quy trình kiểm tra",
+        "difficulty": "expert_review_required",
+        "labor_hours": null
       }}
-    ],
-    "level_5_diagnosis_procedures": [
-      {{
-        "step_id": "STEP_1",
-        "step_order": 1,
-        "step_label_vi": "Bước kiểm tra an toàn bằng tiếng Việt",
-        "expected_evidence": "Dấu hiệu/kết quả kỳ vọng bằng tiếng Việt"
+    }}
+  ],
+  "procedure_trees": {{
+    "FAULT_<ID>": {{
+      "fault_id": "FAULT_<ID>",
+      "fault_name": "snake_case_name",
+      "entry_step": "<fault_slug>_s1",
+      "steps": {{
+        "<fault_slug>_s1": {{
+          "id": "<fault_slug>_s1",
+          "symptom_id": "SYM_...",
+          "symptom_label": "Tên triệu chứng",
+          "question": "Câu hỏi kiểm tra bước 1?",
+          "is_question": true,
+          "yes_next": "<fault_slug>_s2",
+          "no_next": "REFUTED",
+          "results": []
+        }},
+        "<fault_slug>_s2": {{
+          "id": "<fault_slug>_s2",
+          "symptom_id": "SYM_...",
+          "symptom_label": "Tên triệu chứng",
+          "question": "Câu hỏi kiểm tra bước 2?",
+          "is_question": true,
+          "yes_next": "DIAGNOSED",
+          "no_next": "REFUTED",
+          "results": []
+        }}
       }}
-    ],
-    "level_6_confirmation_and_resolution": {{
-      "confirmation_tests": [
-        {{"test_label_vi": "Tên bài test bằng tiếng Việt", "pass_condition": "Điều kiện đạt bằng tiếng Việt"}}
-      ],
-      "parts_to_replace": [
-        {{"part_label_vi": "Tên linh kiện bằng tiếng Việt", "replace_when": "Chỉ thay khi điều kiện này đúng"}}
-      ],
-      "resolution_steps": ["Hướng xử lý bằng tiếng Việt"]
     }}
   }},
-  "summary_vi": "Một câu tóm tắt bằng tiếng Việt cho người review",
-  "notes": ["Ghi chú thận trọng bằng tiếng Việt"]
+  "review_notes": {{
+    "reason": "Lý do tạo patch",
+    "confidence_limit": "LLM suggestion only; not official diagnosis."
+  }}
 }}
 """.strip()
 
+
+# ---------------------------------------------------------------------------
+# Safe JSON parser
+# ---------------------------------------------------------------------------
 
 def _safe_json(text: str) -> dict[str, Any]:
     cleaned = text.strip()
@@ -248,261 +445,133 @@ def _safe_json(text: str) -> dict[str, Any]:
     return json.loads(cleaned)
 
 
+# ---------------------------------------------------------------------------
+# Offline fallback — generates llm_kb_patch shape without LLM
+# ---------------------------------------------------------------------------
+
 def _offline_response(user_input: str) -> dict[str, Any]:
     system = _infer_system(user_input)
-    system_label = _system_label_vi(system)
+    system_id = _level_id("SYS", system)
     symptom_name = _slugify(user_input, default="user_reported_symptom")
     symptom_id = _level_id("SYM", user_input)
+    fault_id = f"FAULT_{_slugify(user_input, default='unknown').upper()}"
+    fault_name = _slugify(user_input, default="unknown_fault")
+    step_base = _slugify(fault_name, default="offline")
 
     return {
-        "diagnostic_tree": {
-            "level_1_root": {
-                "system_id": _level_id("SYS", system),
-                "system_code": system,
-                "system_label": system_label,
-            },
-            "level_2_primary_symptom": {
-                "symptom_id": symptom_id,
-                "symptom_name": symptom_name,
-                "symptom_label_vi": user_input,
-                "aliases": [user_input],
-            },
-            "level_3_context": {
-                "secondary_symptoms": [],
-                "conditions": [],
-                "missing_questions": [
-                    "Triệu chứng xuất hiện khi nào: lúc khởi động, chạy chậm, tăng tốc hay chạy đường dài?",
-                    "Có đèn cảnh báo hoặc đèn check engine sáng không?",
-                    "Có mùi lạ, tiếng lạ, khói, rung giật hoặc rò rỉ chất lỏng không?",
-                    "Xe đời nào, loại động cơ gì, đã bảo dưỡng hoặc thay linh kiện gì gần đây?",
-                ],
-            },
-            "level_4_possible_faults": [
-                {
-                    "fault_id": "UNMAPPED_SYMPTOM",
-                    "fault_name": "unmapped_symptom",
-                    "fault_label_vi": "Triệu chứng chưa có trong Knowledge Graph",
-                    "system": system_label,
-                    "confidence": 0.2,
-                    "reason_vi": "Chưa có rule đã duyệt để ánh xạ triệu chứng này sang lỗi cụ thể.",
-                    "decision": DECISION_NEEDS_REVIEW,
-                    "matched_rules": [
-                        {
-                            "symptom_id": "USER_REPORTED_SYMPTOM",
-                            "symptom_name": "user_reported_symptom",
-                            "symptom_label": user_input,
-                            "cf": 0.2,
-                            "priority": 1,
-                            "source": SOURCE_OFFLINE_FALLBACK,
-                        }
-                    ],
-                }
-            ],
-            "level_5_diagnosis_procedures": [
-                {
-                    "step_id": "STEP_COLLECT_CONTEXT",
-                    "step_order": 1,
-                    "step_label_vi": "Thu thập thêm thông tin về hệ thống xe, điều kiện xuất hiện, đèn cảnh báo, âm thanh, mùi và dữ liệu OBD nếu có.",
-                    "expected_evidence": "Có đủ ngữ cảnh để chuyên gia chọn hệ thống, triệu chứng chính và lỗi nghi ngờ phù hợp.",
-                },
-                {
-                    "step_id": "STEP_EXPERT_MAPPING",
-                    "step_order": 2,
-                    "step_label_vi": "Chuyên gia xác nhận đây có phải case thật và map vào cây chẩn đoán phù hợp.",
-                    "expected_evidence": "Có rule hoặc mapping mới được duyệt trước khi đưa vào Knowledge Graph.",
-                },
-            ],
-            "level_6_confirmation_and_resolution": {
-                "confirmation_tests": [
-                    {
-                        "test_label_vi": "Review thủ công bởi chuyên gia",
-                        "pass_condition": "Chuyên gia xác nhận hệ thống, lỗi, quy trình kiểm tra và hướng xử lý là hợp lệ.",
-                    }
-                ],
-                "parts_to_replace": [],
-                "resolution_steps": [
-                    "Không khuyến nghị thay linh kiện cho tới khi có xác nhận chẩn đoán.",
-                    "Nếu là case thật, thêm symptom và rule đã duyệt vào staging hoặc Knowledge Graph.",
-                ],
-            },
+        "review_type": "llm_kb_patch",
+        "needs_expert_review": True,
+        "source": "llm_fallback",
+        "user_input": user_input,
+        "suggested_mapping": {
+            "system_id": system_id,
+            "primary_symptom_id": symptom_id,
+            "primary_symptom_label": user_input,
+            "aliases": [user_input],
         },
-        "summary_vi": f"Chưa có rule đã duyệt cho triệu chứng '{user_input}', cần chuyên gia xác nhận trước khi đưa vào Knowledge Graph.",
-        "notes": [
-            "Chưa cấu hình GEMINI_API_KEY nên hệ thống dùng fallback offline, không gọi LLM.",
-        ],
-    }
-
-
-def _normalize_matched_rules(matched_rules: Any, user_input: str, source: str) -> list[dict[str, Any]]:
-    if not isinstance(matched_rules, list) or not matched_rules:
-        return [
-            {
-                "symptom_id": "USER_REPORTED_SYMPTOM",
-                "symptom_name": "user_reported_symptom",
-                "symptom_label": user_input,
-                "cf": 0.2,
-                "priority": 1,
-                "source": _source_vi(source),
-            }
-        ]
-
-    normalized = []
-    for index, rule in enumerate(matched_rules, start=1):
-        if not isinstance(rule, dict):
-            continue
-        normalized.append(
-            {
-                "symptom_id": rule.get("symptom_id") or "USER_REPORTED_SYMPTOM",
-                "symptom_name": rule.get("symptom_name") or "user_reported_symptom",
-                "symptom_label": rule.get("symptom_label") or user_input,
-                "cf": rule.get("cf", 0.2),
-                "priority": rule.get("priority", index),
-                "source": _source_vi(rule.get("source") or source),
-            }
-        )
-    return normalized
-
-
-def _normalize_context(context: Any) -> dict[str, Any]:
-    if not isinstance(context, dict):
-        context = {}
-
-    return {
-        "secondary_symptoms": context.get("secondary_symptoms") or [],
-        "conditions": context.get("conditions") or [],
-        "missing_questions": context.get("missing_questions")
-        or [
-            "Triệu chứng xuất hiện trong điều kiện nào?",
-            "Có đèn cảnh báo hoặc đèn check engine sáng không?",
-            "Có tiếng lạ, mùi lạ, khói hoặc rung giật không?",
-        ],
-    }
-
-
-def _normalize_resolution(resolution: Any) -> dict[str, Any]:
-    if not isinstance(resolution, dict):
-        resolution = {}
-
-    return {
-        "confirmation_tests": resolution.get("confirmation_tests") or [],
-        "parts_to_replace": resolution.get("parts_to_replace") or [],
-        "resolution_steps": resolution.get("resolution_steps")
-        or ["Chỉ đưa vào Knowledge Graph sau khi chuyên gia xác nhận."],
-    }
-
-
-def _normalize_tree(payload: dict[str, Any], user_input: str, top_k: int, source: str) -> dict[str, Any]:
-    if isinstance(payload.get("diagnostic_tree"), dict):
-        tree = payload["diagnostic_tree"]
-    else:
-        tree = {}
-
-    legacy_diagnoses = payload.get("diagnoses", [])
-    possible_faults = tree.get("level_4_possible_faults") or legacy_diagnoses
-    possible_faults = possible_faults[:top_k] if isinstance(possible_faults, list) else []
-
-    inferred_system = _infer_system(user_input)
-    first_system_code = next(
-        (
-            fault.get("system_code") or fault.get("system")
-            for fault in possible_faults
-            if isinstance(fault, dict) and (fault.get("system_code") or fault.get("system"))
-        ),
-        inferred_system,
-    )
-    if first_system_code == "Unknown" and inferred_system != "Unknown":
-        first_system_code = inferred_system
-
-    first_system_label = _system_label_vi(first_system_code)
-    root = tree.get("level_1_root") if isinstance(tree.get("level_1_root"), dict) else {}
-    symptom = tree.get("level_2_primary_symptom") if isinstance(tree.get("level_2_primary_symptom"), dict) else {}
-    symptom_label = symptom.get("symptom_label_vi") or symptom.get("symptom_label") or user_input
-
-    normalized_faults = []
-    for index, fault in enumerate(possible_faults, start=1):
-        if not isinstance(fault, dict):
-            continue
-
-        fault_id = fault.get("fault_id") or f"LLM_FAULT_{index}"
-        fault_name = fault.get("fault_name") or _slugify(fault_id)
-        fault_system_code = fault.get("system_code") or first_system_code or inferred_system
-        fault_system_label = _system_label_vi(fault.get("system") or fault_system_code)
-        confidence = fault.get("confidence", fault.get("final_cf", 0.35))
-        try:
-            confidence = float(confidence)
-        except (TypeError, ValueError):
-            confidence = 0.35
-
-        normalized_faults.append(
+        "candidate_faults": [
             {
                 "fault_id": fault_id,
                 "fault_name": fault_name,
-                "fault_label_vi": fault.get("fault_label_vi") or fault.get("fault_label") or fault_name,
-                "system": fault_system_label,
-                "confidence": min(confidence, MAX_LLM_CONFIDENCE),
-                "reason_vi": fault.get("reason_vi") or fault.get("reason") or "Đây là candidate từ fallback ngoài Knowledge Graph, cần chuyên gia xác nhận.",
-                "decision": _decision_vi(fault.get("decision")),
-                "matched_rules": _normalize_matched_rules(fault.get("matched_rules"), user_input, source),
+                "fault_label": f"Triệu chứng chưa có trong Knowledge Graph: {user_input}",
+                "cf": 0.2,
+                "symptoms": [
+                    {"symptom_id": symptom_id, "cf": 0.2, "priority": 1}
+                ],
+                "resolution": {
+                    "parts": [],
+                    "tools": [],
+                    "procedure": "Chưa xác định — cần chuyên gia kiểm tra và xác nhận.",
+                    "difficulty": "expert_review_required",
+                    "labor_hours": None,
+                },
             }
-        )
-
-    normalized_faults.sort(key=lambda item: item["confidence"], reverse=True)
-
-    return {
-        "level_1_root": {
-            "system_id": root.get("system_id") or _level_id("SYS", first_system_code),
-            "system_code": root.get("system_code") or first_system_code,
-            "system_label": root.get("system_label") or first_system_label,
+        ],
+        "procedure_trees": {
+            fault_id: {
+                "fault_id": fault_id,
+                "fault_name": fault_name,
+                "entry_step": f"{step_base}_s1",
+                "steps": {
+                    f"{step_base}_s1": {
+                        "id": f"{step_base}_s1",
+                        "symptom_id": symptom_id,
+                        "symptom_label": user_input,
+                        "question": "Triệu chứng xuất hiện khi nào: lúc khởi động, chạy chậm, tăng tốc hay chạy đường dài?",
+                        "is_question": True,
+                        "yes_next": f"{step_base}_s2",
+                        "no_next": "REFUTED",
+                        "results": [],
+                    },
+                    f"{step_base}_s2": {
+                        "id": f"{step_base}_s2",
+                        "symptom_id": symptom_id,
+                        "symptom_label": user_input,
+                        "question": "Có đèn cảnh báo hoặc đèn check engine sáng không?",
+                        "is_question": True,
+                        "yes_next": "DIAGNOSED",
+                        "no_next": "REFUTED",
+                        "results": [],
+                    },
+                },
+            }
         },
-        "level_2_primary_symptom": {
-            "symptom_id": symptom.get("symptom_id") or _level_id("SYM", symptom_label),
-            "symptom_name": symptom.get("symptom_name") or _slugify(symptom_label, default="user_reported_symptom"),
-            "symptom_label_vi": symptom_label,
-            "aliases": symptom.get("aliases") or [symptom_label],
+        "review_notes": {
+            "reason": "Chưa cấu hình GEMINI_API_KEY nên hệ thống dùng fallback offline.",
+            "confidence_limit": "LLM suggestion only; not official diagnosis.",
         },
-        "level_3_context": _normalize_context(tree.get("level_3_context")),
-        "level_4_possible_faults": normalized_faults,
-        "level_5_diagnosis_procedures": tree.get("level_5_diagnosis_procedures") or _legacy_repairs_to_steps(legacy_diagnoses),
-        "level_6_confirmation_and_resolution": _normalize_resolution(tree.get("level_6_confirmation_and_resolution")),
     }
 
 
-def _legacy_repairs_to_steps(diagnoses: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    steps: list[dict[str, Any]] = []
-    order = 1
-    for diagnosis in diagnoses:
-        if not isinstance(diagnosis, dict):
-            continue
-        for repair in diagnosis.get("repairs", []):
-            if not isinstance(repair, dict):
-                continue
-            for step in repair.get("steps", []):
-                steps.append(
-                    {
-                        "step_id": f"STEP_{order}",
-                        "step_order": order,
-                        "step_label_vi": step,
-                        "expected_evidence": repair.get("repair_label") or "Cần kiểm tra để xác nhận bằng chứng chẩn đoán.",
-                    }
-                )
-                order += 1
+# ---------------------------------------------------------------------------
+# Normalise LLM raw output into valid llm_kb_patch shape
+# ---------------------------------------------------------------------------
 
-    return steps or [
-        {
-            "step_id": "STEP_REVIEW",
-            "step_order": 1,
-            "step_label_vi": "Chuyên gia review triệu chứng và chọn nhánh cây chẩn đoán phù hợp.",
-            "expected_evidence": "Có mapping được duyệt.",
+def _normalize_llm_patch(raw: dict[str, Any], user_input: str, source: str) -> dict[str, Any]:
+    """Take raw LLM JSON and ensure it conforms to llm_kb_patch schema."""
+
+    # If the LLM already returned valid llm_kb_patch, just clamp confidence
+    if raw.get("review_type") == "llm_kb_patch" and raw.get("candidate_faults"):
+        patch = dict(raw)
+    else:
+        # Legacy / malformed — wrap into the new shape
+        patch = _offline_response(user_input)
+        patch["review_notes"] = {
+            "reason": "LLM trả kết quả không đúng schema llm_kb_patch, dùng offline fallback.",
+            "confidence_limit": "LLM suggestion only; not official diagnosis.",
         }
-    ]
+        return patch
 
+    # Force safety invariants
+    patch["review_type"] = "llm_kb_patch"
+    patch["needs_expert_review"] = True
+    patch["source"] = source
+    patch.setdefault("user_input", user_input)
+
+    # Clamp all cf values
+    for fault in patch.get("candidate_faults", []):
+        if isinstance(fault, dict):
+            fault["cf"] = _clamp_cf(fault.get("cf", 0.35))
+            for sym in fault.get("symptoms", []):
+                if isinstance(sym, dict):
+                    sym["cf"] = _clamp_cf(sym.get("cf", 0.35))
+
+    return patch
+
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
 
 def diagnose_with_llm(user_input: str, top_k: int = 5) -> dict[str, Any]:
     source = SOURCE_LLM_FALLBACK
     queue_reason = "trieu_chung_chua_duoc_mapping"
 
+    # Build KB context for prompt enrichment
+    kb_context = build_kb_context(user_input)
+
     if not _has_api_key():
-        payload = _offline_response(user_input)
+        patch = _offline_response(user_input)
         source = SOURCE_OFFLINE_FALLBACK
         queue_reason = "offline_trieu_chung_chua_duoc_mapping"
     else:
@@ -511,32 +580,29 @@ def diagnose_with_llm(user_input: str, top_k: int = 5) -> dict[str, Any]:
 
             genai.configure(api_key=GEMINI_API_KEY)
             model = genai.GenerativeModel(DEFAULT_MODEL)
-            response = model.generate_content(_prompt(user_input, top_k))
-            payload = _safe_json(response.text)
+            response = model.generate_content(_prompt(user_input, top_k, kb_context))
+            raw = _safe_json(response.text)
+            patch = _normalize_llm_patch(raw, user_input, source)
         except Exception as exc:
-            payload = _offline_response(user_input)
-            payload.setdefault("notes", []).append(f"Gọi LLM fallback thất bại: {exc}")
+            patch = _offline_response(user_input)
+            patch.setdefault("review_notes", {})["llm_error"] = str(exc)
             source = SOURCE_OFFLINE_FALLBACK
             queue_reason = "offline_trieu_chung_chua_duoc_mapping"
 
-    diagnostic_tree = _normalize_tree(payload, user_input=user_input, top_k=top_k, source=source)
-    possible_faults = diagnostic_tree["level_4_possible_faults"]
+    # Validate
+    ok, validation_errors = validate_llm_kb_patch(patch)
+    if not ok:
+        patch.setdefault("review_notes", {})["validation_errors"] = validation_errors
 
-    result = {
-        "diagnostic_tree": diagnostic_tree,
-        "summary_vi": payload.get("summary_vi")
-        or f"Triệu chứng '{user_input}' đã được chuẩn hóa theo cây 6 tầng và cần chuyên gia xác nhận.",
-        "diagnoses": possible_faults,  # Giữ tương thích ngược cho UI/API cũ.
-        "notes": payload.get("notes", []),
-        "source": source,
-        "schema_version": "diagnostic_tree.v1",
-        "queued_for_review": False,
-    }
-
+    # Enqueue for expert review
+    patch["queued_for_review"] = False
     try:
-        enqueue_llm_suggestion(user_input, result, reason=queue_reason)
-        result["queued_for_review"] = True
+        enqueue_llm_suggestion(user_input, patch, reason=queue_reason)
+        patch["queued_for_review"] = True
     except Exception as exc:
-        result.setdefault("notes", []).append(f"Không thể đưa gợi ý vào hàng chờ review: {exc}")
+        patch.setdefault("review_notes", {})["queue_error"] = str(exc)
 
-    return result
+    # Always enforce source
+    patch["source"] = source
+
+    return patch

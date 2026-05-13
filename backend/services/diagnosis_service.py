@@ -84,14 +84,60 @@ def filter_rejected_faults(response, rejected_faults):
     return response
 
 
+def _extract_patch_next_question(patch):
+    """Extract the first procedure tree entry-step question from an llm_kb_patch."""
+    trees = patch.get("procedure_trees")
+    faults = patch.get("candidate_faults")
+    if not isinstance(trees, dict) or not trees:
+        return None
+    if not isinstance(faults, list) or not faults:
+        return None
+
+    # Pick the first candidate fault that has a matching procedure tree
+    for fault in faults:
+        if not isinstance(fault, dict):
+            continue
+        fault_id = fault.get("fault_id")
+        tree = trees.get(fault_id)
+        if not isinstance(tree, dict):
+            continue
+        entry = tree.get("entry_step")
+        steps = tree.get("steps", {})
+        step = steps.get(entry) if entry else None
+        if step and step.get("question"):
+            return {
+                "question": step["question"],
+                "answer_type": "yes_no",
+                "source": "llm_fallback_procedure_tree",
+                "fault_id": fault_id,
+                "step_id": entry,
+                "mode": "llm_fallback",
+            }
+    return None
+
+
 def llm_response(user_input, top_k=5, reason="kg_no_match"):
     fallback = diagnose_with_llm(user_input, top_k=top_k)
-    diagnoses = fallback.get("diagnoses", [])
-    missing_questions = (
-        fallback.get("diagnostic_tree", {})
-        .get("level_3_context", {})
-        .get("missing_questions", [])
-    )
+
+    # Extract first question from the generated procedure tree
+    patch_question = _extract_patch_next_question(fallback)
+
+    # Fallback generic question when no procedure tree question available
+    fallback_question = {
+        "question": "Hệ thống chưa có đủ kiến thức đã kiểm duyệt cho triệu chứng này. Triệu chứng này thường xuất hiện khi nào?",
+        "type": "multiple_choice",
+        "mode": "llm_fallback",
+        "choices": [
+            {"value": "startup", "label": "Lúc khởi động"},
+            {"value": "accelerating", "label": "Khi tăng tốc"},
+            {"value": "idle", "label": "Khi chạy không tải"},
+            {"value": "high_speed", "label": "Ở tốc độ cao"},
+            {"value": "not_sure", "label": "Không chắc"},
+        ],
+        "why": [
+            "Thông tin này giúp chuyên gia xác định hệ thống liên quan trước khi thêm luật mới vào Knowledge Graph."
+        ],
+    }
 
     response = {
         "matched_symptoms": [],
@@ -111,29 +157,16 @@ def llm_response(user_input, top_k=5, reason="kg_no_match"):
         "current_hypotheses": [],
         "candidate_faults": [],
 
-        # Chỉ để admin/queue dùng
-        "llm_suggestions": diagnoses,
+        # LLM patch suggestion — for expert review only
+        "llm_patch_suggestion": fallback,
+        "queued_for_review": fallback.get("queued_for_review", False),
+        "review_status": "pending",
+        "review_type": "llm_kb_patch",
 
-        "next_question": {
-            "question": missing_questions[0]
-            if missing_questions
-            else "Hệ thống chưa có đủ kiến thức đã kiểm duyệt cho triệu chứng này. Triệu chứng này thường xuất hiện khi nào?",
-            "type": "multiple_choice",
-            "mode": "llm_fallback",
-            "choices": [
-                {"value": "startup", "label": "Lúc khởi động"},
-                {"value": "accelerating", "label": "Khi tăng tốc"},
-                {"value": "idle", "label": "Khi chạy không tải"},
-                {"value": "high_speed", "label": "Ở tốc độ cao"},
-                {"value": "not_sure", "label": "Không chắc"},
-            ],
-            "why": [
-                "Thông tin này giúp chuyên gia xác định hệ thống liên quan trước khi thêm luật mới vào Knowledge Graph."
-            ],
-        },
+        # Use procedure tree question if available, else generic fallback
+        "next_question": patch_question or fallback_question,
 
         "notes": ["Triệu chứng đã được đưa vào hàng chờ chuyên gia; chưa có kết luận cuối."],
-        "queued_for_review": fallback.get("queued_for_review", False),
         "reasoning_trace": [
             "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
             "Đã đưa case vào hàng chờ chuyên gia.",
@@ -150,7 +183,7 @@ def llm_response(user_input, top_k=5, reason="kg_no_match"):
         "fallback_notes": [],
         "debug": {
             "fallback_reason": reason,
-            "fallback_notes": fallback.get("notes", []),
+            "fallback_notes": fallback.get("review_notes", {}),
             "raw_fallback": fallback,
         },
     }
