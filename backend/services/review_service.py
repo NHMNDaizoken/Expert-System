@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from neo4j import GraphDatabase
 
-from backend.config import settings
+from backend.core.config import settings
 
 
 class ReviewService:

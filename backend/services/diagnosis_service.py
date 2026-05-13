@@ -2,23 +2,16 @@ from fastapi import HTTPException, status
 
 from backend.services.diagnosis_normalizer import normalize_diagnosis_response
 from backend.services.session_service import SessionService
+from backend.core.dependencies import get_engine
 from src.expert_system.engine import ExpertSystemEngine
 from src.expert_system.knowledge_base import KnowledgeBase
 from src.expert_system.policy import apply_response_policy
 from src.expert_system.llm_fallback import diagnose_with_llm
+from src.expert_system.utils.scoring import confidence_label
 
 
 MIN_CHAT_STEPS = 1
 
-
-def confidence_label(cf):
-    if cf >= 0.8:
-        return "Rất có khả năng"
-    if cf >= 0.6:
-        return "Có khả năng"
-    if cf >= 0.5:
-        return "Có thể xảy ra"
-    return "Chưa chắc chắn"
 
 
 def parse_answer(answer):
@@ -188,7 +181,7 @@ class DiagnosisService:
 
         reason = "kg_no_match"
         try:
-            response = ExpertSystemEngine.from_staging().diagnose(user_input, top_k=top_k)
+            response = get_engine().diagnose(user_input, top_k=top_k)
             response = apply_response_policy(response)
             response = enrich_response(response)
             response["source"] = "staging_files_kg"
@@ -233,7 +226,7 @@ class DiagnosisService:
         session_for_engine["rejected_faults"] = sorted(rejected_faults or [])
 
         response = enrich_response(
-            ExpertSystemEngine.from_staging().diagnose(
+            get_engine().diagnose(
                 user_input,
                 top_k=top_k,
                 confirmed_symptoms=sorted(confirmed_symptoms),
@@ -310,7 +303,7 @@ class DiagnosisService:
         last_question = session.get("last_question") or {}
 
         if symptom:
-            engine = ExpertSystemEngine.from_staging()
+            engine = get_engine()
             try:
                 for match in engine.matcher.match(symptom):
                     confirmed_symptoms.add(match["symptom_id"])

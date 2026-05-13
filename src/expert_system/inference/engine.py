@@ -171,8 +171,8 @@ class ExpertSystemEngine:
         top = diagnoses[0]
         second = diagnoses[1] if len(diagnoses) > 1 else None
 
-        top_cf = float(top.get("final_cf", top.get("confidence", 0)) or 0)
-        second_cf = float(second.get("final_cf", second.get("confidence", 0)) or 0) if second else 0.0
+        top_cf = float(top.get("confidence", top.get("final_cf", 0)) or 0)
+        second_cf = float(second.get("confidence", second.get("final_cf", 0)) or 0) if second else 0.0
         gap = top_cf - second_cf
 
         evidence_count = len(set(memory.confirmed_symptoms or []))
@@ -417,7 +417,8 @@ class ExpertSystemEngine:
                 "fault_id": top.get("fault_id"),
                 "fault_name": top.get("fault_name"),
                 "score": top.get("score"),
-                "final_cf": top.get("final_cf"),
+                "final_cf": top.get("final_cf", top.get("confidence")),
+                "confidence": top.get("confidence", top.get("final_cf")),
             },
             "explanation": "Được chọn từ quy trình kiểm tra của giả thuyết lỗi mạnh nhất hiện tại.",
         }
@@ -439,30 +440,13 @@ class ExpertSystemEngine:
                 "fault_name": item.get("fault_name"),
                 "fault_label": item.get("fault_label"),
                 "system": item.get("system"),
-                "final_cf": item.get("final_cf"),
+                "final_cf": item.get("final_cf", item.get("confidence")),
+                "confidence": item.get("confidence", item.get("final_cf")),
                 "confidence_label": item.get("confidence_label"),
             }
             for item in diagnoses
         ]
 
-    # Keep these as static methods for backward compatibility
-    @staticmethod
-    def _combine_cf(cf_old: float, cf_new: float) -> float:
-        return combine_cf(cf_old, cf_new)
-
-    @staticmethod
-    def _confidence_label(score: float) -> str:
-        return confidence_label(score)
-
-    # Keep _select_by_information_gain as static method for backward compatibility
-    @staticmethod
-    def _select_by_information_gain(
-        ranked: list[dict[str, Any]],
-        asked: set[str],
-        all_symptoms: list[str],
-        cf_map: dict[str, dict[str, float]],
-    ) -> dict[str, Any] | None:
-        return _select_by_information_gain(ranked, asked, all_symptoms, cf_map)
 
 
 # ============================================================================
@@ -507,7 +491,7 @@ def rank_faults(
         if not matched_rules and confirmed and not rule.get("candidate_reason"):
             continue
 
-        final_cf = round(min(max(score, 0.0), 1.0), 4)
+        confidence = round(min(max(score, 0.0), 1.0), 4)
         ranked.append(
             {
                 "fault_id": fault_id,
@@ -515,15 +499,17 @@ def rank_faults(
                 "fault_label": rule.get("label_vi") or rule.get("display_name", rule.get("fault_name", fault_id)),
                 "system": rule.get("system_id") or rule.get("system"),
                 "subsystem": rule.get("subsystem_id") or rule.get("subsystem"),
-                "score": final_cf,
-                "final_cf": final_cf,
+                "score": confidence,
+                "confidence": confidence,
+                "final_cf": confidence,
                 "cf_breakdown": breakdown,
                 "score_breakdown": {
-                    "cf_confidence": final_cf,
+                    "cf_confidence": confidence,
+                    "confidence": confidence,
                     "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                 },
-                "confidence_label": confidence_label(final_cf),
-                "decision": "accepted" if final_cf >= 0.5 else "uncertain",
+                "confidence_label": confidence_label(confidence),
+                "decision": "accepted" if confidence >= 0.5 else "uncertain",
                 "candidate_reason": rule.get("candidate_reason"),
                 "matched_rules": matched_rules,
                 "repairs": rule.get("repairs", []),
@@ -531,7 +517,7 @@ def rank_faults(
             }
         )
 
-    return sorted(ranked, key=lambda item: item["final_cf"], reverse=True)
+    return sorted(ranked, key=lambda item: item["confidence"], reverse=True)
 
 
 # Alias for backward compatibility

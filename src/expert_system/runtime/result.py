@@ -15,6 +15,7 @@ class DiagnosisCandidate(TypedDict, total=False):
     fault_label: str
     system: str | None
     final_cf: float
+    confidence: float
     confidence_label: str
 
 

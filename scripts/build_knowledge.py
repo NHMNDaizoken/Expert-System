@@ -13,6 +13,8 @@ try:
 except ModuleNotFoundError:
     from scripts import _bootstrap  # type: ignore # noqa: F401
 
+from src.expert_system.utils.text import slugify
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RAW_PATH = PROJECT_ROOT / "data" / "raw" / "automotive_faults.json"
 STAGING_DIR = PROJECT_ROOT / "data" / "staging"
@@ -124,12 +126,6 @@ def symptom_to_question_vi(symptom: Any, translations: dict[str, str] | None = N
 
     return f"Bạn có nhận thấy dấu hiệu này không: {label_lower}?"
 
-
-def slugify(text: Any) -> str:
-    text = str(text or "").lower().strip()
-    text = re.sub(r"[^a-z0-9]+", "_", text)
-    text = re.sub(r"_+", "_", text)
-    return text.strip("_")
 
 
 def make_id(prefix: str, text: Any) -> str:

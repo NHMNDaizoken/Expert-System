@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from backend.dependencies import require_admin_api_key
+from backend.core.dependencies import require_admin_api_key
 from backend.schemas import RuleDecisionRequest
 from backend.services.review_service import ReviewService
 

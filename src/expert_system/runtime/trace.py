@@ -12,6 +12,14 @@ from typing import Any
 
 from src.expert_system.knowledge.loader import KnowledgeBase
 from src.expert_system.runtime.state import WorkingMemory
+from src.expert_system.runtime.trace_models import (
+    FuzzyTrace,
+    CFTrace,
+    QuestionTrace,
+    PolicyTrace,
+    RejectedCandidateTrace,
+    TraceEvent
+)
 
 
 class ExplanationBuilder:
@@ -31,11 +39,30 @@ class ExplanationBuilder:
         status: str,
     ) -> dict[str, Any]:
         top = diagnoses[0] if diagnoses else None
+        
+        fuzzy_trace = FuzzyTrace(
+            input_text=user_input,
+            matched_symptoms=matched_symptoms
+        ).model_dump()
+        
+        question_selection = self._question_selection(next_question)
+        
+        cf_calculation_steps = [
+            step
+            for diagnosis in diagnoses
+            for step in self._cf_steps_for_diagnosis(diagnosis)
+        ]
+        
+        rejected_candidates = [
+            RejectedCandidateTrace(fault_id=fault_id, reason="Rejected via procedure tree or user answer").model_dump()
+            for fault_id in (memory.rejected_faults or [])
+        ]
+
         return {
             "input": user_input,
             "normalization": {
                 "status": "matched" if matched_symptoms else "failed",
-                "matched_symptoms": matched_symptoms,
+                "fuzzy_trace": fuzzy_trace,
                 "confirmed_symptoms": memory.confirmed_symptoms,
                 "rejected_symptoms": memory.rejected_symptoms,
             },
@@ -60,20 +87,17 @@ class ExplanationBuilder:
                 }
                 for diagnosis in diagnoses
             ],
-            "question_selection": self._question_selection(next_question),
+            "question_selection": question_selection,
             "backward_chaining": [self._rule_trace(diagnosis) for diagnosis in diagnoses],
-            "cf_calculation_steps": [
-                step
-                for diagnosis in diagnoses
-                for step in self._cf_steps_for_diagnosis(diagnosis)
-            ],
+            "cf_calculation_steps": cf_calculation_steps,
+            "rejected_candidates": rejected_candidates,
             "final_decision": {
                 "status": status,
                 "top_fault": (
                     {
                         "fault_id": top["fault_id"],
                         "fault_label": top.get("fault_label"),
-                        "final_cf": top.get("final_cf"),
+                        "confidence": top.get("confidence", top.get("final_cf")),
                         "decision": top.get("decision"),
                     }
                     if top
@@ -84,7 +108,7 @@ class ExplanationBuilder:
                 {
                     "fault_id": diagnosis["fault_id"],
                     "score": diagnosis["score"],
-                    "final_cf": diagnosis["final_cf"],
+                    "confidence": diagnosis.get("confidence", diagnosis.get("final_cf")),
                     "matched_symptom_count": len(diagnosis["matched_rules"]),
                 }
                 for diagnosis in diagnoses
@@ -97,9 +121,10 @@ class ExplanationBuilder:
         top = diagnoses[0]
         system = self.kb.system_label(top.get("system")) or top.get("system") or "Hệ thống chưa rõ"
         primary = self.kb.label_for_symptom(memory.primary_symptom) if memory.primary_symptom else "triệu chứng đã mô tả"
+        confidence = top.get('confidence', top.get('final_cf'))
         return (
             f"{system} > {primary} > {top.get('fault_label', top.get('fault_name'))} "
-            f"với CF {top.get('final_cf')}. Trạng thái: {status}."
+            f"với CF {confidence}. Trạng thái: {status}."
         )
 
     def _question_selection(self, next_question: dict[str, Any] | None) -> dict[str, Any]:
@@ -108,8 +133,16 @@ class ExplanationBuilder:
                 "status": "not_selected",
                 "explanation": "Không còn câu hỏi bổ sung hữu ích.",
             }
+            
+        trace = QuestionTrace(
+            question_id=next_question.get("symptom_id", "unknown"),
+            mode=next_question.get("mode", "unknown"),
+            score=next_question.get("information_gain", 0.0)
+        ).model_dump()
+        
         return {
             "status": "selected",
+            "trace": trace,
             "selected_symptom": next_question.get("symptom_id"),
             "selected_label": next_question.get("label"),
             "question": next_question.get("question"),
@@ -141,7 +174,12 @@ class ExplanationBuilder:
 
     def _cf_steps_for_diagnosis(self, diagnosis: dict[str, Any]) -> list[dict[str, Any]]:
         steps = []
+        contributions = []
         for rule in diagnosis.get("matched_rules", []):
+            contributions.append({
+                "symptom_id": rule.get("symptom_id"),
+                "cf": rule.get("cf")
+            })
             steps.append(
                 {
                     "fault_id": diagnosis["fault_id"],
@@ -154,12 +192,21 @@ class ExplanationBuilder:
                     "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
                 }
             )
+            
+        cf_trace = CFTrace(
+            fault_id=diagnosis["fault_id"],
+            initial_cf=0.0,
+            contributions=contributions,
+            final_cf=diagnosis.get("confidence", diagnosis.get("final_cf", 0.0))
+        ).model_dump()
+        
         steps.append(
             {
                 "fault_id": diagnosis["fault_id"],
                 "fault_label": diagnosis.get("fault_label"),
                 "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
                 "score_breakdown": diagnosis.get("score_breakdown", {}),
+                "cf_trace": cf_trace
             }
         )
         return steps

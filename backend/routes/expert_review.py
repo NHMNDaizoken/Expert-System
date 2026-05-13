@@ -12,7 +12,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from backend.dependencies import require_admin_api_key
+from backend.core.dependencies import require_admin_api_key
 from backend.schemas import ExpertReviewApproveRequest, ExpertReviewRejectRequest
 
 

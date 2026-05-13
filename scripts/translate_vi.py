@@ -15,6 +15,8 @@ except ModuleNotFoundError:
 import httpx
 from dotenv import load_dotenv
 
+from src.expert_system.utils.text import slugify
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 RAW_PATH = PROJECT_ROOT / "data" / "raw" / "automotive_faults.json"
@@ -95,12 +97,6 @@ def save_json(path: Path, data: Any) -> None:
     with path.open("w", encoding="utf-8") as file:
         json.dump(data, file, indent=2, ensure_ascii=False)
 
-
-def slugify(text: Any) -> str:
-    text = str(text or "").lower().strip()
-    text = re.sub(r"[^a-z0-9]+", "_", text)
-    text = re.sub(r"_+", "_", text)
-    return text.strip("_")
 
 
 def should_translate_text(text: str) -> bool:

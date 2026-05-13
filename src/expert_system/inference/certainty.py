@@ -54,7 +54,7 @@ def rank_faults(
         if not matched_rules and confirmed and not rule.get("candidate_reason"):
             continue
 
-        final_cf = round(min(max(score, 0.0), 1.0), 4)
+        confidence = round(min(max(score, 0.0), 1.0), 4)
         ranked.append(
             {
                 "fault_id": fault_id,
@@ -62,15 +62,17 @@ def rank_faults(
                 "fault_label": kb.label_for_fault(rule, fault_id),
                 "system": rule.get("system_id") or rule.get("system"),
                 "subsystem": rule.get("subsystem_id") or rule.get("subsystem"),
-                "score": final_cf,
-                "final_cf": final_cf,
+                "score": confidence,
+                "confidence": confidence,
+                "final_cf": confidence,  # Legacy alias
                 "cf_breakdown": breakdown,
                 "score_breakdown": {
-                    "cf_confidence": final_cf,
+                    "cf_confidence": confidence,
+                    "confidence": confidence,
                     "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes.",
                 },
-                "confidence_label": confidence_label(final_cf),
-                "decision": "accepted" if final_cf >= 0.5 else "uncertain",
+                "confidence_label": confidence_label(confidence),
+                "decision": "accepted" if confidence >= 0.5 else "uncertain",
                 "candidate_reason": rule.get("candidate_reason"),
                 "matched_rules": matched_rules,
                 "repairs": rule.get("repairs", []),
@@ -78,7 +80,7 @@ def rank_faults(
             }
         )
 
-    return sorted(ranked, key=lambda item: item["final_cf"], reverse=True)
+    return sorted(ranked, key=lambda item: item["confidence"], reverse=True)
 
 
 def load_cf_map(kg_rules: list[dict[str, Any]]) -> dict[str, dict[str, float]]:

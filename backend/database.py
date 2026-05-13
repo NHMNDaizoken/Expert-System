@@ -1,6 +1,6 @@
 import sqlite3
 
-from backend.config import settings
+from backend.core.config import settings
 
 
 def get_sqlite_connection():

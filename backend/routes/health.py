@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from neo4j import GraphDatabase
 
-from backend.config import settings
+from backend.core.config import settings
 from backend.database import get_sqlite_connection
 
 

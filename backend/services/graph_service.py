@@ -4,8 +4,9 @@ from pathlib import Path
 
 from neo4j import GraphDatabase
 
-from backend.config import settings
+from backend.core.config import settings
 from backend.services.diagnosis_service import confidence_label
+from src.expert_system.utils.text import slugify
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -23,12 +24,6 @@ RELATION_LABELS = {
     "PART_OF": "Thuộc hệ thống",
 }
 
-
-def slugify(text):
-    text = str(text or "").lower().strip()
-    text = re.sub(r"[^a-z0-9]+", "_", text)
-    text = re.sub(r"_+", "_", text)
-    return text.strip("_")
 
 
 class GraphService:
