@@ -1,9 +1,10 @@
-from src.expert_system.engine import ExpertSystemEngine, load_cf_map, rank_faults
-from src.expert_system.knowledge_base import KnowledgeBase
-from src.expert_system.procedure import ProcedureRunner as ProcedureReasoner
-from src.expert_system.matcher import SymptomMatcher
-from src.expert_system.schemas import ExpertSystemValidator
-from src.expert_system.engine import WorkingMemory
+from src.expert_system.inference.engine import ExpertSystemEngine
+from src.expert_system.inference.certainty import load_cf_map, rank_faults
+from src.expert_system.knowledge.loader import KnowledgeBase
+from src.expert_system.inference.procedure import ProcedureRunner as ProcedureReasoner
+from src.expert_system.inference.fuzzy import SymptomMatcher
+from src.expert_system.knowledge.schema import ExpertSystemValidator
+from src.expert_system.runtime.state import WorkingMemory
 
 
 ALIASES = {

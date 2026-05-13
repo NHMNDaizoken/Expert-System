@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-from src.config import PROJECT_ROOT
+from src.expert_system.config import PROJECT_ROOT
 from src.expert_system.utils.text import slugify
 
 

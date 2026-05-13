@@ -9,7 +9,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 
-from src.config import ENV_PATH
+from src.expert_system.config import ENV_PATH
 
 
 load_dotenv(ENV_PATH)

@@ -3,9 +3,9 @@ from fastapi import HTTPException, status
 from backend.services.diagnosis_normalizer import normalize_diagnosis_response
 from backend.services.session_service import SessionService
 from backend.core.dependencies import get_engine
-from src.expert_system.engine import ExpertSystemEngine
-from src.expert_system.knowledge_base import KnowledgeBase
-from src.expert_system.policy import apply_response_policy
+from src.expert_system.inference.engine import ExpertSystemEngine
+from src.expert_system.knowledge.loader import KnowledgeBase
+from src.expert_system.inference.policy import apply_response_policy
 from src.expert_system.llm_fallback import diagnose_with_llm
 from src.expert_system.utils.scoring import confidence_label
 

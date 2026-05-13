@@ -13,7 +13,7 @@ Thành phần chính:
 - Tri thức chẩn đoán: JSON trong `data/staging`.
 - Graph visualization: Neo4j (có fallback từ JSON).
 - Session runtime: SQLite.
-- Inference engine: `src/expert_system/engine.py`.
+- Inference engine: `src/expert_system/inference/engine.py`.
 
 Luồng chuẩn:
 
@@ -41,17 +41,16 @@ docs/          Tài liệu chi tiết
 
 Inference và policy:
 
-- `src/expert_system/engine.py`: engine chính.
-- `src/expert_system/matcher.py`: match triệu chứng.
-- `src/expert_system/procedure.py`: hỏi theo procedure tree.
-- `src/expert_system/policy.py`: gate kết quả final.
+- `src/expert_system/inference/engine.py`: engine chính.
+- `src/expert_system/inference/fuzzy.py`: match triệu chứng.
+- `src/expert_system/inference/procedure.py`: hỏi theo procedure tree.
+- `src/expert_system/inference/policy.py`: gate kết quả final.
 
 Backend orchestration:
 
 - `backend/services/diagnosis_service.py`: luồng chẩn đoán + fallback + enrich response.
 - `backend/services/session_service.py`: quản lý phiên và trạng thái bước.
 - `backend/services/graph_service.py`: graph API + fallback.
-- `src/llm_fallback.py`: wrapper tương thích, re-export fallback API.
 - `src/expert_system/llm_fallback.py`: triển khai chính cho LLM fallback.
 
 Tri thức staging:
@@ -99,7 +98,7 @@ pip install -r requirements.txt
 Nếu dùng `uv`:
 
 ```powershell
-uv run python scripts/validate_knowledge.py
+uv run python scripts/validate/validate_knowledge.py
 ```
 
 ### 5.2 Setup Frontend
@@ -119,7 +118,7 @@ docker compose up -d neo4j
 ### 5.4 Import Knowledge Graph
 
 ```powershell
-python scripts/import_graph.py --clear
+python scripts/graph/import_graph.py --clear
 ```
 
 ### 5.5 Chạy Backend và Frontend
@@ -165,7 +164,7 @@ docker compose logs -f neo4j
 Nếu graph rỗng:
 
 ```powershell
-docker compose exec backend python -m scripts.import_graph --clear
+docker compose exec backend python -m scripts.graph.import_graph --clear
 ```
 
 ## 7. Data Pipeline
@@ -173,10 +172,10 @@ docker compose exec backend python -m scripts.import_graph --clear
 Khi cập nhật dataset gốc `data/raw/automotive_faults.json`:
 
 ```powershell
-python scripts/translate_vi.py
-python scripts/build_knowledge.py --rebuild-from-raw
-python scripts/validate_knowledge.py
-python scripts/import_graph.py --clear
+python scripts/build/translate_vi.py
+python scripts/build/build_knowledge.py --rebuild-from-raw
+python scripts/validate/validate_knowledge.py
+python scripts/graph/import_graph.py --clear
 ```
 
 Mục đích từng script:
@@ -187,7 +186,7 @@ Mục đích từng script:
 - `import_graph.py`: nạp vào Neo4j.
 - `rebuild_hierarchy.py`: chỉ build lại `expert_tree.json`.
 
-Lưu ý: script cũ đã được archive trong `scripts/legacy/`.
+Lưu ý: script cũ đã được xóa trong quá trình dọn dẹp.
 
 ## 8. API Chính
 
@@ -280,14 +279,14 @@ npm run build
 Evaluation:
 
 ```powershell
-python scripts/evaluate_diagnosis.py
+python scripts/evaluate/evaluate_diagnosis.py
 ```
 
 ## 11. Lỗi Thường Gặp
 
 - Lỗi PowerShell policy: dùng `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`.
 - Không thấy `python`: dùng `py` hoặc kích hoạt đúng `.venv`.
-- `/api/graph` trống: import lại `scripts/import_graph.py --clear`.
+- `/api/graph` trống: import lại `scripts/graph/import_graph.py --clear`.
 - Frontend thiếu package: chạy lại `npm install` trong `frontend`.
 - SQLite lỗi lock file: dừng backend cũ còn treo, xóa `data/app.sqlite3` nếu cần khởi tạo lại.
 

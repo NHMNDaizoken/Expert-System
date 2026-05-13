@@ -190,13 +190,10 @@ def _run_script(path: Path) -> dict[str, Any]:
 
 @router.post("/rebuild")
 def rebuild_knowledge():
-    scripts = [PROJECT_ROOT / "scripts" / "build_knowledge.py"]
-    import_script = PROJECT_ROOT / "scripts" / "import_neo4j.py"
-    fallback_import_script = PROJECT_ROOT / "scripts" / "import_graph.py"
+    scripts = [PROJECT_ROOT / "scripts" / "build" / "build_knowledge.py"]
+    import_script = PROJECT_ROOT / "scripts" / "graph" / "import_graph.py"
     if import_script.exists():
         scripts.append(import_script)
-    elif fallback_import_script.exists():
-        scripts.append(fallback_import_script)
 
     runs = [_run_script(script) for script in scripts if script.exists()]
     return {

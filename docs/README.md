@@ -50,17 +50,16 @@ User input → Symptom normalization + fuzzy matching → Hypothesis ranking (dy
 ## Các thành phần & file chính
 
 ### Inference:
-- src/expert_system/engine.py: điều phối suy luận
-- src/expert_system/matcher.py: chuẩn hóa/match symptom
-- src/expert_system/procedure.py: hỏi đáp theo cây bước
-- src/expert_system/policy.py: chỉ cho phép finalization đúng điều kiện
+- src/expert_system/inference/engine.py: điều phối suy luận
+- src/expert_system/inference/fuzzy.py: chuẩn hóa/match symptom
+- src/expert_system/inference/procedure.py: hỏi đáp theo cây bước
+- src/expert_system/inference/policy.py: chỉ cho phép finalization đúng điều kiện
 
 ### Backend:
 - backend/routes/diagnosis.py: endpoints chẩn đoán + session
 - backend/services/diagnosis_service.py: orchestration và fallback
 
-### Fallback module layout:
-- src/llm_fallback.py: lớp tương thích để import path cũ không bị vỡ
+### Fallback module:
 - src/expert_system/llm_fallback.py: nơi chứa logic fallback thật
 
 ---
@@ -172,17 +171,17 @@ Lưu ý:
 - `results` chỉ nên dùng khi final.
 - `current_hypotheses` dùng cho trạng thái trung gian.
 - `next_question` điều khiển màn hình hỏi đáp.
-- `src/llm_fallback.py` là wrapper; logic fallback thực tế ở `src/expert_system/llm_fallback.py`.
+- Logic fallback thực tế ở `src/expert_system/llm_fallback.py`.
 
 ## 7. Build Tri Thức và Import Graph
 
 Chuỗi chuẩn:
 
 ```powershell
-python scripts/translate_vi.py
-python scripts/build_knowledge.py --rebuild-from-raw
-python scripts/validate_knowledge.py
-python scripts/import_graph.py --clear
+python scripts/build/translate_vi.py
+python scripts/build/build_knowledge.py --rebuild-from-raw
+python scripts/validate/validate_knowledge.py
+python scripts/graph/import_graph.py --clear
 ```
 
 Mô tả ngắn:
@@ -211,16 +210,16 @@ npm run build
 Evaluation:
 
 ```powershell
-python scripts/evaluate_diagnosis.py
+python scripts/evaluate/evaluate_diagnosis.py
 ```
 
 Dev checks:
 
 ```powershell
-python scripts/dev_checks.py neo4j
-python scripts/dev_checks.py normalizer "ABS warning light on"
-python scripts/dev_checks.py rules SYM_ABS_WARNING_LIGHT_ON
-python scripts/dev_checks.py inference "dim headlights and clicking noise when starting"
+python scripts/dev/dev_checks.py neo4j
+python scripts/dev/dev_checks.py normalizer "ABS warning light on"
+python scripts/dev/dev_checks.py rules SYM_ABS_WARNING_LIGHT_ON
+python scripts/dev/dev_checks.py inference "dim headlights and clicking noise when starting"
 ```
 
 ## 9. Ghi Chú Vận Hành

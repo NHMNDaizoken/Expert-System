@@ -1,12 +1,7 @@
-"""Wrapper — runs import_neo4j from the new scripts/graph/ location."""
-import sys
-from pathlib import Path
+"""
+DELETED — This file has been superseded by scripts/graph/import_graph.py.
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-from scripts.import_neo4j import main  # noqa: E402
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+Use scripts/graph/import_graph.py as the single Neo4j import entrypoint.
+This file should be deleted from the repository.
+"""
+raise SystemExit("This script has been removed. Use: python scripts/graph/import_graph.py")

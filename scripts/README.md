@@ -20,24 +20,14 @@ scripts/
 │   └── evaluate_diagnosis.py # Run test cases and measure accuracy
 │
 ├── graph/                    # Neo4j graph import
-│   ├── import_graph.py       # Import knowledge graph into Neo4j
-│   └── import_neo4j.py       # Shortcut entry point for Neo4j import
+│   └── import_graph.py       # Import knowledge graph into Neo4j (single entrypoint)
 │
 ├── dev/                      # Developer utilities
 │   ├── dev_checks.py         # Manual development checks (normalizer, rules, inference)
 │   ├── check_imports.py      # Verify old/new import paths work correctly
 │   └── smoke_test.py         # Quick sanity check of the engine
 │
-├── (original scripts)        # Original scripts remain at scripts/ root
-│   ├── build_knowledge.py
-│   ├── translate_vi.py
-│   ├── rebuild_hierarchy.py
-│   ├── validate_knowledge.py
-│   ├── evaluate_diagnosis.py
-│   ├── import_graph.py
-│   ├── import_neo4j.py
-│   └── dev_checks.py
-│
+
 └── _bootstrap.py             # Adds project root to sys.path
 ```
 
@@ -54,14 +44,10 @@ python scripts/graph/import_graph.py
 python scripts/dev/check_imports.py
 python scripts/dev/smoke_test.py
 
-# Original paths also still work
-python scripts/build_knowledge.py
-python scripts/validate_knowledge.py
+
 ```
 
 ## Rules
 
 - Scripts must NOT contain runtime inference logic.
 - Runtime inference logic lives in `src/expert_system/`.
-- Scripts in subdirectories are thin wrappers that bootstrap and delegate to the originals.
-- Original scripts at the root level are preserved for backward compatibility.
