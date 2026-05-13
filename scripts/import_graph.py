@@ -16,7 +16,7 @@ try:
 except ModuleNotFoundError:
     from scripts import _bootstrap  # type: ignore # noqa: F401
 from src.config import require_neo4j_config
-from src.legacy.kg_validator import extract_rules, validate_all
+from src.expert_system.knowledge.loader import extract_rules
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

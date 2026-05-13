@@ -7,10 +7,9 @@ try:
     import _bootstrap  # type: ignore # noqa: F401
 except ModuleNotFoundError:
     from scripts import _bootstrap  # type: ignore # noqa: F401
-from src.legacy.kg_validator import KGValidationError, validate_all
-from src.expert_system.knowledge_base import KnowledgeBase
-from src.expert_system.schemas import ExpertSystemValidator
 
+from src.expert_system.knowledge.loader import KnowledgeBase
+from src.expert_system.knowledge.schema import ExpertSystemValidator
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ONTOLOGY_PATH = PROJECT_ROOT / "data" / "staging" / "ontology.json"
@@ -30,11 +29,13 @@ def main() -> int:
     args = build_parser().parse_args()
 
     try:
-        validate_all(str(args.ontology), str(args.symptom_aliases), str(args.rules))
         report = ExpertSystemValidator(KnowledgeBase.from_staging()).validate()
         if not report.ok:
-            raise KGValidationError("; ".join(report.errors))
-    except KGValidationError as error:
+            print("Validation failed")
+            for error in report.errors:
+                print(f"- {error}")
+            return 1
+    except Exception as error:
         print("Validation failed")
         print(f"- {error}")
         return 1

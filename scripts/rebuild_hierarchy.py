@@ -7,8 +7,8 @@ try:
     from _bootstrap import PROJECT_ROOT  # type: ignore
 except ModuleNotFoundError:
     from scripts._bootstrap import PROJECT_ROOT  # type: ignore
-from src.expert_system.hierarchy import build_hierarchy
-from src.expert_system.knowledge_base import extract_rules, load_json
+from src.expert_system.knowledge.hierarchy import build_hierarchy
+from src.expert_system.knowledge.loader import extract_rules, load_json
 
 STAGING = PROJECT_ROOT / "data" / "staging"
 OUTPUT = STAGING / "expert_tree.json"

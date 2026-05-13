@@ -1,6 +1,6 @@
 import unittest
 
-from src.legacy.cf import combine_cf
+from src.expert_system.utils.scoring import combine_cf
 
 
 class CertaintyFactorTest(unittest.TestCase):

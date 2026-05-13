@@ -10,7 +10,7 @@ try:
     import _bootstrap  # type: ignore # noqa: F401
 except ModuleNotFoundError:
     from scripts import _bootstrap  # type: ignore # noqa: F401
-from src.legacy.kg_inference import KGInference
+from src.expert_system.inference.engine import ExpertSystemEngine
 
 
 DEFAULT_CASES_PATH = Path("data/staging/test_cases.json")
@@ -31,7 +31,7 @@ def hit_at(predicted: list[str], expected: list[str], k: int) -> bool:
 
 
 def evaluate(cases: list[dict[str, Any]], top_k: int) -> tuple[dict[str, float], list[dict[str, Any]]]:
-    engine = KGInference.from_files()
+    engine = ExpertSystemEngine.from_staging()
     details = []
 
     for case in cases:

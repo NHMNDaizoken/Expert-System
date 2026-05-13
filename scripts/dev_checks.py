@@ -5,8 +5,9 @@ try:
     import _bootstrap  # type: ignore # noqa: F401
 except ModuleNotFoundError:
     from scripts import _bootstrap  # type: ignore # noqa: F401
-from src.legacy.kg_inference import DEFAULT_ALIAS_PATH, DEFAULT_RULES_PATH
-from src.legacy.kg_inference import KGInference, SymptomMatcher, extract_rules, load_json
+from src.expert_system.knowledge.loader import DEFAULT_STAGING_DIR, extract_rules, load_json
+from src.expert_system.inference.fuzzy import SymptomMatcher
+from src.expert_system.inference.engine import ExpertSystemEngine
 
 
 DEFAULT_INPUTS = [
@@ -17,7 +18,7 @@ DEFAULT_INPUTS = [
 
 
 def _file_engine():
-    return KGInference.from_files()
+    return ExpertSystemEngine.from_staging()
 
 
 def check_neo4j(_args):
@@ -36,7 +37,7 @@ def check_neo4j(_args):
 
 
 def check_normalizer(args):
-    matcher = SymptomMatcher(load_json(DEFAULT_ALIAS_PATH))
+    matcher = SymptomMatcher(load_json(DEFAULT_STAGING_DIR / "symptom_aliases.json"))
 
     for text in args.inputs:
         print("\nInput:", text)
@@ -45,7 +46,7 @@ def check_normalizer(args):
 
 
 def check_rules(args):
-    rules = extract_rules(load_json(DEFAULT_RULES_PATH))
+    rules = extract_rules(load_json(DEFAULT_STAGING_DIR / "kg_rules_from_dataset.json"))
     matching_rules = [
         {
             "fault_id": rule.get("fault_id"),

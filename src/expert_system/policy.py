@@ -1,30 +1,7 @@
-from __future__ import annotations
+"""
+Compatibility wrapper — re-exports from src.expert_system.inference.policy.
 
-from typing import Any
-
-
-def apply_response_policy(response: dict[str, Any]) -> dict[str, Any]:
-    if response.get("status") == "llm_fallback":
-        response["results"] = []
-        response["is_final"] = False
-        return response
-
-    if response.get("status") != "diagnosed":
-        response["results"] = []
-        response["is_final"] = False
-        return response
-
-    # Engine đã diagnosed và không còn câu hỏi thì phải cho kết luận.
-    if not response.get("next_question"):
-        response["results"] = response.get("results") or response.get("current_hypotheses") or response.get("diagnoses") or []
-        response["is_final"] = True
-        return response
-
-    if response.get("procedure_terminal") not in {None, "DIAGNOSED"}:
-        response["status"] = "need_more_info"
-        response["results"] = []
-        response["is_final"] = False
-        return response
-
-    response["is_final"] = True
-    return response
+All logic has been moved to src/expert_system/inference/policy.py.
+This file exists so that existing imports continue to work.
+"""
+from src.expert_system.inference.policy import apply_response_policy  # noqa: F401

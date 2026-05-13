@@ -1,6 +1,8 @@
-from src.expert_system.engine import load_cf_map, rank_faults
-from src.expert_system.legacy.cf_reasoner import check_diagnosed
-from src.legacy.next_question import get_next_from_tree, select_by_information_gain
+from src.expert_system.inference.certainty import load_cf_map, rank_faults
+from src.expert_system.inference.question import select_by_information_gain
+from src.expert_system.inference.procedure import get_next_from_tree
+from src.expert_system.inference.engine import ExpertSystemEngine
+from src.expert_system.runtime.state import WorkingMemory
 
 
 SAMPLE_RULES = [
@@ -37,20 +39,26 @@ def test_load_cf_map():
 
 
 def test_rank_faults_uses_dynamic_cf():
-    ranked = rank_faults(["sym_x"], [], load_cf_map(SAMPLE_RULES), SAMPLE_RULES)
+    from src.expert_system.knowledge.loader import KnowledgeBase
+    kb = KnowledgeBase(rules=SAMPLE_RULES)
+    ranked = rank_faults(["sym_x"], [], SAMPLE_RULES, kb)
     assert ranked[0]["fault_id"] == "fault_a"
     assert ranked[0]["cf_breakdown"][0]["cf"] == 0.9
 
 
 def test_not_diagnosed_when_scores_close():
-    assert not check_diagnosed([{"score": 0.55}, {"score": 0.45}])
+    engine = ExpertSystemEngine()
+    memory = WorkingMemory(confirmed_symptoms=["sym_x", "sym_y"])
+    assert not engine._confident_enough([{"final_cf": 0.55}, {"final_cf": 0.45}], memory)
 
 
 def test_diagnosed_when_top_has_gap():
-    assert check_diagnosed([
-        {"score": 0.85, "matched_rules": [{"symptom_id": "sym_x"}, {"symptom_id": "sym_y"}], "question_count": 1},
-        {"score": 0.10},
-    ])
+    engine = ExpertSystemEngine()
+    memory = WorkingMemory(confirmed_symptoms=["sym_x", "sym_y"])
+    assert engine._confident_enough([
+        {"final_cf": 0.85, "matched_rules": [{"symptom_id": "sym_x"}, {"symptom_id": "sym_y"}]},
+        {"final_cf": 0.10},
+    ], memory)
 
 
 def test_information_gain_selects_unasked_symptom():

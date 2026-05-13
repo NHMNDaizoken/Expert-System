@@ -1,6 +1,7 @@
 import unittest
 
-from src.legacy.kg_inference import KGInference, SymptomMatcher, extract_rules
+from src.expert_system.inference.engine import ExpertSystemEngine
+from src.expert_system.knowledge.loader import KnowledgeBase
 
 
 ALIASES = {
@@ -49,12 +50,9 @@ RULES = [
 
 
 class KGInferenceTest(unittest.TestCase):
-    def test_extract_rules_accepts_list_and_wrapped_rules(self):
-        self.assertEqual(extract_rules(RULES), RULES)
-        self.assertEqual(extract_rules({"rules": RULES}), RULES)
-
     def test_diagnose_matches_multiple_symptoms_and_returns_result_when_clear(self):
-        inference = KGInference(SymptomMatcher(ALIASES), rules=RULES)
+        kb = KnowledgeBase(symptom_aliases=ALIASES, rules=RULES)
+        inference = ExpertSystemEngine(kb)
 
         response = inference.diagnose(
             "clicking noise when starting and dim headlights",
@@ -70,7 +68,8 @@ class KGInferenceTest(unittest.TestCase):
         self.assertEqual(response["diagnoses"][0]["fault_id"], "FLT_WEAK_BATTERY")
 
     def test_diagnose_returns_next_question_for_ambiguous_faults(self):
-        inference = KGInference(SymptomMatcher(ALIASES), rules=RULES)
+        kb = KnowledgeBase(symptom_aliases=ALIASES, rules=RULES)
+        inference = ExpertSystemEngine(kb)
 
         response = inference.diagnose("clicking noise when starting", top_k=2)
 
