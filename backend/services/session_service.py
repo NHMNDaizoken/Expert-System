@@ -14,6 +14,11 @@ JSON_FIELDS = {
     "last_question",
     "step_history",
     "branch_path",
+    "asked_questions",
+    "symptoms_normalized",
+    "vehicle_context",
+    "decision_tree",
+    "selected_path",
 }
 
 NEW_SESSION_FIELDS = {
@@ -23,6 +28,15 @@ NEW_SESSION_FIELDS = {
     "last_answer": None,
     "active_fault_id": None,
     "total_steps_est": None,
+    "asked_questions": [],
+    "symptoms_normalized": [],
+    "vehicle_context": {},
+    "llm_candidate_generated": 0,
+    "candidate_id": None,
+    "decision_tree": {},
+    "current_node_id": None,
+    "selected_result_node_id": None,
+    "selected_path": [],
 }
 
 
@@ -69,8 +83,12 @@ class SessionService:
                     branch_path,
                     last_answer,
                     active_fault_id,
-                    total_steps_est
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    total_steps_est,
+                    asked_questions,
+                    symptoms_normalized,
+                    vehicle_context,
+                    llm_candidate_generated
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     session_id,
@@ -94,6 +112,10 @@ class SessionService:
                     None,
                     ((last_question or {}).get("fault_preview") or {}).get("fault_id"),
                     response.get("total_steps_est"),
+                    json.dumps(response.get("asked_questions", [])),
+                    json.dumps(response.get("symptoms_normalized", [])),
+                    json.dumps(response.get("vehicle_context", {})),
+                    1 if response.get("llm_candidate_generated") else 0,
                 ),
             )
 
@@ -197,7 +219,11 @@ class SessionService:
                     step_history = ?,
                     branch_path = ?,
                     active_fault_id = ?,
-                    total_steps_est = ?
+                    total_steps_est = ?,
+                    asked_questions = ?,
+                    symptoms_normalized = ?,
+                    vehicle_context = ?,
+                    llm_candidate_generated = ?
                 WHERE session_id = ?
                 """,
                 (
@@ -215,6 +241,10 @@ class SessionService:
                     json.dumps(branch_path),
                     active_fault_id,
                     response.get("total_steps_est"),
+                    json.dumps(response.get("asked_questions") or previous.get("asked_questions", [])),
+                    json.dumps(response.get("symptoms_normalized") or previous.get("symptoms_normalized", [])),
+                    json.dumps(response.get("vehicle_context") or previous.get("vehicle_context", {})),
+                    1 if response.get("llm_candidate_generated") or previous.get("llm_candidate_generated") else 0,
                     session_id,
                 ),
             )
@@ -230,8 +260,9 @@ class SessionService:
                     confirmed_symptoms, rejected_symptoms, current_hypotheses,
                     reasoning_trace, answers, last_question, current_step_id,
                     step_history, branch_path, last_answer, active_fault_id,
-                    total_steps_est
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    total_steps_est, asked_questions, symptoms_normalized,
+                    vehicle_context, llm_candidate_generated
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     session_id,
@@ -251,6 +282,10 @@ class SessionService:
                     None,
                     None,
                     None,
+                    json.dumps([]),
+                    json.dumps([]),
+                    json.dumps({}),
+                    0,
                 ),
             )
         return session_id
@@ -283,6 +318,59 @@ class SessionService:
                     json.dumps(history),
                     json.dumps(branch_path),
                     "true" if answer is True else "false" if answer is False else "null",
+                    session_id,
+                ),
+            )
+        return self.get(session_id)
+
+    def attach_decision_tree(self, session_id, candidate, current_node_id=None):
+        tree = candidate.get("tree", {}) if isinstance(candidate, dict) else {}
+        root_node_id = current_node_id or tree.get("root_node_id")
+        with get_sqlite_connection() as connection:
+            connection.execute(
+                """
+                UPDATE diagnosis_sessions
+                SET updated_at = ?,
+                    status = ?,
+                    candidate_id = ?,
+                    decision_tree = ?,
+                    current_node_id = ?,
+                    selected_result_node_id = ?,
+                    selected_path = ?,
+                    llm_candidate_generated = 1
+                WHERE session_id = ?
+                """,
+                (
+                    utc_now(),
+                    "diagnostic_decision_tree",
+                    candidate.get("candidate_id"),
+                    json.dumps(candidate, ensure_ascii=False),
+                    root_node_id,
+                    None,
+                    json.dumps([], ensure_ascii=False),
+                    session_id,
+                ),
+            )
+        return self.get(session_id)
+
+    def update_decision_tree_state(self, session_id, current_node_id, selected_path, selected_result_node_id=None):
+        with get_sqlite_connection() as connection:
+            connection.execute(
+                """
+                UPDATE diagnosis_sessions
+                SET updated_at = ?,
+                    current_node_id = ?,
+                    selected_result_node_id = ?,
+                    selected_path = ?,
+                    status = ?
+                WHERE session_id = ?
+                """,
+                (
+                    utc_now(),
+                    current_node_id,
+                    selected_result_node_id,
+                    json.dumps(selected_path, ensure_ascii=False),
+                    "diagnosed" if selected_result_node_id else "diagnostic_decision_tree",
                     session_id,
                 ),
             )

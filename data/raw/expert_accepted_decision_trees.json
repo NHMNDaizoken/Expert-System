@@ -1,0 +1,185 @@
+{
+  "trees": [
+    {
+      "candidate_id": "gen_diag_001",
+      "source": "expert_approved_llm_tree",
+      "root_symptom": {
+        "symptom_id": "new_unidentified_symptom",
+        "label_vi": "Triệu chứng hoàn toàn mới",
+        "aliases": [
+          "hiện tượng lạ",
+          "hành vi bất thường",
+          "vấn đề mới phát sinh"
+        ]
+      },
+      "tree": {
+        "root_node_id": "q1",
+        "nodes": [
+          {
+            "node_id": "q1",
+            "type": "question",
+            "question": "Xe có xuất hiện đèn báo lỗi trên bảng điều khiển (Check Engine/ABS/Battery) không?",
+            "answer_type": "yes_no",
+            "yes_next": "q2",
+            "no_next": "q3",
+            "unknown_next": "q_unknown_1",
+            "purpose": "Xác định xem hệ thống máy tính có ghi nhận lỗi điện tử hay không"
+          },
+          {
+            "node_id": "q2",
+            "type": "question",
+            "question": "Đèn báo lỗi có màu đỏ hoặc nhấp nháy liên tục không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "q4",
+            "unknown_next": "r2",
+            "purpose": "Phân loại mức độ nguy hiểm của lỗi hệ thống"
+          },
+          {
+            "node_id": "q3",
+            "type": "question",
+            "question": "Có tiếng động lạ (kêu lạch cạch, rít, gõ) phát ra từ khoang động cơ không?",
+            "answer_type": "yes_no",
+            "yes_next": "r3",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Kiểm tra các vấn đề cơ khí vật lý"
+          },
+          {
+            "node_id": "q4",
+            "type": "question",
+            "question": "Xe có bị mất công suất hoặc chết máy đột ngột khi đang di chuyển không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Đánh giá tình trạng vận hành của động cơ"
+          },
+          {
+            "node_id": "q_unknown_1",
+            "type": "question",
+            "question": "Bạn có ngửi thấy mùi khét hoặc mùi nhiên liệu không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Kiểm tra nguy cơ cháy nổ tiềm ẩn"
+          },
+          {
+            "node_id": "r1",
+            "type": "result",
+            "fault": {
+              "fault_id": "critical_system_failure",
+              "fault_name": "Lỗi hệ thống nghiêm trọng",
+              "system": "engine",
+              "severity": "critical",
+              "confidence": 0.85
+            },
+            "components": [
+              {
+                "component_id": "ecu",
+                "name_vi": "Bộ điều khiển động cơ (ECU)"
+              }
+            ],
+            "causes": [
+              "Lỗi cảm biến quan trọng",
+              "Hỏng hệ thống cung cấp nhiên liệu",
+              "Chập mạch hệ thống điện"
+            ],
+            "diagnostic_steps": [
+              "Sử dụng máy quét lỗi OBDII đọc mã lỗi"
+            ],
+            "repair_steps": [
+              "Ngừng vận hành xe",
+              "Liên hệ cứu hộ đưa xe về gara"
+            ],
+            "safety_notes": [
+              "Không cố gắng lái xe khi đèn đỏ nhấp nháy"
+            ],
+            "when_to_stop": [
+              "Dừng ngay lập tức nếu thấy khói hoặc có mùi khét"
+            ]
+          },
+          {
+            "node_id": "r2",
+            "type": "result",
+            "fault": {
+              "fault_id": "unknown_mechanical_wear",
+              "fault_name": "Hao mòn cơ khí chưa xác định",
+              "system": "unknown",
+              "severity": "medium",
+              "confidence": 0.6
+            },
+            "components": [
+              {
+                "component_id": "general_components",
+                "name_vi": "Các bộ phận chuyển động chung"
+              }
+            ],
+            "causes": [
+              "Hao mòn tự nhiên",
+              "Dầu bôi trơn kém",
+              "Lỏng giắc cắm"
+            ],
+            "diagnostic_steps": [
+              "Kiểm tra mực dầu và nước làm mát",
+              "Quan sát các vị trí có dấu hiệu rò rỉ"
+            ],
+            "repair_steps": [
+              "Kiểm tra bảo dưỡng định kỳ",
+              "Theo dõi sát sao nếu hiện tượng không tái diễn"
+            ],
+            "safety_notes": [
+              "Chú ý quan sát sự thay đổi nhiệt độ động cơ"
+            ],
+            "when_to_stop": [
+              "Nếu hiện tượng diễn ra liên tục hoặc tăng dần cường độ"
+            ]
+          },
+          {
+            "node_id": "r3",
+            "type": "result",
+            "fault": {
+              "fault_id": "accessory_drive_belt_failure",
+              "fault_name": "Hỏng dây curoa hoặc bộ phận phụ trợ",
+              "system": "engine",
+              "severity": "high",
+              "confidence": 0.75
+            },
+            "components": [
+              {
+                "component_id": "serpentine_belt",
+                "name_vi": "Dây curoa tổng"
+              }
+            ],
+            "causes": [
+              "Dây curoa bị nứt/chùng",
+              "Bạc đạn máy phát bị kẹt"
+            ],
+            "diagnostic_steps": [
+              "Kiểm tra độ căng của dây curoa bằng mắt thường",
+              "Lắng nghe vị trí phát ra tiếng kêu"
+            ],
+            "repair_steps": [
+              "Thay thế dây curoa",
+              "Kiểm tra các pulley liên quan"
+            ],
+            "safety_notes": [
+              "Cẩn thận khi đưa tay vào khoang máy khi động cơ còn nóng"
+            ],
+            "when_to_stop": [
+              "Nếu dây curoa có dấu hiệu đứt hoàn toàn"
+            ]
+          }
+        ],
+        "expert_review": {
+          "candidate_ready": true,
+          "status": "pending_expert_review"
+        }
+      },
+      "approved_at": "2026-05-14T17:27:54.552298+00:00",
+      "approved_by": "expert",
+      "selected_paths": []
+    }
+  ]
+}

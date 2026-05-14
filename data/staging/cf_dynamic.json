@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "total_records": 99,
-    "total_symptoms": 143,
-    "total_faults": 99,
-    "generated_at": "2026-05-12T02:56:14.954639+00:00",
+    "total_records": 102,
+    "total_symptoms": 144,
+    "total_faults": 102,
+    "generated_at": "2026-05-14T17:27:54.905504+00:00",
     "low_cf_threshold": 0.15
   },
   "symptoms": {
@@ -402,6 +402,11 @@
     },
     "SYM_TRANSMISSION_WON_T_SHIFT_GEARS": {
       "FLT_096": 1.0
+    },
+    "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I": {
+      "accessory_drive_belt_failure": 0.3333,
+      "critical_system_failure": 0.3333,
+      "unknown_mechanical_wear": 0.3333
     },
     "SYM_TURBO_LAG": {
       "FLT_058": 1.0

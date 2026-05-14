@@ -54,7 +54,7 @@ class ExpertSystemEngine:
         memory = self._prepare_memory(matched_symptoms, confirmed_symptoms, rejected_symptoms, session)
 
         if not memory.confirmed_symptoms:
-            return self._llm_fallback_response(text, matched_symptoms, memory, top_k)
+            return self._unknown_response(text, matched_symptoms, memory)
 
         memory.primary_symptom = self._select_primary_symptom(memory.confirmed_symptoms)
         memory.detected_systems = self._detect_systems(memory.confirmed_symptoms)
@@ -62,7 +62,7 @@ class ExpertSystemEngine:
         diagnoses = self._rank(candidate_rules, memory.confirmed_symptoms, memory.rejected_symptoms, top_k)
         
         if not diagnoses:
-            return self._llm_fallback_response(text, matched_symptoms, memory, top_k)
+            return self._unknown_response(text, matched_symptoms, memory)
 
         status, next_question, procedure_terminal = self._evaluate_state(memory, diagnoses)
         
@@ -219,61 +219,6 @@ class ExpertSystemEngine:
             **memory.to_response_fields(),
         }
 
-    def _llm_fallback_response(
-        self,
-        text: str,
-        matched_symptoms: list[dict[str, Any]],
-        memory: WorkingMemory,
-        top_k: int,
-    ) -> dict[str, Any]:
-        fallback = diagnose_with_llm(text, top_k=top_k)
-        diagnoses = fallback.get("diagnoses", [])
-        missing_questions = (
-            fallback.get("diagnostic_tree", {})
-            .get("level_3_context", {})
-            .get("missing_questions", [])
-        )
-        return {
-            "matched_symptoms": matched_symptoms,
-            "candidate_faults": [],
-            "status": "need_more_info",
-            "is_final": False,
-            "source": "llm_fallback",
-            "results": [],
-            "diagnoses": [],
-            "current_hypotheses": [],
-            "llm_suggestions": diagnoses,
-            "next_question": {
-                "question": missing_questions[0]
-                if missing_questions
-                else "Mình chưa có triệu chứng này trong hệ thống. Triệu chứng thường xảy ra khi nào?",
-                "type": "multiple_choice",
-                "mode": "llm_fallback",
-                "choices": [
-                    {"value": "startup", "label": "Lúc khởi động"},
-                    {"value": "accelerating", "label": "Khi tăng tốc"},
-                    {"value": "idle", "label": "Khi chạy không tải"},
-                    {"value": "high_speed", "label": "Ở tốc độ cao"},
-                    {"value": "not_sure", "label": "Không chắc"},
-                ],
-                "why": "Cần thêm context trước khi chuyên gia thêm mapping mới vào Knowledge Graph.",
-            },
-            "notes": ["Triệu chứng đã được đưa vào hàng chờ chuyên gia; chưa có kết luận cuối."],
-            "queued_for_review": fallback.get("queued_for_review", False),
-            "reasoning_trace": [
-                "Không tìm thấy triệu chứng phù hợp trong knowledge base.",
-                "Đã đưa case vào hàng chờ chuyên gia.",
-                "Không hiển thị candidate LLM như kết luận chẩn đoán.",
-            ],
-            "tree_level": "symptom",
-            "explanation_summary": "Triệu chứng chưa có trong cơ sở tri thức; cần thêm thông tin và chuyên gia duyệt.",
-            "debug": {
-                "fallback_notes": fallback.get("notes", []),
-                "raw_fallback": fallback,
-            },
-            "procedure_terminal": None,
-            **memory.to_response_fields(),
-        }
 
     def _select_primary_symptom(self, confirmed_symptoms: list[str]) -> str | None:
         if not confirmed_symptoms:

@@ -277,9 +277,16 @@ export default function GraphViewer() {
 
     const timeout = window.setTimeout(async () => {
       try {
-        const results = await searchGraph(trimmed);
+        const data = await searchGraph(trimmed);
         if (!cancelled) {
-          setSearchResults(results);
+          // Flatten results for the popover or handle them specifically
+          const flattened = [
+            ...(data.matched_symptoms || []),
+            ...(data.related_faults || []),
+            ...(data.related_components || []),
+            ...(data.repairs || [])
+          ];
+          setSearchResults(flattened);
         }
       } catch {
         if (!cancelled) {
@@ -641,9 +648,35 @@ function NodeDetails({ node, graph, onOpenFaultGraph, loading, onSelectNode }) {
           onSelectNode={onSelectNode}
         />
       )}
+      {node.metadata?.causes && node.metadata.causes.length > 0 && (
+        <section className="expert-panel">
+          <h3>Nguyên nhân khả thi</h3>
+          <ul>
+            {node.metadata.causes.map((cause, idx) => <li key={idx}>{cause}</li>)}
+          </ul>
+        </section>
+      )}
+      {node.metadata?.diagnostic_steps && node.metadata.diagnostic_steps.length > 0 && (
+        <section className="expert-panel">
+          <h3>Các bước chẩn đoán</h3>
+          <ol>
+            {node.metadata.diagnostic_steps.map((step, idx) => <li key={idx}>{step}</li>)}
+          </ol>
+        </section>
+      )}
       <RelationshipPanel edges={connectedEdges} nodesById={nodesById} />
       {node.type === "Fault" && (
         <RepairPanel edges={connectedEdges} nodesById={nodesById} />
+      )}
+      {node.metadata?.safety_notes && node.metadata.safety_notes.length > 0 && (
+        <section className="expert-panel safety-notes">
+          <h3 style={{ color: "var(--warning-base)" }}>
+            <CircleAlert size={18} /> Lưu ý an toàn
+          </h3>
+          <ul>
+            {node.metadata.safety_notes.map((note, idx) => <li key={idx}>{note}</li>)}
+          </ul>
+        </section>
       )}
     </>
   );

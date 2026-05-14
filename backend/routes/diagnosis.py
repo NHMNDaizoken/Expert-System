@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import HTTPException, status
 
-from backend.schemas import AnswerRequest, DiagnoseRequest
+from backend.schemas import AnswerRequest, DiagnoseRequest, DiagnosisStartRequest, DiagnosisTreeAnswerRequest
 from backend.services.diagnosis_service import DiagnosisService
 from backend.services.session_service import SessionService
 
@@ -40,6 +40,20 @@ def diagnose(payload: DiagnoseRequest):
 @router.post("/api/answer")
 def answer(payload: AnswerRequest):
     return DiagnosisService().answer(payload.session_id, payload.answer)
+
+
+@router.post("/api/diagnosis/start")
+def start_diagnosis(payload: DiagnosisStartRequest):
+    return DiagnosisService().start_decision_tree(payload.description, payload.top_k)
+
+
+@router.post("/api/diagnosis/answer")
+def answer_diagnosis_tree(payload: DiagnosisTreeAnswerRequest):
+    return DiagnosisService().answer_decision_tree(
+        payload.session_id,
+        payload.node_id,
+        payload.answer,
+    )
 
 
 @router.post("/session/new")

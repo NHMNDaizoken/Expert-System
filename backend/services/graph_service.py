@@ -22,9 +22,13 @@ RELATION_LABELS = {
     "FIXED_BY": "Giải pháp sửa chữa",
     "RELATED_TO": "Liên quan đến",
     "PART_OF": "Thuộc hệ thống",
+    "HAS_DECISION_TREE": "Cây chẩn đoán",
+    "HAS_ROOT_QUESTION": "Câu hỏi đầu",
+    "YES": "Có",
+    "NO": "Không",
+    "UNKNOWN": "Không rõ",
+    "DIAGNOSES": "Chẩn đoán",
 }
-
-
 
 class GraphService:
     NODE_LABELS = [
@@ -34,14 +38,23 @@ class GraphService:
         "Fault",
         "Symptom",
         "Repair",
+        "DecisionTree",
+        "Question",
+        "Result",
     ]
-    SEARCH_LABELS = {"Fault", "Symptom", "Component", "Repair"}
+    SEARCH_LABELS = {"Fault", "Symptom", "Component", "Repair", "DecisionTree", "Question", "Result"}
     RELATIONSHIP_TYPES = [
         "PART_OF",
         "AFFECTS",
         "HAS_SYMPTOM",
         "FIXED_BY",
         "RELATED_TO",
+        "HAS_DECISION_TREE",
+        "HAS_ROOT_QUESTION",
+        "YES",
+        "NO",
+        "UNKNOWN",
+        "DIAGNOSES",
     ]
 
     def __init__(self):
@@ -86,11 +99,11 @@ class GraphService:
     def search_graph(self, query):
         query = (query or "").strip()
         if not query:
-            return []
+            return {"matched_symptoms": [], "decision_trees": [], "question_path": [], "possible_faults": [], "related_faults": [], "related_components": [], "repairs": []}
 
         try:
             results = self._search_graph_from_neo4j(query)
-            if results:
+            if results and any(results.values()):
                 return results
         except Exception:
             pass
@@ -98,139 +111,142 @@ class GraphService:
         try:
             return self._search_graph_from_files(query)
         except Exception:
-            return []
+            return {"matched_symptoms": [], "decision_trees": [], "question_path": [], "possible_faults": [], "related_faults": [], "related_components": [], "repairs": []}
+
+    def _search_graph_from_neo4j(self, query):
+        if self.driver is None:
+            return None
+
+        # Cypher traversal: Symptom -> Fault -> Component/Repair
+        cypher = """
+        MATCH (s:Symptom)
+        WHERE toLower(toString(coalesce(s.name, ""))) CONTAINS toLower($query)
+           OR toLower(toString(coalesce(s.display_name, ""))) CONTAINS toLower($query)
+           OR toLower(toString(coalesce(s.label_vi, ""))) CONTAINS toLower($query)
+           OR any(a IN s.aliases WHERE toLower(toString(a)) CONTAINS toLower($query))
+        
+        OPTIONAL MATCH (f:Fault)-[:HAS_SYMPTOM]->(s)
+        OPTIONAL MATCH (f)-[:AFFECTS]->(c:Component)
+        OPTIONAL MATCH (f)-[:FIXED_BY]->(r:Repair)
+        OPTIONAL MATCH (s)-[:HAS_DECISION_TREE]->(dt:DecisionTree)
+        OPTIONAL MATCH (dt)-[:HAS_ROOT_QUESTION]->(q:Question)
+        OPTIONAL MATCH (q)-[:YES|NO|UNKNOWN*0..4]->(tree_node)
+        WHERE tree_node IS NULL OR tree_node:Question OR tree_node:Result
+        OPTIONAL MATCH (tree_node:Result)-[:DIAGNOSES]->(tf:Fault)
+        
+        RETURN 
+            collect(distinct s) as symptoms,
+            collect(distinct f) as faults,
+            collect(distinct c) as components,
+            collect(distinct r) as repairs,
+            collect(distinct dt) as decision_trees,
+            collect(distinct q) + collect(distinct tree_node) as question_path,
+            collect(distinct tf) as possible_faults
+        """
+
+        with self.driver.session() as session:
+            result = session.run(cypher, query=query).single()
+            if not result:
+                return None
+                
+            return {
+                "matched_symptoms": [self._format_node(n, ["Symptom"]) for n in result["symptoms"]],
+                "decision_trees": [self._format_node(n, ["DecisionTree"]) for n in result["decision_trees"] if n],
+                "question_path": [self._format_node(n, self._labels(n) or ["Question"]) for n in result["question_path"] if n],
+                "possible_faults": [self._format_node(n, ["Fault"]) for n in result["possible_faults"] if n],
+                "related_faults": [self._format_node(n, ["Fault"]) for n in result["faults"]],
+                "related_components": [self._format_node(n, ["Component"]) for n in result["components"]],
+                "repairs": [self._format_node(n, ["Repair"]) for n in result["repairs"]]
+            }
+
+    def _search_graph_from_files(self, query):
+        graph = self._get_graph_from_files()
+        needle = query.lower()
+        
+        matched_symptoms = []
+        related_faults = []
+        related_components = []
+        repairs = []
+        decision_trees = []
+        question_path = []
+        possible_faults = []
+
+        # Find symptoms first
+        for node in graph["nodes"]:
+            if node.get("type") == "Symptom":
+                metadata = node.get("metadata") or {}
+                haystack = [node.get("id"), node.get("label"), *metadata.get("aliases", [])]
+                if any(needle in str(value).lower() for value in haystack if value):
+                    matched_symptoms.append(node)
+
+        # Traverse to faults, components, repairs
+        symptom_ids = {s["id"] for s in matched_symptoms}
+        fault_ids = set()
+        
+        for edge in graph["edges"]:
+            if edge["type"] == "HAS_SYMPTOM" and edge["target"] in symptom_ids:
+                fault_ids.add(edge["source"])
+            if edge["type"] == "HAS_DECISION_TREE" and edge["source"] in symptom_ids:
+                decision_trees.append(next((n for n in graph["nodes"] if n["id"] == edge["target"]), None))
+
+        for node in graph["nodes"]:
+            if node["id"] in fault_ids and node["type"] == "Fault":
+                related_faults.append(node)
+                # Find connected components and repairs
+                for edge in graph["edges"]:
+                    if edge["source"] == node["id"]:
+                        if edge["type"] == "AFFECTS":
+                            target_node = next((n for n in graph["nodes"] if n["id"] == edge["target"]), None)
+                            if target_node: related_components.append(target_node)
+                        if edge["type"] == "FIXED_BY":
+                            target_node = next((n for n in graph["nodes"] if n["id"] == edge["target"]), None)
+                            if target_node: repairs.append(target_node)
+        tree_ids = {node["id"] for node in decision_trees if node}
+        frontier = set()
+        for edge in graph["edges"]:
+            if edge["type"] == "HAS_ROOT_QUESTION" and edge["source"] in tree_ids:
+                frontier.add(edge["target"])
+        visited = set()
+        while frontier:
+            node_id = frontier.pop()
+            if node_id in visited:
+                continue
+            visited.add(node_id)
+            node = next((n for n in graph["nodes"] if n["id"] == node_id), None)
+            if node:
+                question_path.append(node)
+            for edge in graph["edges"]:
+                if edge["source"] == node_id and edge["type"] in {"YES", "NO", "UNKNOWN", "DIAGNOSES"}:
+                    if edge["type"] == "DIAGNOSES":
+                        fault_node = next((n for n in graph["nodes"] if n["id"] == edge["target"]), None)
+                        if fault_node:
+                            possible_faults.append(fault_node)
+                    else:
+                        frontier.add(edge["target"])
+
+        return {
+            "matched_symptoms": matched_symptoms,
+            "decision_trees": [node for node in self._dedupe_nodes(decision_trees) if node],
+            "question_path": self._dedupe_nodes(question_path),
+            "possible_faults": self._dedupe_nodes(possible_faults),
+            "related_faults": related_faults,
+            "related_components": related_components,
+            "repairs": repairs
+        }
 
     def list_faults(self, query="", limit=200):
         query = (query or "").strip()
         limit = max(1, min(int(limit or 200), 500))
-
         try:
             results = self._list_faults_from_neo4j(query, limit)
-            if results:
-                return results
-        except Exception:
-            pass
-
+            if results: return results
+        except Exception: pass
         try:
             return self._list_faults_from_files(query, limit)
-        except Exception:
-            return []
-
-    def get_stats(self):
-        try:
-            stats = self._get_stats_from_neo4j()
-            if stats["relationships"] or any(stats[label] for label in self.NODE_LABELS):
-                return stats
-        except Exception:
-            pass
-
-        try:
-            return self._get_stats_from_files()
-        except Exception:
-            return self._empty_stats()
-
-    def _get_graph_from_neo4j(self):
-        if self.driver is None:
-            return {"nodes": [], "edges": []}
-
-        query = """
-        MATCH (n)
-        WHERE any(label IN labels(n)
-          WHERE label IN ['VehicleSystem', 'Subsystem', 'Component', 'Fault', 'Symptom', 'Repair'])
-        OPTIONAL MATCH (n)-[r:PART_OF|AFFECTS|HAS_SYMPTOM|FIXED_BY|RELATED_TO]->(m)
-        WHERE m IS NULL OR any(label IN labels(m)
-          WHERE label IN ['VehicleSystem', 'Subsystem', 'Component', 'Fault', 'Symptom', 'Repair'])
-        RETURN n, r, m
-        """
-        nodes = []
-        edges = []
-
-        with self.driver.session() as session:
-            for record in session.run(query):
-                nodes.append(self._format_node(record["n"], self._labels(record["n"])))
-                if record["m"] is None:
-                    continue
-                nodes.append(self._format_node(record["m"], self._labels(record["m"])))
-                edges.append(self._format_edge(record["r"]))
-
-        return {
-            "nodes": self._dedupe_nodes(nodes),
-            "edges": self._dedupe_edges(edges),
-        }
-
-    def _get_fault_graph_from_neo4j(self, fault_id):
-        if self.driver is None:
-            return {"nodes": [], "edges": []}
-
-        query = """
-        MATCH (f:Fault {id: $fault_id})
-        OPTIONAL MATCH (f)-[hs:HAS_SYMPTOM]->(s:Symptom)
-        OPTIONAL MATCH (f)-[af:AFFECTS]->(c:Component)
-        OPTIONAL MATCH (c)-[cp:PART_OF]->(sub:Subsystem)
-        OPTIONAL MATCH (sub)-[sp:PART_OF]->(sys:VehicleSystem)
-        OPTIONAL MATCH (f)-[fr:FIXED_BY]->(r:Repair)
-        OPTIONAL MATCH (f)-[rel:RELATED_TO]-(rf:Fault)
-        RETURN
-          [node IN [f] + collect(DISTINCT s) + collect(DISTINCT c)
-            + collect(DISTINCT sub) + collect(DISTINCT sys)
-            + collect(DISTINCT r) + collect(DISTINCT rf)
-            WHERE node IS NOT NULL] AS nodes,
-          [edge IN collect(DISTINCT hs) + collect(DISTINCT af)
-            + collect(DISTINCT cp) + collect(DISTINCT sp)
-            + collect(DISTINCT fr) + collect(DISTINCT rel)
-            WHERE edge IS NOT NULL] AS edges
-        """
-
-        with self.driver.session() as session:
-            record = session.run(query, fault_id=fault_id).single()
-
-        if record is None:
-            return {"nodes": [], "edges": []}
-
-        nodes = [
-            self._format_node(node, self._labels(node))
-            for node in record["nodes"]
-            if node is not None
-        ]
-        edges = [
-            self._format_edge(edge)
-            for edge in record["edges"]
-            if edge is not None
-        ]
-        return {
-            "nodes": self._dedupe_nodes(nodes),
-            "edges": self._dedupe_edges(edges),
-        }
-
-    def _search_graph_from_neo4j(self, query):
-        if self.driver is None:
-            return []
-
-        cypher = """
-        MATCH (n)
-        WHERE any(label IN labels(n)
-          WHERE label IN ['Fault', 'Symptom', 'Component', 'Repair'])
-        WITH n, toLower($query) AS q
-        WHERE toLower(toString(coalesce(n.id, ""))) CONTAINS q
-           OR toLower(toString(coalesce(n.name, ""))) CONTAINS q
-           OR toLower(toString(coalesce(n.display_name, ""))) CONTAINS q
-           OR toLower(toString(coalesce(n.label_vi, ""))) CONTAINS q
-        RETURN n
-        LIMIT 30
-        """
-
-        with self.driver.session() as session:
-            nodes = [
-                self._format_node(record["n"], self._labels(record["n"]))
-                for record in session.run(cypher, query=query)
-            ]
-
-        return self._compact_nodes(nodes)
+        except Exception: return []
 
     def _list_faults_from_neo4j(self, query, limit):
-        if self.driver is None:
-            return []
-
+        if self.driver is None: return []
         cypher = """
         MATCH (f:Fault)
         WITH f, toLower($query) AS q
@@ -245,287 +261,203 @@ class GraphService:
         ORDER BY coalesce(f.display_name, f.label_vi, f.name, f.id)
         LIMIT $limit
         """
-
         with self.driver.session() as session:
             nodes = []
             for record in session.run(cypher, query=query, limit=limit):
-                node = self._format_node(record["f"], self._labels(record["f"]))
+                node = self._format_node(record["f"], ["Fault"])
                 node["summary"] = {
                     "symptom_count": int(record["symptom_count"] or 0),
                     "component_count": int(record["component_count"] or 0),
                 }
                 nodes.append(node)
+        return nodes
 
-        return self._compact_faults(nodes)
+    def get_stats(self):
+        try:
+            stats = self._get_stats_from_neo4j()
+            if stats["relationships"] or any(stats[label] for label in self.NODE_LABELS):
+                return stats
+        except Exception: pass
+        try:
+            return self._get_stats_from_files()
+        except Exception: return self._empty_stats()
 
     def _get_stats_from_neo4j(self):
-        if self.driver is None:
-            return self._empty_stats()
-
+        if self.driver is None: return self._empty_stats()
         stats = self._empty_stats()
-
         with self.driver.session() as session:
             for label in self.NODE_LABELS:
-                record = session.run(
-                    f"MATCH (n:{label}) RETURN count(n) AS count"
-                ).single()
+                record = session.run(f"MATCH (n:{label}) RETURN count(n) AS count").single()
                 stats[label] = int(record["count"]) if record is not None else 0
-
             record = session.run("MATCH ()-[r]->() RETURN count(r) AS count").single()
             stats["relationships"] = int(record["count"]) if record is not None else 0
-
         return stats
+
+    def _get_graph_from_neo4j(self):
+        if self.driver is None: return {"nodes": [], "edges": []}
+        query = """
+        MATCH (n)
+        WHERE any(label IN labels(n) WHERE label IN ['VehicleSystem', 'Subsystem', 'Component', 'Fault', 'Symptom', 'Repair', 'DecisionTree', 'Question', 'Result'])
+        OPTIONAL MATCH (n)-[r:PART_OF|AFFECTS|HAS_SYMPTOM|FIXED_BY|RELATED_TO|HAS_DECISION_TREE|HAS_ROOT_QUESTION|YES|NO|UNKNOWN|DIAGNOSES]->(m)
+        WHERE m IS NULL OR any(label IN labels(m) WHERE label IN ['VehicleSystem', 'Subsystem', 'Component', 'Fault', 'Symptom', 'Repair', 'DecisionTree', 'Question', 'Result'])
+        RETURN n, r, m
+        """
+        nodes, edges = [], []
+        with self.driver.session() as session:
+            for record in session.run(query):
+                nodes.append(self._format_node(record["n"], self._labels(record["n"])))
+                if record["m"]:
+                    nodes.append(self._format_node(record["m"], self._labels(record["m"])))
+                    edges.append(self._format_edge(record["r"]))
+        return {"nodes": self._dedupe_nodes(nodes), "edges": self._dedupe_edges(edges)}
+
+    def _get_fault_graph_from_neo4j(self, fault_id):
+        if self.driver is None: return {"nodes": [], "edges": []}
+        query = """
+        MATCH (f:Fault {id: $fault_id})
+        OPTIONAL MATCH (f)-[hs:HAS_SYMPTOM]->(s:Symptom)
+        OPTIONAL MATCH (f)-[af:AFFECTS]->(c:Component)
+        OPTIONAL MATCH (c)-[cp:PART_OF]->(sub:Subsystem)
+        OPTIONAL MATCH (sub)-[sp:PART_OF]->(sys:VehicleSystem)
+        OPTIONAL MATCH (f)-[fr:FIXED_BY]->(r:Repair)
+        OPTIONAL MATCH (f)-[rel:RELATED_TO]-(rf:Fault)
+        RETURN
+          [node IN [f] + collect(DISTINCT s) + collect(DISTINCT c) + collect(DISTINCT sub) + collect(DISTINCT sys) + collect(DISTINCT r) + collect(DISTINCT rf) WHERE node IS NOT NULL] AS nodes,
+          [edge IN collect(DISTINCT hs) + collect(DISTINCT af) + collect(DISTINCT cp) + collect(DISTINCT sp) + collect(DISTINCT fr) + collect(DISTINCT rel) WHERE edge IS NOT NULL] AS edges
+        """
+        with self.driver.session() as session:
+            record = session.run(query, fault_id=fault_id).single()
+        if not record: return {"nodes": [], "edges": []}
+        nodes = [self._format_node(n, self._labels(n)) for n in record["nodes"]]
+        edges = [self._format_edge(e) for e in record["edges"]]
+        return {"nodes": self._dedupe_nodes(nodes), "edges": self._dedupe_edges(edges)}
 
     def _get_graph_from_files(self):
         ontology = self._load_json(ONTOLOGY_PATH, default={"vehicle_systems": []})
         rules_data = self._load_json(RULES_PATH, default=[])
         symptom_aliases = self._load_json(SYMPTOM_ALIASES_PATH, default={})
         rules = rules_data.get("rules", rules_data) if isinstance(rules_data, dict) else rules_data
-
-        nodes = []
-        edges = []
-
+        nodes, edges = [], []
         def add_node(node_id, label, node_type, status="approved", metadata=None):
-            properties = dict(metadata or {})
-            properties.update({
-                "id": node_id,
-                "label": label or node_id,
-                "type": node_type,
-                "status": status,
-            })
-            nodes.append(self._format_node(properties, [node_type]))
-
+            props = dict(metadata or {})
+            props.update({"id": node_id, "label": label or node_id, "type": node_type, "status": status})
+            nodes.append(self._format_node(props, [node_type]))
         def add_edge(source, target, edge_type, cf=None, metadata=None):
-            edge_id = f"{source}-{edge_type}-{target}"
-            edges.append({
-                "id": edge_id,
-                "source": source,
-                "target": target,
-                "type": edge_type,
-                "label": RELATION_LABELS.get(edge_type, edge_type),
-                "cf": cf,
-                "confidence_label": (
-                    confidence_label(float(cf)) if cf is not None else None
-                ),
-                "metadata": metadata or {},
-            })
-
+            edges.append({"id": f"{source}-{edge_type}-{target}", "source": source, "target": target, "type": edge_type, "label": RELATION_LABELS.get(edge_type, edge_type), "cf": cf, "confidence_label": (confidence_label(float(cf)) if cf is not None else None), "metadata": metadata or {}})
         for system in ontology.get("vehicle_systems", []):
-            system_id = system["id"]
-            add_node(
-                system_id,
-                self._display_label(system),
-                "VehicleSystem",
-                metadata=system,
-            )
-
+            add_node(system["id"], self._display_label(system), "VehicleSystem", metadata=system)
             for subsystem in system.get("subsystems", []):
-                subsystem_id = subsystem["id"]
-                add_node(
-                    subsystem_id,
-                    self._display_label(subsystem),
-                    "Subsystem",
-                    metadata=subsystem,
-                )
-                add_edge(subsystem_id, system_id, "PART_OF")
-
+                add_node(subsystem["id"], self._display_label(subsystem), "Subsystem", metadata=subsystem)
+                add_edge(subsystem["id"], system["id"], "PART_OF")
                 for component in subsystem.get("components", []):
-                    component_id = component["id"]
-                    add_node(
-                        component_id,
-                        self._display_label(component),
-                        "Component",
-                        metadata=component,
-                    )
-                    add_edge(component_id, subsystem_id, "PART_OF")
-
-        for symptom_id, symptom in symptom_aliases.items():
-            add_node(symptom_id, self._display_label(symptom), "Symptom", metadata=symptom)
-
+                    add_node(component["id"], self._display_label(component), "Component", metadata=component)
+                    add_edge(component["id"], subsystem["id"], "PART_OF")
+        for symptom_id, symptom in symptom_aliases.items(): add_node(symptom_id, self._display_label(symptom), "Symptom", metadata=symptom)
         for rule in rules:
-            fault_id = rule["fault_id"]
-            status = rule.get("status", "approved")
+            fault_id = rule["fault_id"]; status = rule.get("status", "approved")
             add_node(fault_id, self._display_label(rule), "Fault", status, metadata=rule)
-
-            for component_id in rule.get("affected_components", []):
-                add_edge(fault_id, component_id, "AFFECTS")
-
-            for symptom in rule.get("symptoms", []):
-                symptom_id = symptom["symptom_id"]
-                if not any(node["id"] == symptom_id for node in nodes):
-                    add_node(symptom_id, symptom_id, "Symptom")
-                add_edge(
-                    fault_id,
-                    symptom_id,
-                    "HAS_SYMPTOM",
-                    symptom.get("cf"),
-                    {"priority": symptom.get("priority", 2)},
-                )
-
-            for repair in rule.get("repairs", []):
-                repair_id = repair["repair_id"]
-                add_node(repair_id, self._display_label(repair), "Repair", status, repair)
-                add_edge(fault_id, repair_id, "FIXED_BY")
-
-        return {
-            "nodes": self._dedupe_nodes(nodes),
-            "edges": self._dedupe_edges(edges),
-        }
+            for cid in rule.get("affected_components", []): add_edge(fault_id, cid, "AFFECTS")
+            for sym in rule.get("symptoms", []):
+                sid = sym["symptom_id"]
+                if not any(n["id"] == sid for n in nodes): add_node(sid, sid, "Symptom")
+                add_edge(fault_id, sid, "HAS_SYMPTOM", sym.get("cf"), {"priority": sym.get("priority", 2)})
+            for rep in rule.get("repairs", []):
+                add_node(rep["repair_id"], self._display_label(rep), "Repair", status, rep)
+                add_edge(fault_id, rep["repair_id"], "FIXED_BY")
+        decision_tree_records = rules_data.get("decision_trees", []) if isinstance(rules_data, dict) else []
+        for tree in decision_tree_records:
+            tree_id = f"DT_{tree.get('candidate_id')}"
+            root = tree.get("root_symptom") or {}
+            root_label = root.get("label_vi") or root.get("symptom_id") or tree_id
+            symptom_id = f"SYM_{slugify(root_label).upper()}"
+            add_node(tree_id, root_label, "DecisionTree", "approved", tree)
+            if not any(n["id"] == symptom_id for n in nodes):
+                add_node(symptom_id, root_label, "Symptom", "approved", {"aliases": root.get("aliases", [])})
+            add_edge(symptom_id, tree_id, "HAS_DECISION_TREE")
+            node_ids = {}
+            for node in (tree.get("tree") or {}).get("nodes", []):
+                gid = f"{tree_id}_{node.get('node_id')}"
+                node_ids[node.get("node_id")] = gid
+                if node.get("type") == "question":
+                    add_node(gid, node.get("question"), "Question", "approved", node)
+                else:
+                    label = (node.get("fault") or {}).get("fault_name") or node.get("node_id")
+                    add_node(gid, label, "Result", "approved", node)
+                    fid = (node.get("fault") or {}).get("fault_id")
+                    if fid:
+                        add_edge(gid, fid, "DIAGNOSES")
+            root_node = node_ids.get((tree.get("tree") or {}).get("root_node_id"))
+            if root_node:
+                add_edge(tree_id, root_node, "HAS_ROOT_QUESTION")
+            node_map = {node.get("node_id"): node for node in (tree.get("tree") or {}).get("nodes", [])}
+            for node in node_map.values():
+                if node.get("type") != "question":
+                    continue
+                source = node_ids.get(node.get("node_id"))
+                for key, rel in (("yes_next", "YES"), ("no_next", "NO"), ("unknown_next", "UNKNOWN")):
+                    target = node_ids.get(node.get(key))
+                    if source and target:
+                        add_edge(source, target, rel)
+        return {"nodes": self._dedupe_nodes(nodes), "edges": self._dedupe_edges(edges)}
 
     def _get_fault_graph_from_files(self, fault_id):
         graph = self._get_graph_from_files()
         nodes_by_id = {node["id"]: node for node in graph["nodes"]}
-        if fault_id not in nodes_by_id:
-            return {"nodes": [], "edges": []}
-
-        selected_node_ids = {fault_id}
-        selected_edges = []
-        affected_component_ids = set()
-
+        if fault_id not in nodes_by_id: return {"nodes": [], "edges": []}
+        selected_node_ids = {fault_id}; selected_edges = []; affected_component_ids = set()
         for edge in graph["edges"]:
-            if edge["source"] == fault_id and edge["type"] in {
-                "HAS_SYMPTOM",
-                "AFFECTS",
-                "FIXED_BY",
-                "RELATED_TO",
-            }:
-                selected_edges.append(edge)
-                selected_node_ids.add(edge["target"])
-                if edge["type"] == "AFFECTS":
-                    affected_component_ids.add(edge["target"])
+            if edge["source"] == fault_id and edge["type"] in {"HAS_SYMPTOM", "AFFECTS", "FIXED_BY", "RELATED_TO"}:
+                selected_edges.append(edge); selected_node_ids.add(edge["target"])
+                if edge["type"] == "AFFECTS": affected_component_ids.add(edge["target"])
             elif edge["target"] == fault_id and edge["type"] == "RELATED_TO":
-                selected_edges.append(edge)
-                selected_node_ids.add(edge["source"])
-
+                selected_edges.append(edge); selected_node_ids.add(edge["source"])
         parent_ids = set(affected_component_ids)
         while parent_ids:
-            current_id = parent_ids.pop()
+            cid = parent_ids.pop()
             for edge in graph["edges"]:
-                if edge["source"] == current_id and edge["type"] == "PART_OF":
+                if edge["source"] == cid and edge["type"] == "PART_OF":
                     selected_edges.append(edge)
                     if edge["target"] not in selected_node_ids:
-                        selected_node_ids.add(edge["target"])
-                        parent_ids.add(edge["target"])
-
-        return {
-            "nodes": [
-                nodes_by_id[node_id]
-                for node_id in selected_node_ids
-                if node_id in nodes_by_id
-            ],
-            "edges": self._dedupe_edges(selected_edges),
-        }
-
-    def _search_graph_from_files(self, query):
-        graph = self._get_graph_from_files()
-        needle = query.lower()
-        matches = []
-
-        for node in graph["nodes"]:
-            if node.get("type") not in self.SEARCH_LABELS:
-                continue
-
-            metadata = node.get("metadata") or {}
-            haystack = [
-                node.get("id"),
-                node.get("label"),
-                metadata.get("name"),
-                metadata.get("display_name"),
-                metadata.get("label_vi"),
-            ]
-            if any(needle in str(value).lower() for value in haystack if value):
-                matches.append(node)
-
-        return self._compact_nodes(matches[:30])
+                        selected_node_ids.add(edge["target"]); parent_ids.add(edge["target"])
+        return {"nodes": [nodes_by_id[nid] for nid in selected_node_ids if nid in nodes_by_id], "edges": self._dedupe_edges(selected_edges)}
 
     def _list_faults_from_files(self, query, limit):
         rules_data = self._load_json(RULES_PATH, default=[])
         rules = rules_data.get("rules", rules_data) if isinstance(rules_data, dict) else rules_data
-        needle = query.lower()
-        faults = []
-
+        needle = query.lower(); faults = []
         for rule in rules:
-            metadata = rule or {}
-            haystack = [
-                metadata.get("fault_id"),
-                metadata.get("fault_name"),
-                metadata.get("display_name"),
-                metadata.get("label_vi"),
-                metadata.get("system"),
-                metadata.get("system_id"),
-            ]
-            if needle and not any(needle in str(value).lower() for value in haystack if value):
-                continue
-
-            fault_id = metadata.get("fault_id")
-            if not fault_id:
-                continue
-
-            faults.append({
-                "id": fault_id,
-                "label": self._display_label(metadata) or fault_id,
-                "type": "Fault",
-                "status": metadata.get("status", "approved"),
-                "summary": {
-                    "system": metadata.get("system_id") or metadata.get("system"),
-                    "symptom_count": len(metadata.get("symptoms", [])),
-                    "component_count": len(metadata.get("affected_components", [])),
-                    "repair_count": len(metadata.get("repairs", [])),
-                },
-            })
-
+            m = rule or {}
+            haystack = [m.get("fault_id"), m.get("fault_name"), m.get("display_name"), m.get("label_vi"), m.get("system"), m.get("system_id")]
+            if needle and not any(needle in str(v).lower() for v in haystack if v): continue
+            fid = m.get("fault_id")
+            if fid: faults.append({"id": fid, "label": self._display_label(m) or fid, "type": "Fault", "status": m.get("status", "approved"), "summary": {"system": m.get("system_id") or m.get("system"), "symptom_count": len(m.get("symptoms", [])), "component_count": len(m.get("affected_components", [])), "repair_count": len(m.get("repairs", []))}})
         faults.sort(key=lambda item: item["label"].lower())
         return faults[:limit]
 
     def _get_stats_from_files(self):
-        graph = self._get_graph_from_files()
-        stats = self._empty_stats()
-
+        graph = self._get_graph_from_files(); stats = self._empty_stats()
         for node in graph["nodes"]:
-            node_type = node.get("type")
-            if node_type in stats:
-                stats[node_type] += 1
-
+            nt = node.get("type")
+            if nt in stats: stats[nt] += 1
         stats["relationships"] = len(graph["edges"])
         return stats
 
     def _load_json(self, path, default):
-        if not path.exists():
-            return default
-        with path.open("r", encoding="utf-8") as file:
-            return json.load(file)
+        if not path.exists(): return default
+        with path.open("r", encoding="utf-8") as file: return json.load(file)
 
     def _display_label(self, data):
-        return self._localize_display_label(
-            data.get("label_vi")
-            or data.get("display_name")
-            or data.get("label")
-            or data.get("fault_label")
-            or data.get("fault_name")
-            or data.get("repair_label")
-            or data.get("repair_name")
-            or data.get("name")
-        )
+        return self._localize_display_label(data.get("label_vi") or data.get("display_name") or data.get("label") or data.get("fault_label") or data.get("fault_name") or data.get("repair_label") or data.get("repair_name") or data.get("name"))
 
     def _localize_display_label(self, value):
         text = str(value or "").strip()
-        if not text:
-            return text
+        if not text: return text
         action_label = self._format_action_label(text)
-        if action_label != text:
-            return action_label
+        if action_label != text: return action_label
         return self.translations.get(slugify(text), text)
 
     def _format_action_label(self, text):
-        patterns = [
-            (r"^Diagnosis for (.+)$", "Kiểm tra"),
-            (r"^Repair for (.+)$", "Sửa chữa"),
-            (r"^Replace (.+)$", "Thay"),
-            (r"^Inspect (.+)$", "Kiểm tra"),
-            (r"^Clean (.+)$", "Vệ sinh"),
-            (r"^Test (.+)$", "Kiểm tra"),
-            (r"^Adjust (.+)$", "Điều chỉnh"),
-        ]
+        patterns = [(r"^Diagnosis for (.+)$", "Kiểm tra"), (r"^Repair for (.+)$", "Sửa chữa"), (r"^Replace (.+)$", "Thay"), (r"^Inspect (.+)$", "Kiểm tra"), (r"^Clean (.+)$", "Vệ sinh"), (r"^Test (.+)$", "Kiểm tra"), (r"^Adjust (.+)$", "Điều chỉnh")]
         for pattern, verb in patterns:
             match = re.match(pattern, text, flags=re.IGNORECASE)
             if match:
@@ -535,129 +467,45 @@ class GraphService:
 
     def _node_id(self, node):
         properties = self._node_properties(node)
-        return str(
-            properties.get("id")
-            or properties.get("name")
-            or getattr(node, "element_id", "")
-        )
+        return str(properties.get("id") or properties.get("name") or getattr(node, "element_id", ""))
 
     def _format_node(self, node, labels):
         properties = self._node_properties(node)
         node_id = self._node_id(node)
-        node_type = next(
-            (label for label in self.NODE_LABELS if label in labels),
-            properties.get("type") or (labels[0] if labels else "Node"),
-        )
-        label = self._localize_display_label(
-            properties.get("label_vi")
-            or properties.get("display_name")
-            or properties.get("label")
-            or properties.get("fault_label")
-            or properties.get("fault_name")
-            or properties.get("repair_label")
-            or properties.get("repair_name")
-            or properties.get("name")
-            or node_id
-        )
-        metadata = {
-            key: self._json_safe(value)
-            for key, value in properties.items()
-            if key not in {"id", "label", "type", "status"}
-        }
-        return {
-            "id": node_id,
-            "label": label,
-            "type": node_type,
-            "status": properties.get("status") or "unknown",
-            "metadata": metadata,
-        }
+        node_type = next((label for label in self.NODE_LABELS if label in labels), properties.get("type") or (labels[0] if labels else "Node"))
+        label = self._localize_display_label(properties.get("label_vi") or properties.get("display_name") or properties.get("label") or properties.get("fault_label") or properties.get("fault_name") or properties.get("repair_label") or properties.get("repair_name") or properties.get("name") or node_id)
+        metadata = {k: self._json_safe(v) for k, v in properties.items() if k not in {"id", "label", "type", "status"}}
+        return {"id": node_id, "label": label, "type": node_type, "status": properties.get("status") or "unknown", "metadata": metadata}
 
     def _format_edge(self, rel):
-        cf = rel.get("cf")
-        confidence = None
+        cf = rel.get("cf"); confidence = None
         if cf is not None:
-            try:
-                confidence = confidence_label(float(cf))
-            except (TypeError, ValueError):
-                confidence = None
-        metadata = {
-            key: self._json_safe(value)
-            for key, value in self._node_properties(rel).items()
-            if key != "cf"
-        }
-
-        return {
-            "id": str(getattr(rel, "element_id", "")) or (
-                f"{self._node_id(rel.start_node)}-{rel.type}-{self._node_id(rel.end_node)}"
-            ),
-            "source": self._node_id(rel.start_node),
-            "target": self._node_id(rel.end_node),
-            "type": rel.type,
-            "label": RELATION_LABELS.get(rel.type, rel.type),
-            "cf": cf,
-            "confidence_label": confidence,
-            "metadata": metadata,
-        }
+            try: confidence = confidence_label(float(cf))
+            except: pass
+        metadata = {k: self._json_safe(v) for k, v in self._node_properties(rel).items() if k != "cf"}
+        return {"id": str(getattr(rel, "element_id", "")) or (f"{self._node_id(rel.start_node)}-{rel.type}-{self._node_id(rel.end_node)}"), "source": self._node_id(rel.start_node), "target": self._node_id(rel.end_node), "type": rel.type, "label": RELATION_LABELS.get(rel.type, rel.type), "cf": cf, "confidence_label": confidence, "metadata": metadata}
 
     def _dedupe_nodes(self, nodes):
         deduped = {}
         for node in nodes:
-            if not node or not node.get("id"):
-                continue
-            deduped[node["id"]] = node
+            if node and node.get("id"): deduped[node["id"]] = node
         return list(deduped.values())
 
     def _dedupe_edges(self, edges):
         deduped = {}
         for edge in edges:
-            if not edge:
-                continue
-            edge_id = edge.get("id") or (
-                f"{edge.get('source')}-{edge.get('type')}-{edge.get('target')}"
-            )
-            deduped[edge_id] = {**edge, "id": edge_id}
+            if edge:
+                eid = edge.get("id") or (f"{edge.get('source')}-{edge.get('type')}-{edge.get('target')}")
+                deduped[eid] = {**edge, "id": eid}
         return list(deduped.values())
 
-    def _compact_nodes(self, nodes):
-        return [
-            {
-                "id": node["id"],
-                "label": node["label"],
-                "type": node["type"],
-                "status": node["status"],
-            }
-            for node in self._dedupe_nodes(nodes)
-        ]
-
-    def _compact_faults(self, nodes):
-        return [
-            {
-                "id": node["id"],
-                "label": node["label"],
-                "type": node["type"],
-                "status": node["status"],
-                "summary": node.get("summary", {}),
-            }
-            for node in self._dedupe_nodes(nodes)
-        ]
-
-    def _labels(self, node):
-        return list(getattr(node, "labels", []))
-
+    def _labels(self, node): return list(getattr(node, "labels", []))
     def _node_properties(self, node):
-        try:
-            return dict(node)
-        except (TypeError, ValueError):
-            return {}
-
+        try: return dict(node)
+        except: return {}
     def _json_safe(self, value):
-        if value is None or isinstance(value, str | int | float | bool):
-            return value
-        if isinstance(value, list | tuple | set):
-            return [self._json_safe(item) for item in value]
-        if isinstance(value, dict):
-            return {str(key): self._json_safe(item) for key, item in value.items()}
+        if value is None or isinstance(value, str | int | float | bool): return value
+        if isinstance(value, list | tuple | set): return [self._json_safe(item) for item in value]
+        if isinstance(value, dict): return {str(k): self._json_safe(v) for k, v in value.items()}
         return str(value)
-
-    def _empty_stats(self):
-        return {**{label: 0 for label in self.NODE_LABELS}, "relationships": 0}
+    def _empty_stats(self): return {**{label: 0 for label in self.NODE_LABELS}, "relationships": 0}

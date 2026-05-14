@@ -190,11 +190,10 @@ def _run_script(path: Path) -> dict[str, Any]:
 
 @router.post("/rebuild")
 def rebuild_knowledge():
-    scripts = [PROJECT_ROOT / "scripts" / "build" / "build_knowledge.py"]
-    import_script = PROJECT_ROOT / "scripts" / "graph" / "import_graph.py"
-    if import_script.exists():
-        scripts.append(import_script)
-
+    scripts = [
+        PROJECT_ROOT / "scripts" / "build" / "build_knowledge.py",
+        PROJECT_ROOT / "scripts" / "graph" / "import_graph.py",
+    ]
     runs = [_run_script(script) for script in scripts if script.exists()]
     return {
         "success": bool(runs) and all(run["success"] for run in runs),

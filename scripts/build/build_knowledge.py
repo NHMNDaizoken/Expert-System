@@ -3,10 +3,15 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
     import _bootstrap  # type: ignore # noqa: F401
@@ -15,11 +20,13 @@ except ModuleNotFoundError:
 
 from src.expert_system.utils.text import slugify
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_PATH = PROJECT_ROOT / "data" / "raw" / "automotive_faults.json"
+RAW_EXPERT_PATH = PROJECT_ROOT / "data" / "raw" / "expert_accepted_faults.json"
+RAW_EXPERT_TREES_PATH = PROJECT_ROOT / "data" / "raw" / "expert_accepted_decision_trees.json"
 STAGING_DIR = PROJECT_ROOT / "data" / "staging"
 CF_PATH = STAGING_DIR / "cf_dynamic.json"
 PROCEDURE_PATH = STAGING_DIR / "procedure_trees.json"
+DECISION_TREES_PATH = STAGING_DIR / "decision_trees.json"
 EXPERT_TREE_PATH = STAGING_DIR / "expert_tree.json"
 KG_PATH = STAGING_DIR / "kg_rules_from_dataset.json"
 ALIASES_PATH = STAGING_DIR / "symptom_aliases.json"
@@ -44,9 +51,77 @@ def save_json(path: str | Path, data: Any) -> None:
 
 
 def load_records(path: str | Path = RAW_PATH) -> list[dict[str, Any]]:
-    if not Path(path).exists():
+    records = []
+    
+    # Load primary dataset
+    if Path(path).exists():
+        data = load_json(path)
+        records.extend(_extract_records(data))
+    
+    # Load expert accepted faults
+    if RAW_EXPERT_PATH.exists():
+        expert_data = load_json(RAW_EXPERT_PATH)
+        records.extend(_extract_records(expert_data))
+        
+    return records
+
+def load_accepted_decision_trees() -> list[dict[str, Any]]:
+    if not RAW_EXPERT_TREES_PATH.exists():
         return []
-    data = load_json(path)
+    data = load_json(RAW_EXPERT_TREES_PATH)
+    if isinstance(data, dict) and isinstance(data.get("trees"), list):
+        return [tree for tree in data["trees"] if isinstance(tree, dict)]
+    if isinstance(data, list):
+        return [tree for tree in data if isinstance(tree, dict)]
+    return []
+
+def system_to_category(system: str) -> str:
+    mapping = {
+        "engine": "Engine",
+        "cooling_system": "Cooling System",
+        "fuel_system": "Fuel System",
+        "ignition_system": "Engine",
+        "brake_system": "Brake System",
+        "electrical_system": "Electrical System",
+        "transmission": "Transmission",
+        "suspension": "Suspension and Steering",
+        "steering": "Suspension and Steering",
+    }
+    return mapping.get(str(system or "").lower(), "Electrical System")
+
+def decision_tree_records(trees: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    records = []
+    for tree_record in trees:
+        root_symptom = tree_record.get("root_symptom") or {}
+        root_label = root_symptom.get("label_vi") or root_symptom.get("symptom_id") or "Triệu chứng từ cây chẩn đoán"
+        candidate_id = tree_record.get("candidate_id")
+        for node in (tree_record.get("tree") or {}).get("nodes", []):
+            if node.get("type") != "result":
+                continue
+            fault = node.get("fault") or {}
+            repair_steps = node.get("repair_steps") or []
+            diagnostic_steps = node.get("diagnostic_steps") or []
+            records.append(
+                {
+                    "fault_id": fault.get("fault_id"),
+                    "category": system_to_category(fault.get("system")),
+                    "subcategory": fault.get("fault_name") or fault.get("fault_id"),
+                    "symptoms": [root_label],
+                    "diagnosis_steps": [{"step": step, "result": ["Bất thường", "Bình thường"]} for step in diagnostic_steps + repair_steps],
+                    "parts": [component.get("name_vi") or component.get("component_id") for component in node.get("components", []) if isinstance(component, dict)],
+                    "tools": ["Cầu nâng", "Đèn soi gầm", "Dụng cụ kiểm tra cơ khí"],
+                    "difficulty": "advanced" if fault.get("severity") in {"high", "critical"} else "intermediate",
+                    "labor_hours": max(1, min(8, len(repair_steps) or 1)),
+                    "causes": node.get("causes", []),
+                    "safety_notes": node.get("safety_notes", []),
+                    "confidence": fault.get("confidence", 0.5),
+                    "source_candidate_id": candidate_id,
+                    "source_decision_tree_node_id": node.get("node_id"),
+                }
+            )
+    return records
+
+def _extract_records(data: Any) -> list[dict[str, Any]]:
     if isinstance(data, list):
         return [record for record in data if isinstance(record, dict)]
     if isinstance(data, dict):
@@ -246,6 +321,32 @@ def build_aliases(
                 },
             )
     return dict(sorted(aliases.items()))
+
+def merge_decision_tree_aliases(aliases: dict[str, Any], trees: list[dict[str, Any]]) -> dict[str, Any]:
+    for tree in trees:
+        root = tree.get("root_symptom") or {}
+        label = str(root.get("label_vi") or "").strip()
+        if not label:
+            continue
+        symptom_id = symptom_id_for(label)
+        raw_aliases = [label, *(root.get("aliases") or [])]
+        aliases[symptom_id] = {
+            "name": slugify(label),
+            "display_name": label,
+            "label_vi": label,
+            "aliases": list(dict.fromkeys([str(alias) for alias in raw_aliases if str(alias).strip()])),
+        }
+    return dict(sorted(aliases.items()))
+
+def build_decision_tree_artifact(trees: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "meta": {
+            "version": "1.0",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "total_trees": len(trees),
+        },
+        "trees": trees,
+    }
 
 def build_primary_candidate_sets(records: list[dict[str, Any]]) -> dict[str, list[str]]:
     category_faults: dict[str, list[str]] = {}
@@ -553,6 +654,10 @@ def build_rules(
                     "steps": resolution["steps"],
                 }
             ],
+            "causes": [vi_label(c, translations) for c in record.get("causes", [])],
+            "severity": record.get("difficulty") or "medium",
+            "safety_notes": [vi_label(s, translations) for s in record.get("safety_notes", [])],
+            "diagnostic_steps": resolution["steps"],
             "status": "approved",
         }
         rules.append(rule)
@@ -574,7 +679,8 @@ def load_existing_artifact(path: Path) -> Any | None:
 
 
 def build_knowledge(rebuild_from_raw: bool = False) -> dict[str, Path]:
-    records = load_records(RAW_PATH)
+    accepted_trees = load_accepted_decision_trees()
+    records = load_records(RAW_PATH) + decision_tree_records(accepted_trees)
     translations = load_translations()
 
     if rebuild_from_raw and records:
@@ -582,16 +688,20 @@ def build_knowledge(rebuild_from_raw: bool = False) -> dict[str, Path]:
         procedure_trees = build_procedure_trees(records, translations)
         rules = build_rules(records, cf_data, procedure_trees, translations)
         expert_tree = build_expert_tree(records, rules.get("rules", []), translations)
-        aliases = build_aliases(records, translations)
+        aliases = merge_decision_tree_aliases(build_aliases(records, translations), accepted_trees)
     else:
         cf_data = load_existing_artifact(CF_PATH) or compute_cf(records)
         procedure_trees = load_existing_artifact(PROCEDURE_PATH) or build_procedure_trees(records, translations)
         rules = load_existing_artifact(KG_PATH) or build_rules(records, cf_data, procedure_trees, translations)
         expert_tree = build_expert_tree(records, rules.get("rules", []), translations)
-        aliases = load_existing_artifact(ALIASES_PATH) or build_aliases(records, translations)
+        aliases = load_existing_artifact(ALIASES_PATH) or merge_decision_tree_aliases(build_aliases(records, translations), accepted_trees)
+
+    rules["decision_trees"] = accepted_trees
+    decision_trees = build_decision_tree_artifact(accepted_trees)
 
     save_json(CF_PATH, cf_data)
     save_json(PROCEDURE_PATH, procedure_trees)
+    save_json(DECISION_TREES_PATH, decision_trees)
     save_json(EXPERT_TREE_PATH, expert_tree)
     save_json(ALIASES_PATH, aliases)
     save_json(KG_PATH, rules)
@@ -599,6 +709,7 @@ def build_knowledge(rebuild_from_raw: bool = False) -> dict[str, Path]:
     return {
         "cf": CF_PATH,
         "procedures": PROCEDURE_PATH,
+        "decision_trees": DECISION_TREES_PATH,
         "expert_tree": EXPERT_TREE_PATH,
         "aliases": ALIASES_PATH,
         "rules": KG_PATH,

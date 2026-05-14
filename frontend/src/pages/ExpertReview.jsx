@@ -16,6 +16,14 @@ function makeSymptomId(text) {
 }
 
 function buildApprovedPayload(suggestion) {
+  if (suggestion?.llm_output?.type === "diagnostic_decision_tree") {
+    return suggestion.llm_output;
+  }
+  // If the new structured candidate exists, use it as the base
+  if (suggestion?.llm_output?.candidate) {
+    return suggestion.llm_output.candidate;
+  }
+
   const diagnoses = suggestion?.llm_output?.diagnoses || [];
   const firstDiagnosis = diagnoses[0] || {};
   return {
@@ -53,25 +61,29 @@ function systemLabel(value) {
 }
 
 function reviewSummary(suggestion) {
-  const tree = suggestion?.llm_output?.diagnostic_tree || {};
-  const symptom = tree.level_2_primary_symptom || {};
-  const root = tree.level_1_root || {};
-  const diagnoses = suggestion?.llm_output?.diagnoses || tree.level_4_possible_faults || [];
-  const top = diagnoses[0] || {};
+  const llm = suggestion?.llm_output || {};
+  const candidate = llm.candidate || {};
+  const treeCandidate = llm.type === "diagnostic_decision_tree" ? llm : candidate;
+  const resultLeaves = (treeCandidate?.tree?.nodes || []).filter((node) => node.type === "result");
+  const faults = candidate.faults || llm.diagnoses || [];
+  const top = resultLeaves[0]?.fault || faults[0] || {};
 
   return {
-    primary: symptom.symptom_label_vi || suggestion?.user_input || "Chưa rõ triệu chứng",
-    system: root.system_label || top.system || "Chưa rõ",
+    primary: treeCandidate?.root_symptom?.label_vi || suggestion?.user_input || "Chưa rõ triệu chứng",
+    system: top.system || top.system_id || "Chưa rõ",
     currentDiagnosis:
+      top.fault_name ||
       top.fault_label_vi ||
-      top.fault_label_en ||
       top.fault_label ||
       "Triệu chứng chưa được KG hiện tại phủ đủ",
     recommended:
-      top.decision ||
-      "Tạo ánh xạ triệu chứng mới hoặc yêu cầu thêm thông tin từ người dùng.",
-    questions: tree.level_3_context?.missing_questions || [],
-    summaryText: suggestion?.llm_output?.summary_vi,
+      treeCandidate?.type === "diagnostic_decision_tree"
+        ? "Duyệt toàn bộ cây chẩn đoán Yes/No trước khi nhập KG."
+        : llm.status === "pending_expert_review" 
+        ? "Duyệt ứng viên chẩn đoán mới cấu trúc JSON." 
+        : "Tạo ánh xạ triệu chứng mới hoặc yêu cầu thêm thông tin.",
+    questions: llm.missing_questions || [],
+    summaryText: llm.summary_vi || llm.reason,
   };
 }
 
@@ -224,6 +236,12 @@ export default function ExpertReview() {
   const diagnoses = selected?.llm_output?.diagnoses || [];
   const notes = selected?.llm_output?.notes || [];
   const summary = reviewSummary(selected);
+  const decisionTreeCandidate =
+    selected?.llm_output?.type === "diagnostic_decision_tree"
+      ? selected.llm_output
+      : selected?.llm_output?.candidate?.type === "diagnostic_decision_tree"
+        ? selected.llm_output.candidate
+        : null;
 
   return (
     <div className="page review-page">
@@ -343,7 +361,8 @@ export default function ExpertReview() {
               </section>
 
               <SymptomInfoCard summary={summary} />
-              <DiagnosisCandidateCard diagnoses={diagnoses} />
+              {decisionTreeCandidate && <DecisionTreeReviewCard candidate={decisionTreeCandidate} />}
+              <DiagnosisCandidateCard diagnoses={diagnoses} candidate={selected?.llm_output?.candidate} />
               <SuggestedActionCard />
 
               {notes.length > 0 && (
@@ -437,33 +456,128 @@ function SymptomInfoCard({ summary }) {
   );
 }
 
-function DiagnosisCandidateCard({ diagnoses }) {
+function DiagnosisCandidateCard({ diagnoses, candidate }) {
+  if (candidate?.type === "diagnostic_decision_tree") {
+    return null;
+  }
+  const faults = candidate?.faults || diagnoses || [];
   return (
     <section className="review-section review-readable-card">
       <h3>Ứng viên chẩn đoán</h3>
-      {diagnoses.length === 0 ? (
+      {faults.length === 0 ? (
         <p className="muted">Chưa có chẩn đoán đã xác minh. Nên giữ trong hàng chờ kiểm duyệt.</p>
       ) : (
         <div className="review-diagnoses">
-          {diagnoses.map((diagnosis, index) => (
-            <article className="review-diagnosis" key={diagnosis.fault_id || index}>
+          {faults.map((fault, index) => (
+            <article className="review-diagnosis" key={fault.fault_id || fault.fault_name || index}>
               <div>
                 <h4>
-                  {diagnosis.fault_label_vi ||
-                    diagnosis.fault_label ||
-                    diagnosis.fault_name ||
+                  {fault.fault_label_vi ||
+                    fault.fault_label ||
+                    fault.fault_name ||
                     "Triệu chứng chưa ánh xạ"}
                 </h4>
-                <p className="muted">{systemLabel(diagnosis.system)}</p>
+                <p className="muted">{systemLabel(fault.system || fault.system_id)}</p>
+                {fault.diagnostic_steps && (
+                  <div style={{ fontSize: "0.8rem", marginTop: "4px" }}>
+                    {fault.diagnostic_steps.length} bước chẩn đoán
+                  </div>
+                )}
               </div>
               <strong>
-                {Math.round(Number(diagnosis.confidence ?? diagnosis.final_cf ?? 0) * 100)}%
+                {Math.round(Number(fault.confidence ?? fault.final_cf ?? 0) * 100)}%
               </strong>
             </article>
           ))}
         </div>
       )}
     </section>
+  );
+}
+
+function DecisionTreeReviewCard({ candidate }) {
+  const nodes = candidate?.tree?.nodes || [];
+  const nodeById = Object.fromEntries(nodes.map((node) => [node.node_id, node]));
+  const resultNodes = nodes.filter((node) => node.type === "result");
+  const selectedPath = candidate?.selected_path || candidate?.selected_paths?.[0] || [];
+  const selectedNodeIds = new Set(selectedPath.flatMap((item) => [item.node_id, item.next_node_id]).filter(Boolean));
+  return (
+    <section className="review-section review-readable-card decision-tree-review">
+      <h3>Cây quyết định đầy đủ</h3>
+      <div className="tree-root">
+        <strong>{candidate.root_symptom?.label_vi}</strong>
+        <p className="muted">{(candidate.root_symptom?.aliases || []).join(", ")}</p>
+      </div>
+      <div className="tree-node-list">
+        {nodes.map((node) => (
+          <article
+            key={node.node_id}
+            className={`tree-node ${node.type} ${selectedNodeIds.has(node.node_id) ? "selected" : ""}`}
+          >
+            <div className="tree-node-head">
+              <strong>{node.node_id}</strong>
+              <span>{node.type === "question" ? "Câu hỏi" : "Kết quả"}</span>
+            </div>
+            {node.type === "question" ? (
+              <>
+                <p>{node.question}</p>
+                <div className="tree-branches">
+                  <Branch label="Có" target={node.yes_next} node={nodeById[node.yes_next]} />
+                  <Branch label="Không" target={node.no_next} node={nodeById[node.no_next]} />
+                  <Branch label="Không rõ" target={node.unknown_next} node={nodeById[node.unknown_next]} />
+                </div>
+              </>
+            ) : (
+              <>
+                <p>{node.fault?.fault_name}</p>
+                <p className="muted">
+                  {systemLabel(node.fault?.system)} · {Math.round(Number(node.fault?.confidence || 0) * 100)}%
+                </p>
+                <MiniList title="Bộ phận" items={(node.components || []).map((item) => item.name_vi || item.component_id)} />
+                <MiniList title="Kiểm tra" items={node.diagnostic_steps} />
+                <MiniList title="Sửa chữa" items={node.repair_steps} />
+                <MiniList title="An toàn" items={node.safety_notes} />
+              </>
+            )}
+          </article>
+        ))}
+      </div>
+      <div className="review-diagnoses">
+        {resultNodes.map((node) => (
+          <article className="review-diagnosis" key={node.node_id}>
+            <div>
+              <h4>{node.fault?.fault_name}</h4>
+              <p className="muted">{node.node_id}</p>
+            </div>
+            <strong>{Math.round(Number(node.fault?.confidence || 0) * 100)}%</strong>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Branch({ label, target, node }) {
+  return (
+    <span>
+      {label}: {target}
+      {node?.type === "result" ? " → lỗi" : ""}
+    </span>
+  );
+}
+
+function MiniList({ title, items }) {
+  const values = (items || []).filter(Boolean).slice(0, 4);
+  if (!values.length) return null;
+  return (
+    <div className="tree-mini-list">
+      <span>{title}</span>
+      <ul>
+        {values.map((item, index) => (
+          <li key={`${title}-${index}`}>{item}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

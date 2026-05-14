@@ -10,7 +10,7 @@
       "diagnosis_procedures",
       "confirmation_tests_parts_resolution"
     ],
-    "generated_at": "2026-05-12T09:38:19.031210+00:00"
+    "generated_at": "2026-05-14T17:27:54.925112+00:00"
   },
   "systems": {
     "SYS_BRAKE": {
@@ -3289,6 +3289,70 @@
               }
             }
           ]
+        },
+        "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I": {
+          "symptom_id": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+          "name": "tri_u_ch_ng_ho_n_to_n_m_i",
+          "display_name": "Triệu chứng hoàn toàn mới",
+          "label_vi": "Triệu chứng hoàn toàn mới",
+          "secondary_symptoms": [],
+          "possible_faults": [
+            {
+              "fault_id": "unknown_mechanical_wear",
+              "fault_name": "hao_m_n_c_kh_ch_a_x_c_nh",
+              "display_name": "Hao mòn cơ khí chưa xác định",
+              "label_vi": "Hao mòn cơ khí chưa xác định",
+              "system_id": "SYS_ELECTRICAL",
+              "subsystem_id": "SUB_STARTING",
+              "affected_components": [
+                "CMP_STARTER_MOTOR"
+              ],
+              "confidence": 0.6,
+              "diagnosis_procedures": [
+                "Kiểm tra mực dầu và nước làm mát",
+                "Quan sát các vị trí có dấu hiệu rò rỉ",
+                "Kiểm tra bảo dưỡng định kỳ",
+                "Theo dõi sát sao nếu hiện tượng không tái diễn"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Các bộ phận chuyển động chung"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Kiểm tra mực dầu và nước làm mát. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Quan sát các vị trí có dấu hiệu rò rỉ. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Kiểm tra bảo dưỡng định kỳ. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Theo dõi sát sao nếu hiện tượng không tái diễn. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "intermediate",
+                "labor_hours": 2,
+                "steps": [
+                  "Kiểm tra mực dầu và nước làm mát",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Quan sát các vị trí có dấu hiệu rò rỉ",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Kiểm tra bảo dưỡng định kỳ",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Theo dõi sát sao nếu hiện tượng không tái diễn",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
+                ]
+              }
+            }
+          ]
         }
       }
     },
@@ -4921,6 +4985,119 @@
                   "Kiểm tra cảm biến vị trí bướm ga",
                   "Kết quả có thể: Cảm biến bướm ga (TPS) lỗi",
                   "Kết quả có thể: Cảm biến bướm ga hoạt động bình thường"
+                ]
+              }
+            }
+          ]
+        },
+        "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I": {
+          "symptom_id": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+          "name": "tri_u_ch_ng_ho_n_to_n_m_i",
+          "display_name": "Triệu chứng hoàn toàn mới",
+          "label_vi": "Triệu chứng hoàn toàn mới",
+          "secondary_symptoms": [],
+          "possible_faults": [
+            {
+              "fault_id": "critical_system_failure",
+              "fault_name": "l_i_h_th_ng_nghi_m_tr_ng",
+              "display_name": "Lỗi hệ thống nghiêm trọng",
+              "label_vi": "Lỗi hệ thống nghiêm trọng",
+              "system_id": "SYS_ENGINE",
+              "subsystem_id": "SUB_ENGINE_MECHANICAL",
+              "affected_components": [
+                "CMP_ENGINE_MOUNT"
+              ],
+              "confidence": 0.85,
+              "diagnosis_procedures": [
+                "Sử dụng máy quét lỗi OBDII đọc mã lỗi",
+                "Ngừng vận hành xe",
+                "Liên hệ cứu hộ đưa xe về gara"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Bộ điều khiển động cơ (ECU)"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Sử dụng máy quét lỗi OBDII đọc mã lỗi. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Ngừng vận hành xe. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Liên hệ cứu hộ đưa xe về gara. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "advanced",
+                "labor_hours": 2,
+                "steps": [
+                  "Sử dụng máy quét lỗi OBDII đọc mã lỗi",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Ngừng vận hành xe",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Liên hệ cứu hộ đưa xe về gara",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
+                ]
+              }
+            },
+            {
+              "fault_id": "accessory_drive_belt_failure",
+              "fault_name": "h_ng_d_y_curoa_ho_c_b_ph_n_ph_tr",
+              "display_name": "Hỏng dây curoa hoặc bộ phận phụ trợ",
+              "label_vi": "Hỏng dây curoa hoặc bộ phận phụ trợ",
+              "system_id": "SYS_ENGINE",
+              "subsystem_id": "SUB_ENGINE_MECHANICAL",
+              "affected_components": [
+                "CMP_ENGINE_MOUNT"
+              ],
+              "confidence": 0.75,
+              "diagnosis_procedures": [
+                "Kiểm tra độ căng của dây curoa bằng mắt thường",
+                "Lắng nghe vị trí phát ra tiếng kêu",
+                "Thay thế dây curoa",
+                "Kiểm tra các pulley liên quan"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Dây curoa tổng"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Kiểm tra độ căng của dây curoa bằng mắt thường. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Lắng nghe vị trí phát ra tiếng kêu. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Thay thế dây curoa. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Kiểm tra các pulley liên quan. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "advanced",
+                "labor_hours": 2,
+                "steps": [
+                  "Kiểm tra độ căng của dây curoa bằng mắt thường",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Lắng nghe vị trí phát ra tiếng kêu",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Thay thế dây curoa",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Kiểm tra các pulley liên quan",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
                 ]
               }
             }

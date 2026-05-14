@@ -1034,6 +1034,17 @@
       "Hộp số không sang số"
     ]
   },
+  "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I": {
+    "name": "tri_u_ch_ng_ho_n_to_n_m_i",
+    "display_name": "Triệu chứng hoàn toàn mới",
+    "label_vi": "Triệu chứng hoàn toàn mới",
+    "aliases": [
+      "Triệu chứng hoàn toàn mới",
+      "hiện tượng lạ",
+      "hành vi bất thường",
+      "vấn đề mới phát sinh"
+    ]
+  },
   "SYM_TURBO_LAG": {
     "name": "turbo_lag",
     "display_name": "Trễ turbo",

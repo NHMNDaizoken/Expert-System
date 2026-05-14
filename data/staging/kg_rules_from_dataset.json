@@ -3,9 +3,9 @@
     "version": "3.0",
     "domain": "car_diagnostic",
     "source": "automotive_faults_dataset",
-    "total_rules": 99,
+    "total_rules": 102,
     "graph_type": "ontology_driven",
-    "generated_at": "2026-05-12T02:56:14.967635+00:00"
+    "generated_at": "2026-05-14T17:27:54.925098+00:00"
   },
   "rules": [
     {
@@ -52,27 +52,25 @@
         "steps": {
           "flt_001_s1": {
             "id": "flt_001_s1",
-            "question": "Kiểm tra cầu chì ABS?",
+            "symptom_id": "SYM_ABS_WARNING_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi ABS sáng",
+            "question": "Đèn cảnh báo ABS có sáng không?",
             "is_question": true,
             "yes_next": "flt_001_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bị cháy/thổi",
-              "Nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_001_s2": {
             "id": "flt_001_s2",
-            "question": "Kiểm tra dây điện đến bộ điều khiển ABS?",
+            "symptom_id": "SYM_BRAKE_PEDAL_PULSATION",
+            "symptom_label": "Bàn đạp phanh bị rung",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Hệ thống dây điện lỗi",
-              "Hệ thống dây điện tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -103,6 +101,17 @@
             "Kết quả có thể: Hệ thống dây điện tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra cầu chì ABS",
+        "Kết quả có thể: Bị cháy/thổi",
+        "Kết quả có thể: Nguyên vẹn",
+        "Kiểm tra dây điện đến bộ điều khiển ABS",
+        "Kết quả có thể: Hệ thống dây điện lỗi",
+        "Kết quả có thể: Hệ thống dây điện tốt"
       ],
       "status": "approved"
     },
@@ -150,27 +159,25 @@
         "steps": {
           "flt_002_s1": {
             "id": "flt_002_s1",
-            "question": "Kiểm tra giắc cắm cảm biến tốc độ bánh xe?",
+            "symptom_id": "SYM_ABS_LIGHT_STAYS_ON",
+            "symptom_label": "Đèn ABS sáng liên tục",
+            "question": "Đèn cảnh báo ABS có sáng không?",
             "is_question": true,
             "yes_next": "flt_002_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Giắc cắm lỏng",
-              "Kết nối chắc chắn"
-            ]
+            "results": []
           },
           "flt_002_s2": {
             "id": "flt_002_s2",
-            "question": "Kiểm tra cảm biến tốc độ bánh xe xem có bẩn hoặc hư hỏng không?",
+            "symptom_id": "SYM_ERRATIC_SPEEDOMETER",
+            "symptom_label": "Đồng hồ tốc độ nhảy số không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bẩn/hư hỏng",
-              "Sạch/nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -201,6 +208,17 @@
             "Kết quả có thể: Sạch/nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra giắc cắm cảm biến tốc độ bánh xe",
+        "Kết quả có thể: Giắc cắm lỏng",
+        "Kết quả có thể: Kết nối chắc chắn",
+        "Kiểm tra cảm biến tốc độ bánh xe xem có bẩn hoặc hư hỏng không",
+        "Kết quả có thể: Bẩn/hư hỏng",
+        "Kết quả có thể: Sạch/nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -248,27 +266,25 @@
         "steps": {
           "flt_003_s1": {
             "id": "flt_003_s1",
-            "question": "Kiểm tra ống chân không bầu trợ lực phanh?",
+            "symptom_id": "SYM_SPONGY_BRAKE_PEDAL",
+            "symptom_label": "Phanh bị nhún",
+            "question": "Bàn đạp phanh có cảm giác bất thường không?",
             "is_question": true,
             "yes_next": "flt_003_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đang rò rỉ",
-              "Nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_003_s2": {
             "id": "flt_003_s2",
-            "question": "Kiểm tra áp suất chân không bầu trợ lực phanh?",
+            "symptom_id": "SYM_HARD_BRAKE_PEDAL",
+            "symptom_label": "Bàn đạp phanh bị cứng",
+            "question": "Bàn đạp phanh có cảm giác bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất chân không thấp",
-              "Áp suất chân không bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -299,6 +315,17 @@
             "Kết quả có thể: Áp suất chân không bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra ống chân không bầu trợ lực phanh",
+        "Kết quả có thể: Đang rò rỉ",
+        "Kết quả có thể: Nguyên vẹn",
+        "Kiểm tra áp suất chân không bầu trợ lực phanh",
+        "Kết quả có thể: Áp suất chân không thấp",
+        "Kết quả có thể: Áp suất chân không bình thường"
       ],
       "status": "approved"
     },
@@ -346,27 +373,25 @@
         "steps": {
           "flt_004_s1": {
             "id": "flt_004_s1",
-            "question": "Kiểm tra rò rỉ heo phanh?",
+            "symptom_id": "SYM_BRAKE_PULLING_TO_ONE_SIDE",
+            "symptom_label": "Phanh bị lệch",
+            "question": "Bạn có nhận thấy dấu hiệu này không: phanh bị lệch?",
             "is_question": true,
             "yes_next": "flt_004_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ chất lỏng",
-              "Không rò rỉ"
-            ]
+            "results": []
           },
           "flt_004_s2": {
             "id": "flt_004_s2",
-            "question": "Kiểm tra hoạt động piston heo phanh?",
+            "symptom_id": "SYM_BRAKE_DRAGGING",
+            "symptom_label": "Bó phanh",
+            "question": "Bạn có nhận thấy dấu hiệu này không: bó phanh?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Kẹt piston",
-              "Piston di chuyển tự do"
-            ]
+            "results": []
           }
         }
       },
@@ -397,6 +422,17 @@
             "Kết quả có thể: Piston di chuyển tự do"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ heo phanh",
+        "Kết quả có thể: Rò rỉ chất lỏng",
+        "Kết quả có thể: Không rò rỉ",
+        "Kiểm tra hoạt động piston heo phanh",
+        "Kết quả có thể: Kẹt piston",
+        "Kết quả có thể: Piston di chuyển tự do"
       ],
       "status": "approved"
     },
@@ -444,27 +480,25 @@
         "steps": {
           "flt_005_s1": {
             "id": "flt_005_s1",
-            "question": "Kiểm tra nứt hoặc rò rỉ ống dầu phanh?",
+            "symptom_id": "SYM_BRAKE_FLUID_LEAK",
+            "symptom_label": "Rò rỉ dầu phanh",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "flt_005_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ống dẫn bị nứt/rò rỉ",
-              "Ống dẫn nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_005_s2": {
             "id": "flt_005_s2",
-            "question": "Kiểm tra áp suất ống dầu phanh?",
+            "symptom_id": "SYM_SOFT_BRAKE_PEDAL",
+            "symptom_label": "Bàn đạp phanh mềm",
+            "question": "Bàn đạp phanh có cảm giác bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Kiểm tra áp suất không đạt",
-              "Đạt kiểm tra áp suất"
-            ]
+            "results": []
           }
         }
       },
@@ -495,6 +529,17 @@
             "Kết quả có thể: Đạt kiểm tra áp suất"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nứt hoặc rò rỉ ống dầu phanh",
+        "Kết quả có thể: Ống dẫn bị nứt/rò rỉ",
+        "Kết quả có thể: Ống dẫn nguyên vẹn",
+        "Kiểm tra áp suất ống dầu phanh",
+        "Kết quả có thể: Kiểm tra áp suất không đạt",
+        "Kết quả có thể: Đạt kiểm tra áp suất"
       ],
       "status": "approved"
     },
@@ -542,27 +587,25 @@
         "steps": {
           "flt_006_s1": {
             "id": "flt_006_s1",
-            "question": "Kiểm tra mức dầu phanh trong tổng phanh?",
+            "symptom_id": "SYM_SPONGY_BRAKE_PEDAL",
+            "symptom_label": "Phanh bị nhún",
+            "question": "Bàn đạp phanh có cảm giác bất thường không?",
             "is_question": true,
             "yes_next": "flt_006_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mức dầu/dung dịch thấp",
-              "Mức dung dịch bình thường"
-            ]
+            "results": []
           },
           "flt_006_s2": {
             "id": "flt_006_s2",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng tổng phanh?",
+            "symptom_id": "SYM_BRAKE_FLUID_LEAKS",
+            "symptom_label": "Các điểm rò rỉ dầu phanh",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ/hư hỏng",
-              "Nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -593,6 +636,17 @@
             "Kết quả có thể: Nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức dầu phanh trong tổng phanh",
+        "Kết quả có thể: Mức dầu/dung dịch thấp",
+        "Kết quả có thể: Mức dung dịch bình thường",
+        "Kiểm tra rò rỉ hoặc hư hỏng tổng phanh",
+        "Kết quả có thể: Rò rỉ/hư hỏng",
+        "Kết quả có thể: Nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -640,27 +694,25 @@
         "steps": {
           "flt_007_s1": {
             "id": "flt_007_s1",
-            "question": "Kiểm tra độ dày má phanh?",
+            "symptom_id": "SYM_SQUEALING_BRAKES",
+            "symptom_label": "Phanh kêu rít",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_007_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Má phanh bị mòn",
-              "Má phanh đủ độ dày"
-            ]
+            "results": []
           },
           "flt_007_s2": {
             "id": "flt_007_s2",
-            "question": "Kiểm tra tình trạng má phanh?",
+            "symptom_id": "SYM_BRAKE_PEDAL_PULSATION",
+            "symptom_label": "Bàn đạp phanh bị rung",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Má phanh bị mòn/hỏng",
-              "Má phanh còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -691,6 +743,17 @@
             "Kết quả có thể: Má phanh còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ dày má phanh",
+        "Kết quả có thể: Má phanh bị mòn",
+        "Kết quả có thể: Má phanh đủ độ dày",
+        "Kiểm tra tình trạng má phanh",
+        "Kết quả có thể: Má phanh bị mòn/hỏng",
+        "Kết quả có thể: Má phanh còn tốt"
       ],
       "status": "approved"
     },
@@ -738,27 +801,25 @@
         "steps": {
           "flt_008_s1": {
             "id": "flt_008_s1",
-            "question": "Đo độ dày đĩa phanh?",
+            "symptom_id": "SYM_BRAKE_PEDAL_PULSATION",
+            "symptom_label": "Bàn đạp phanh bị rung",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "flt_008_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đĩa phanh mòn",
-              "Đĩa phanh đủ độ dày"
-            ]
+            "results": []
           },
           "flt_008_s2": {
             "id": "flt_008_s2",
-            "question": "Kiểm tra xước hoặc vênh đĩa phanh?",
+            "symptom_id": "SYM_STEERING_WHEEL_VIBRATION",
+            "symptom_label": "Rung vô lăng",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đĩa phanh bị xước/vênh",
-              "Đĩa phanh phẳng"
-            ]
+            "results": []
           }
         }
       },
@@ -789,6 +850,17 @@
             "Kết quả có thể: Đĩa phanh phẳng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Đo độ dày đĩa phanh",
+        "Kết quả có thể: Đĩa phanh mòn",
+        "Kết quả có thể: Đĩa phanh đủ độ dày",
+        "Kiểm tra xước hoặc vênh đĩa phanh",
+        "Kết quả có thể: Đĩa phanh bị xước/vênh",
+        "Kết quả có thể: Đĩa phanh phẳng"
       ],
       "status": "approved"
     },
@@ -836,27 +908,25 @@
         "steps": {
           "flt_009_s1": {
             "id": "flt_009_s1",
-            "question": "Kiểm tra độ mòn guốc phanh?",
+            "symptom_id": "SYM_SPONGY_BRAKE_PEDAL",
+            "symptom_label": "Phanh bị nhún",
+            "question": "Bàn đạp phanh có cảm giác bất thường không?",
             "is_question": true,
             "yes_next": "flt_009_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Guốc phanh bị mòn",
-              "Guốc phanh còn tốt"
-            ]
+            "results": []
           },
           "flt_009_s2": {
             "id": "flt_009_s2",
-            "question": "Kiểm tra tang trống phanh xem có bị xước hoặc nứt không?",
+            "symptom_id": "SYM_BRAKE_DRAGGING",
+            "symptom_label": "Bó phanh",
+            "question": "Bạn có nhận thấy dấu hiệu này không: bó phanh?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trống phanh bị xước/nứt",
-              "Trống phanh phẳng"
-            ]
+            "results": []
           }
         }
       },
@@ -887,6 +957,17 @@
             "Kết quả có thể: Trống phanh phẳng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ mòn guốc phanh",
+        "Kết quả có thể: Guốc phanh bị mòn",
+        "Kết quả có thể: Guốc phanh còn tốt",
+        "Kiểm tra tang trống phanh xem có bị xước hoặc nứt không",
+        "Kết quả có thể: Trống phanh bị xước/nứt",
+        "Kết quả có thể: Trống phanh phẳng"
       ],
       "status": "approved"
     },
@@ -933,27 +1014,25 @@
         "steps": {
           "flt_010_s1": {
             "id": "flt_010_s1",
-            "question": "Kiểm tra hoạt động ly hợp lốc lạnh?",
+            "symptom_id": "SYM_NO_COLD_AIR_FROM_VENTS",
+            "symptom_label": "Cửa gió không có hơi lạnh",
+            "question": "Xe có khó nổ khi máy nguội hoặc trời lạnh không?",
             "is_question": true,
             "yes_next": "flt_010_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Côn không bắt",
-              "Côn bắt tốt"
-            ]
+            "results": []
           },
           "flt_010_s2": {
             "id": "flt_010_s2",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng lốc lạnh?",
+            "symptom_id": "SYM_LOUD_NOISE_WHEN_AC_IS_ON",
+            "symptom_label": "Bật điều hòa kêu to",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Lốc lạnh rò rỉ/hư hỏng",
-              "Máy nén nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -984,6 +1063,17 @@
             "Kết quả có thể: Máy nén nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động ly hợp lốc lạnh",
+        "Kết quả có thể: Côn không bắt",
+        "Kết quả có thể: Côn bắt tốt",
+        "Kiểm tra rò rỉ hoặc hư hỏng lốc lạnh",
+        "Kết quả có thể: Lốc lạnh rò rỉ/hư hỏng",
+        "Kết quả có thể: Máy nén nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -1030,27 +1120,25 @@
         "steps": {
           "flt_011_s1": {
             "id": "flt_011_s1",
-            "question": "Kiểm tra bụi bẩn hoặc tắc nghẽn dàn nóng?",
+            "symptom_id": "SYM_WARM_AIR_FROM_AC_VENTS",
+            "symptom_label": "Điều hòa thổi gió nóng",
+            "question": "Bạn có nhận thấy dấu hiệu này không: điều hòa thổi gió nóng?",
             "is_question": true,
             "yes_next": "flt_011_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có dị vật/tắc nghẽn",
-              "Vệ sinh/thông dàn nóng"
-            ]
+            "results": []
           },
           "flt_011_s2": {
             "id": "flt_011_s2",
-            "question": "Kiểm tra rò rỉ dàn nóng điều hòa?",
+            "symptom_id": "SYM_AC_SYSTEM_NOT_COOLING",
+            "symptom_label": "Hệ thống điều hòa không mát",
+            "question": "Bạn có nhận thấy dấu hiệu này không: hệ thống điều hòa không mát?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dàn nóng rò rỉ",
-              "Không rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -1081,6 +1169,17 @@
             "Kết quả có thể: Không rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra bụi bẩn hoặc tắc nghẽn dàn nóng",
+        "Kết quả có thể: Có dị vật/tắc nghẽn",
+        "Kết quả có thể: Vệ sinh/thông dàn nóng",
+        "Kiểm tra rò rỉ dàn nóng điều hòa",
+        "Kết quả có thể: Dàn nóng rò rỉ",
+        "Kết quả có thể: Không rò rỉ"
       ],
       "status": "approved"
     },
@@ -1127,27 +1226,25 @@
         "steps": {
           "flt_012_s1": {
             "id": "flt_012_s1",
-            "question": "Kiểm tra nấm mốc dàn lạnh?",
+            "symptom_id": "SYM_MUSTY_ODOR_FROM_VENTS",
+            "symptom_label": "Cửa gió có mùi hôi",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "flt_012_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có nấm mốc",
-              "Vệ sinh dàn lạnh"
-            ]
+            "results": []
           },
           "flt_012_s2": {
             "id": "flt_012_s2",
-            "question": "Kiểm tra cảm biến nhiệt độ giàn lạnh?",
+            "symptom_id": "SYM_WEAK_AIRFLOW_FROM_VENTS",
+            "symptom_label": "Gió thổi yếu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: gió thổi yếu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cảm biến lỗi",
-              "Cảm biến còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -1178,6 +1275,17 @@
             "Kết quả có thể: Cảm biến còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nấm mốc dàn lạnh",
+        "Kết quả có thể: Có nấm mốc",
+        "Kết quả có thể: Vệ sinh dàn lạnh",
+        "Kiểm tra cảm biến nhiệt độ giàn lạnh",
+        "Kết quả có thể: Cảm biến lỗi",
+        "Kết quả có thể: Cảm biến còn tốt"
       ],
       "status": "approved"
     },
@@ -1224,27 +1332,25 @@
         "steps": {
           "flt_013_s1": {
             "id": "flt_013_s1",
-            "question": "Kiểm tra áp suất hệ thống điều hòa bằng đồng hồ?",
+            "symptom_id": "SYM_WARM_AIR_FROM_VENTS",
+            "symptom_label": "Cửa gió thổi hơi nóng",
+            "question": "Bạn có nhận thấy dấu hiệu này không: cửa gió thổi hơi nóng?",
             "is_question": true,
             "yes_next": "flt_013_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất thấp",
-              "Áp suất bình thường"
-            ]
+            "results": []
           },
           "flt_013_s2": {
             "id": "flt_013_s2",
-            "question": "Kiểm tra rò rỉ hệ thống điều hòa?",
+            "symptom_id": "SYM_LOW_AC_SYSTEM_PRESSURE",
+            "symptom_label": "Áp suất ga điều hòa thấp",
+            "question": "Bạn có nhận thấy dấu hiệu này không: áp suất ga điều hòa thấp?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Hệ thống rò rỉ",
-              "Không rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -1275,6 +1381,17 @@
             "Kết quả có thể: Không rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất hệ thống điều hòa bằng đồng hồ",
+        "Kết quả có thể: Áp suất thấp",
+        "Kết quả có thể: Áp suất bình thường",
+        "Kiểm tra rò rỉ hệ thống điều hòa",
+        "Kết quả có thể: Hệ thống rò rỉ",
+        "Kết quả có thể: Không rò rỉ"
       ],
       "status": "approved"
     },
@@ -1321,27 +1438,25 @@
         "steps": {
           "flt_014_s1": {
             "id": "flt_014_s1",
-            "question": "Quét lỗi hệ thống điều hòa?",
-            "is_question": false,
+            "symptom_id": "SYM_AC_SYSTEM_NOT_WORKING",
+            "symptom_label": "Hệ thống điều hòa không hoạt động",
+            "question": "Bạn có nhận thấy dấu hiệu này không: hệ thống điều hòa không hoạt động?",
+            "is_question": true,
             "yes_next": "flt_014_s2",
             "no_next": "REFUTED",
-            "instruction": "Quét lỗi hệ thống điều hòa. Kết quả kỳ vọng: Có mã lỗi, Không có mã lỗi",
-            "results": [
-              "Có mã lỗi",
-              "Không có mã lỗi"
-            ]
+            "instruction": null,
+            "results": []
           },
           "flt_014_s2": {
             "id": "flt_014_s2",
-            "question": "Kiểm tra hoạt động các bộ phận hệ thống điều hòa?",
+            "symptom_id": "SYM_UNUSUAL_NOISE_FROM_AC_SYSTEM",
+            "symptom_label": "Hệ thống điều hòa kêu lạ",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bộ phận bị hỏng",
-              "Các bộ phận hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -1372,6 +1487,17 @@
             "Kết quả có thể: Các bộ phận hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Quét lỗi hệ thống điều hòa",
+        "Kết quả có thể: Có mã lỗi",
+        "Kết quả có thể: Không có mã lỗi",
+        "Kiểm tra hoạt động các bộ phận hệ thống điều hòa",
+        "Kết quả có thể: Bộ phận bị hỏng",
+        "Kết quả có thể: Các bộ phận hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -1418,27 +1544,25 @@
         "steps": {
           "flt_015_s1": {
             "id": "flt_015_s1",
-            "question": "Kiểm tra và thay lọc gió điều hòa?",
+            "symptom_id": "SYM_MUSTY_ODOR_FROM_VENTS",
+            "symptom_label": "Cửa gió có mùi hôi",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "flt_015_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Lọc bị bẩn/tắc",
-              "Lọc sạch/mới"
-            ]
+            "results": []
           },
           "flt_015_s2": {
             "id": "flt_015_s2",
-            "question": "Kiểm tra rác trong đường lấy gió điều hòa?",
+            "symptom_id": "SYM_REDUCED_AIRFLOW_FROM_VENTS",
+            "symptom_label": "Gió cửa gió yếu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: gió cửa gió yếu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có dị vật trong đường nạp",
-              "Thông đường nạp"
-            ]
+            "results": []
           }
         }
       },
@@ -1469,6 +1593,17 @@
             "Kết quả có thể: Thông đường nạp"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra và thay lọc gió điều hòa",
+        "Kết quả có thể: Lọc bị bẩn/tắc",
+        "Kết quả có thể: Lọc sạch/mới",
+        "Kiểm tra rác trong đường lấy gió điều hòa",
+        "Kết quả có thể: Có dị vật trong đường nạp",
+        "Kết quả có thể: Thông đường nạp"
       ],
       "status": "approved"
     },
@@ -1515,27 +1650,25 @@
         "steps": {
           "flt_016_s1": {
             "id": "flt_016_s1",
-            "question": "Kiểm tra hoạt động quạt gió?",
+            "symptom_id": "SYM_NO_AIR_FROM_VENTS",
+            "symptom_label": "Cửa gió không có gió",
+            "question": "Bạn có nhận thấy dấu hiệu này không: cửa gió không có gió?",
             "is_question": true,
             "yes_next": "flt_016_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mô tơ không chạy",
-              "Mô tơ chạy bình thường"
-            ]
+            "results": []
           },
           "flt_016_s2": {
             "id": "flt_016_s2",
-            "question": "Kiểm tra bụi bẩn hoặc hư hỏng mô tơ quạt gió?",
+            "symptom_id": "SYM_LOUD_NOISE_FROM_HVAC_SYSTEM",
+            "symptom_label": "Hệ thống điều hòa kêu to",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có dị vật/hư hỏng",
-              "Mô tơ sạch/nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -1566,6 +1699,17 @@
             "Kết quả có thể: Mô tơ sạch/nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động quạt gió",
+        "Kết quả có thể: Mô tơ không chạy",
+        "Kết quả có thể: Mô tơ chạy bình thường",
+        "Kiểm tra bụi bẩn hoặc hư hỏng mô tơ quạt gió",
+        "Kết quả có thể: Có dị vật/hư hỏng",
+        "Kết quả có thể: Mô tơ sạch/nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -1612,27 +1756,25 @@
         "steps": {
           "flt_017_s1": {
             "id": "flt_017_s1",
-            "question": "Kiểm tra thông mạch điện trở quạt gió?",
+            "symptom_id": "SYM_HVAC_FAN_SPEED_ERRATIC",
+            "symptom_label": "Tốc độ quạt gió điều hòa không ổn định",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốc độ quạt gió điều hòa không ổn định?",
             "is_question": true,
             "yes_next": "flt_017_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Hỏng điện trở",
-              "Điện trở hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_017_s2": {
             "id": "flt_017_s2",
-            "question": "Kiểm tra quá nhiệt hoặc vết cháy trên điện trở?",
+            "symptom_id": "SYM_HVAC_FAN_ONLY_WORKS_ON_CERTAIN_SETTINGS",
+            "symptom_label": "Quạt gió điều hòa chỉ chạy ở một số nấc",
+            "question": "Bạn có nhận thấy dấu hiệu này không: quạt gió điều hòa chỉ chạy ở một số nấc?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện trở bị quá nhiệt/cháy",
-              "Điện trở còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -1663,6 +1805,17 @@
             "Kết quả có thể: Điện trở còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra thông mạch điện trở quạt gió",
+        "Kết quả có thể: Hỏng điện trở",
+        "Kết quả có thể: Điện trở hoạt động bình thường",
+        "Kiểm tra quá nhiệt hoặc vết cháy trên điện trở",
+        "Kết quả có thể: Điện trở bị quá nhiệt/cháy",
+        "Kết quả có thể: Điện trở còn tốt"
       ],
       "status": "approved"
     },
@@ -1712,27 +1865,25 @@
         "steps": {
           "flt_018_s1": {
             "id": "flt_018_s1",
-            "question": "Kiểm tra mức và tình trạng nước làm mát?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_018_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Nước làm mát thấp/bẩn",
-              "Nước làm mát đủ/sạch"
-            ]
+            "results": []
           },
           "flt_018_s2": {
             "id": "flt_018_s2",
-            "question": "Kiểm tra rò rỉ két nước và ống dẫn?",
+            "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+            "symptom_label": "Rò rỉ nước làm mát dưới gầm xe",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ két nước/ống dẫn",
-              "Không rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -1763,6 +1914,17 @@
             "Kết quả có thể: Không rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức và tình trạng nước làm mát",
+        "Kết quả có thể: Nước làm mát thấp/bẩn",
+        "Kết quả có thể: Nước làm mát đủ/sạch",
+        "Kiểm tra rò rỉ két nước và ống dẫn",
+        "Kết quả có thể: Rò rỉ két nước/ống dẫn",
+        "Kết quả có thể: Không rò rỉ"
       ],
       "status": "approved"
     },
@@ -1809,27 +1971,25 @@
         "steps": {
           "flt_019_s1": {
             "id": "flt_019_s1",
-            "question": "Kiểm tra áp suất hệ thống làm mát?",
+            "symptom_id": "SYM_VISIBLE_COOLANT_PUDDLE_UNDER_VEHICLE",
+            "symptom_label": "Vũng nước làm mát dưới gầm xe",
+            "question": "Mức nước làm mát có thấp hoặc có dấu hiệu rò rỉ không?",
             "is_question": true,
             "yes_next": "flt_019_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Hệ thống rò rỉ",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           },
           "flt_019_s2": {
             "id": "flt_019_s2",
-            "question": "Kiểm tra rò rỉ két nước, ống dẫn và bơm nước?",
+            "symptom_id": "SYM_COOLANT_ODOR_IN_CABIN",
+            "symptom_label": "Mùi nước làm mát trong cabin",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Phát hiện bộ phận rò rỉ",
-              "Các bộ phận còn nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -1860,6 +2020,17 @@
             "Kết quả có thể: Các bộ phận còn nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất hệ thống làm mát",
+        "Kết quả có thể: Hệ thống rò rỉ",
+        "Kết quả có thể: Không phát hiện rò rỉ",
+        "Kiểm tra rò rỉ két nước, ống dẫn và bơm nước",
+        "Kết quả có thể: Phát hiện bộ phận rò rỉ",
+        "Kết quả có thể: Các bộ phận còn nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -1909,27 +2080,25 @@
         "steps": {
           "flt_020_s1": {
             "id": "flt_020_s1",
-            "question": "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_020_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Két nước bị tắc hoặc hư hỏng",
-              "Két nước sạch/nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_020_s2": {
             "id": "flt_020_s2",
-            "question": "Kiểm tra hoạt động van hằng nhiệt?",
+            "symptom_id": "SYM_TEMPERATURE_GAUGE_IN_RED_ZONE",
+            "symptom_label": "Kim nhiệt độ ở vạch đỏ",
+            "question": "Bạn có nhận thấy dấu hiệu này không: kim nhiệt độ ở vạch đỏ?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Van hằng nhiệt lỗi",
-              "Van hằng nhiệt hoạt động tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -1960,6 +2129,17 @@
             "Kết quả có thể: Van hằng nhiệt hoạt động tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không",
+        "Kết quả có thể: Két nước bị tắc hoặc hư hỏng",
+        "Kết quả có thể: Két nước sạch/nguyên vẹn",
+        "Kiểm tra hoạt động van hằng nhiệt",
+        "Kết quả có thể: Van hằng nhiệt lỗi",
+        "Kết quả có thể: Van hằng nhiệt hoạt động tốt"
       ],
       "status": "approved"
     },
@@ -2006,27 +2186,25 @@
         "steps": {
           "flt_021_s1": {
             "id": "flt_021_s1",
-            "question": "Kiểm tra rò rỉ két sưởi?",
+            "symptom_id": "SYM_NO_HEAT_FROM_VENTS",
+            "symptom_label": "Cửa gió không có hơi nóng",
+            "question": "Bạn có nhận thấy dấu hiệu này không: cửa gió không có hơi nóng?",
             "is_question": true,
             "yes_next": "flt_021_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ két sưởi",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           },
           "flt_021_s2": {
             "id": "flt_021_s2",
-            "question": "Kiểm tra lưu thông nước làm mát qua két sưởi?",
+            "symptom_id": "SYM_SWEET_SMELL_IN_CABIN",
+            "symptom_label": "Mùi ngọt trong cabin",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dòng chảy bị tắc nghẽn",
-              "Dòng nước làm mát tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -2057,6 +2235,17 @@
             "Kết quả có thể: Dòng nước làm mát tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ két sưởi",
+        "Kết quả có thể: Rò rỉ két sưởi",
+        "Kết quả có thể: Không phát hiện rò rỉ",
+        "Kiểm tra lưu thông nước làm mát qua két sưởi",
+        "Kết quả có thể: Dòng chảy bị tắc nghẽn",
+        "Kết quả có thể: Dòng nước làm mát tốt"
       ],
       "status": "approved"
     },
@@ -2103,27 +2292,25 @@
         "steps": {
           "flt_022_s1": {
             "id": "flt_022_s1",
-            "question": "Kiểm tra các đầu nối ống dẫn nước sưởi?",
+            "symptom_id": "SYM_COOLANT_ODOR_IN_CABIN",
+            "symptom_label": "Mùi nước làm mát trong cabin",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "flt_022_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Giắc cắm lỏng/hư hỏng",
-              "Kết nối chắc chắn/nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_022_s2": {
             "id": "flt_022_s2",
-            "question": "Kiểm tra áp suất ống dẫn sưởi?",
+            "symptom_id": "SYM_VISIBLE_COOLANT_LEAK_UNDER_VEHICLE",
+            "symptom_label": "Rò rỉ nước làm mát dưới gầm xe",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Phát hiện ống dẫn rò rỉ",
-              "Không tìm thấy rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -2154,6 +2341,17 @@
             "Kết quả có thể: Không tìm thấy rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra các đầu nối ống dẫn nước sưởi",
+        "Kết quả có thể: Giắc cắm lỏng/hư hỏng",
+        "Kết quả có thể: Kết nối chắc chắn/nguyên vẹn",
+        "Kiểm tra áp suất ống dẫn sưởi",
+        "Kết quả có thể: Phát hiện ống dẫn rò rỉ",
+        "Kết quả có thể: Không tìm thấy rò rỉ"
       ],
       "status": "approved"
     },
@@ -2203,27 +2401,25 @@
         "steps": {
           "flt_023_s1": {
             "id": "flt_023_s1",
-            "question": "Kiểm tra hoạt động quạt két nước?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_023_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Quạt không quay",
-              "Quạt hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_023_s2": {
             "id": "flt_023_s2",
-            "question": "Kiểm tra mô-tơ quạt và rơ-le két nước?",
+            "symptom_id": "SYM_AC_NOT_COOLING_AT_IDLE",
+            "symptom_label": "Điều hòa không mát khi chạy không tải",
+            "question": "Bạn có nhận thấy dấu hiệu này không: điều hòa không mát khi chạy không tải?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mô-tơ/rơ-le lỗi",
-              "Mô tơ/rơ le hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -2254,6 +2450,17 @@
             "Kết quả có thể: Mô tơ/rơ le hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động quạt két nước",
+        "Kết quả có thể: Quạt không quay",
+        "Kết quả có thể: Quạt hoạt động bình thường",
+        "Kiểm tra mô-tơ quạt và rơ-le két nước",
+        "Kết quả có thể: Mô-tơ/rơ-le lỗi",
+        "Kết quả có thể: Mô tơ/rơ le hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -2300,27 +2507,25 @@
         "steps": {
           "flt_024_s1": {
             "id": "flt_024_s1",
-            "question": "Kiểm tra hư hỏng ống dẫn két nước?",
+            "symptom_id": "SYM_COOLANT_LEAK_UNDER_VEHICLE",
+            "symptom_label": "Rò rỉ nước làm mát dưới gầm xe",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "flt_024_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Phát hiện ống dẫn bị hỏng",
-              "Các ống dẫn trong tình trạng tốt"
-            ]
+            "results": []
           },
           "flt_024_s2": {
             "id": "flt_024_s2",
-            "question": "Kiểm tra rò rỉ các đầu nối ống?",
+            "symptom_id": "SYM_VISIBLE_WEAR_CRACKS_ON_HOSES",
+            "symptom_label": "Ống dẫn bị mòn/nứt",
+            "question": "Bạn có nhận thấy dấu hiệu này không: ống dẫn bị mòn/nứt?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ tại các mối nối",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -2351,6 +2556,17 @@
             "Kết quả có thể: Không phát hiện rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hư hỏng ống dẫn két nước",
+        "Kết quả có thể: Phát hiện ống dẫn bị hỏng",
+        "Kết quả có thể: Các ống dẫn trong tình trạng tốt",
+        "Kiểm tra rò rỉ các đầu nối ống",
+        "Kết quả có thể: Rò rỉ tại các mối nối",
+        "Kết quả có thể: Không phát hiện rò rỉ"
       ],
       "status": "approved"
     },
@@ -2400,27 +2616,25 @@
         "steps": {
           "flt_025_s1": {
             "id": "flt_025_s1",
-            "question": "Kiểm tra rò rỉ bơm nước?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_025_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ bơm",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           },
           "flt_025_s2": {
             "id": "flt_025_s2",
-            "question": "Kiểm tra hoạt động bơm nước?",
+            "symptom_id": "SYM_COOLANT_LEAK_NEAR_FRONT_OF_ENGINE",
+            "symptom_label": "Rò rỉ nước làm mát phía trước động cơ",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bơm lỗi",
-              "Bơm hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -2451,6 +2665,17 @@
             "Kết quả có thể: Bơm hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ bơm nước",
+        "Kết quả có thể: Rò rỉ bơm",
+        "Kết quả có thể: Không phát hiện rò rỉ",
+        "Kiểm tra hoạt động bơm nước",
+        "Kết quả có thể: Bơm lỗi",
+        "Kết quả có thể: Bơm hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -2500,27 +2725,25 @@
         "steps": {
           "flt_026_s1": {
             "id": "flt_026_s1",
-            "question": "Kiểm tra mòn hoặc hư hỏng bánh răng côn?",
+            "symptom_id": "SYM_WHINING_NOISE_FROM_DRIVETRAIN",
+            "symptom_label": "Hệ thống truyền động kêu hú",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_026_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bánh răng bị mòn/hỏng",
-              "Bánh răng còn tốt"
-            ]
+            "results": []
           },
           "flt_026_s2": {
             "id": "flt_026_s2",
-            "question": "Kiểm tra mức và tình trạng dầu hộp số?",
+            "symptom_id": "SYM_DIFFICULTY_SHIFTING_GEARS",
+            "symptom_label": "Khó sang số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khó sang số?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu hộp số thấp/bẩn",
-              "Dầu hộp số đủ/sạch"
-            ]
+            "results": []
           }
         }
       },
@@ -2551,6 +2774,17 @@
             "Kết quả có thể: Dầu hộp số đủ/sạch"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mòn hoặc hư hỏng bánh răng côn",
+        "Kết quả có thể: Bánh răng bị mòn/hỏng",
+        "Kết quả có thể: Bánh răng còn tốt",
+        "Kiểm tra mức và tình trạng dầu hộp số",
+        "Kết quả có thể: Dầu hộp số thấp/bẩn",
+        "Kết quả có thể: Dầu hộp số đủ/sạch"
       ],
       "status": "approved"
     },
@@ -2600,27 +2834,25 @@
         "steps": {
           "flt_027_s1": {
             "id": "flt_027_s1",
-            "question": "Kiểm tra dầu vi sai trung tâm?",
+            "symptom_id": "SYM_VEHICLE_BINDING_ON_TURNS",
+            "symptom_label": "Xe bị khựng khi vào cua",
+            "question": "Bạn có nhận thấy dấu hiệu này không: xe bị khựng khi vào cua?",
             "is_question": true,
             "yes_next": "flt_027_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           },
           "flt_027_s2": {
             "id": "flt_027_s2",
-            "question": "Kiểm tra độ rơ quá mức vi sai trung tâm?",
+            "symptom_id": "SYM_NOISE_FROM_DRIVETRAIN_WHILE_TURNING",
+            "symptom_label": "Hệ thống truyền động kêu khi đánh lái",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Phát hiện độ rơ quá mức",
-              "Không có độ rơ quá mức"
-            ]
+            "results": []
           }
         }
       },
@@ -2651,6 +2883,17 @@
             "Kết quả có thể: Không có độ rơ quá mức"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra dầu vi sai trung tâm",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức",
+        "Kiểm tra độ rơ quá mức vi sai trung tâm",
+        "Kết quả có thể: Phát hiện độ rơ quá mức",
+        "Kết quả có thể: Không có độ rơ quá mức"
       ],
       "status": "approved"
     },
@@ -2700,27 +2943,25 @@
         "steps": {
           "flt_028_s1": {
             "id": "flt_028_s1",
-            "question": "Kiểm tra tưa hoặc giãn dây côn?",
+            "symptom_id": "SYM_CLUTCH_PEDAL_FEELS_LOOSE",
+            "symptom_label": "Bàn đạp côn bị lỏng",
+            "question": "Bạn có nhận thấy dấu hiệu này không: bàn đạp côn bị lỏng?",
             "is_question": true,
             "yes_next": "flt_028_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây cáp bị hỏng",
-              "Dây cáp nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_028_s2": {
             "id": "flt_028_s2",
-            "question": "Chỉnh độ căng dây côn?",
-            "is_question": false,
+            "symptom_id": "SYM_DIFFICULTY_ENGAGING_GEARS",
+            "symptom_label": "Khó vào số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khó vào số?",
+            "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
-            "instruction": "Chỉnh độ căng dây côn. Kết quả kỳ vọng: Độ căng không đúng, Độ căng đúng tiêu chuẩn",
-            "results": [
-              "Độ căng không đúng",
-              "Độ căng đúng tiêu chuẩn"
-            ]
+            "instruction": null,
+            "results": []
           }
         }
       },
@@ -2751,6 +2992,17 @@
             "Kết quả có thể: Độ căng đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tưa hoặc giãn dây côn",
+        "Kết quả có thể: Dây cáp bị hỏng",
+        "Kết quả có thể: Dây cáp nguyên vẹn",
+        "Chỉnh độ căng dây côn",
+        "Kết quả có thể: Độ căng không đúng",
+        "Kết quả có thể: Độ căng đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -2800,27 +3052,25 @@
         "steps": {
           "flt_029_s1": {
             "id": "flt_029_s1",
-            "question": "Kiểm tra rò rỉ xi lanh con bộ ly hợp?",
+            "symptom_id": "SYM_CLUTCH_PEDAL_FEELS_SPONGY",
+            "symptom_label": "Bàn đạp côn bị mềm/xốp",
+            "question": "Bạn có nhận thấy dấu hiệu này không: bàn đạp côn bị mềm/xốp?",
             "is_question": true,
             "yes_next": "flt_029_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ xi-lanh",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           },
           "flt_029_s2": {
             "id": "flt_029_s2",
-            "question": "Kiểm tra mức và tình trạng dầu côn?",
+            "symptom_id": "SYM_FLUID_LEAK_NEAR_CLUTCH_PEDAL",
+            "symptom_label": "Rò rỉ dầu gần bàn đạp côn",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu đủ/sạch"
-            ]
+            "results": []
           }
         }
       },
@@ -2851,6 +3101,17 @@
             "Kết quả có thể: Dầu đủ/sạch"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ xi lanh con bộ ly hợp",
+        "Kết quả có thể: Rò rỉ xi-lanh",
+        "Kết quả có thể: Không phát hiện rò rỉ",
+        "Kiểm tra mức và tình trạng dầu côn",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu đủ/sạch"
       ],
       "status": "approved"
     },
@@ -2900,27 +3161,25 @@
         "steps": {
           "flt_030_s1": {
             "id": "flt_030_s1",
-            "question": "Kiểm tra mức và tình trạng dầu cầu?",
+            "symptom_id": "SYM_WHINING_NOISE_FROM_REAR_END",
+            "symptom_label": "Cầu sau kêu hú",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_030_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           },
           "flt_030_s2": {
             "id": "flt_030_s2",
-            "question": "Kiểm tra độ mòn ổ bi vi sai?",
+            "symptom_id": "SYM_VEHICLE_VIBRATION_AT_HIGH_SPEEDS",
+            "symptom_label": "Xe rung lắc ở tốc độ cao",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ổ bi bị mòn",
-              "Các ổ bi còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -2951,6 +3210,17 @@
             "Kết quả có thể: Các ổ bi còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức và tình trạng dầu cầu",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức",
+        "Kiểm tra độ mòn ổ bi vi sai",
+        "Kết quả có thể: Ổ bi bị mòn",
+        "Kết quả có thể: Các ổ bi còn tốt"
       ],
       "status": "approved"
     },
@@ -3000,27 +3270,25 @@
         "steps": {
           "flt_031_s1": {
             "id": "flt_031_s1",
-            "question": "Kiểm tra nứt hoặc cong trục cầu chủ động?",
+            "symptom_id": "SYM_AXLE_NOISE_WHILE_TURNING",
+            "symptom_label": "Trục láp kêu khi đánh lái",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_031_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trục bị nứt/cong",
-              "Trục láp nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_031_s2": {
             "id": "flt_031_s2",
-            "question": "Kiểm tra độ mòn ổ bi trục láp?",
+            "symptom_id": "SYM_VEHICLE_LEANS_TO_ONE_SIDE",
+            "symptom_label": "Xe bị nghiêng một bên",
+            "question": "Bạn có nhận thấy dấu hiệu này không: xe bị nghiêng một bên?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ổ bi bị mòn",
-              "Các ổ bi còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -3051,6 +3319,17 @@
             "Kết quả có thể: Các ổ bi còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nứt hoặc cong trục cầu chủ động",
+        "Kết quả có thể: Trục bị nứt/cong",
+        "Kết quả có thể: Trục láp nguyên vẹn",
+        "Kiểm tra độ mòn ổ bi trục láp",
+        "Kết quả có thể: Ổ bi bị mòn",
+        "Kết quả có thể: Các ổ bi còn tốt"
       ],
       "status": "approved"
     },
@@ -3100,27 +3379,25 @@
         "steps": {
           "flt_032_s1": {
             "id": "flt_032_s1",
-            "question": "Kiểm tra nứt hoặc hư hỏng cầu xe?",
+            "symptom_id": "SYM_VEHICLE_BOUNCES_OVER_BUMPS",
+            "symptom_label": "Xe bị nhún nhảy khi qua gờ giảm tốc",
+            "question": "Bạn có nhận thấy dấu hiệu này không: xe bị nhún nhảy khi qua gờ giảm tốc?",
             "is_question": true,
             "yes_next": "flt_032_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trục bị nứt/hỏng",
-              "Trục láp còn tốt"
-            ]
+            "results": []
           },
           "flt_032_s2": {
             "id": "flt_032_s2",
-            "question": "Kiểm tra độ mòn ổ bi trục láp?",
+            "symptom_id": "SYM_LOUD_NOISE_FROM_REAR_AXLE",
+            "symptom_label": "Cầu sau kêu to",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ổ bi bị mòn",
-              "Các ổ bi còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -3151,6 +3428,17 @@
             "Kết quả có thể: Các ổ bi còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nứt hoặc hư hỏng cầu xe",
+        "Kết quả có thể: Trục bị nứt/hỏng",
+        "Kết quả có thể: Trục láp còn tốt",
+        "Kiểm tra độ mòn ổ bi trục láp",
+        "Kết quả có thể: Ổ bi bị mòn",
+        "Kết quả có thể: Các ổ bi còn tốt"
       ],
       "status": "approved"
     },
@@ -3201,27 +3489,25 @@
         "steps": {
           "flt_033_s1": {
             "id": "flt_033_s1",
-            "question": "Kiểm tra mức và tình trạng dầu hộp số?",
+            "symptom_id": "SYM_TRANSMISSION_SLIPPING",
+            "symptom_label": "Trượt số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: trượt số?",
             "is_question": true,
             "yes_next": "flt_033_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           },
           "flt_033_s2": {
             "id": "flt_033_s2",
-            "question": "Kiểm tra rò rỉ hộp số?",
+            "symptom_id": "SYM_DELAY_IN_GEAR_ENGAGEMENT",
+            "symptom_label": "Vào số bị trễ",
+            "question": "Bạn có nhận thấy dấu hiệu này không: vào số bị trễ?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ hộp số",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -3252,6 +3538,17 @@
             "Kết quả có thể: Không phát hiện rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức và tình trạng dầu hộp số",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức",
+        "Kiểm tra rò rỉ hộp số",
+        "Kết quả có thể: Rò rỉ hộp số",
+        "Kết quả có thể: Không phát hiện rò rỉ"
       ],
       "status": "approved"
     },
@@ -3301,27 +3598,25 @@
         "steps": {
           "flt_034_s1": {
             "id": "flt_034_s1",
-            "question": "Kiểm tra độ mòn hoặc rơ lắc khớp các-đăng?",
+            "symptom_id": "SYM_DRIVELINE_VIBRATION",
+            "symptom_label": "Rung lắc hệ thống truyền động",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "flt_034_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Phát hiện độ rơ/mòn",
-              "Khớp nối trong tình trạng tốt"
-            ]
+            "results": []
           },
           "flt_034_s2": {
             "id": "flt_034_s2",
-            "question": "Kiểm tra độ thẳng hàng trục truyền động?",
+            "symptom_id": "SYM_CLUNKING_NOISE_WHEN_SHIFTING",
+            "symptom_label": "Tiếng kêu lục cục khi sang số",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trục truyền động bị lệch",
-              "Trục truyền động thẳng hàng"
-            ]
+            "results": []
           }
         }
       },
@@ -3352,6 +3647,17 @@
             "Kết quả có thể: Trục truyền động thẳng hàng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ mòn hoặc rơ lắc khớp các-đăng",
+        "Kết quả có thể: Phát hiện độ rơ/mòn",
+        "Kết quả có thể: Khớp nối trong tình trạng tốt",
+        "Kiểm tra độ thẳng hàng trục truyền động",
+        "Kết quả có thể: Trục truyền động bị lệch",
+        "Kết quả có thể: Trục truyền động thẳng hàng"
       ],
       "status": "approved"
     },
@@ -3401,27 +3707,25 @@
         "steps": {
           "flt_035_s1": {
             "id": "flt_035_s1",
-            "question": "Kiểm tra hoạt động khớp từ quạt gió?",
+            "symptom_id": "SYM_VEHICLE_BINDING_DURING_TURNS",
+            "symptom_label": "Xe bị khựng khi vào cua",
+            "question": "Bạn có nhận thấy dấu hiệu này không: xe bị khựng khi vào cua?",
             "is_question": true,
             "yes_next": "flt_035_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Khớp nối bị hỏng",
-              "Khớp nối hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_035_s2": {
             "id": "flt_035_s2",
-            "question": "Kiểm tra dầu khớp nối nhớt?",
+            "symptom_id": "SYM_NOISE_FROM_DRIVETRAIN_WHILE_TURNING",
+            "symptom_label": "Hệ thống truyền động kêu khi đánh lái",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           }
         }
       },
@@ -3452,6 +3756,17 @@
             "Kết quả có thể: Dầu sạch/đủ mức"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động khớp từ quạt gió",
+        "Kết quả có thể: Khớp nối bị hỏng",
+        "Kết quả có thể: Khớp nối hoạt động bình thường",
+        "Kiểm tra dầu khớp nối nhớt",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức"
       ],
       "status": "approved"
     },
@@ -3484,7 +3799,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -3504,27 +3820,25 @@
         "steps": {
           "flt_036_s1": {
             "id": "flt_036_s1",
-            "question": "Kiểm tra điện áp ắc quy?",
+            "symptom_id": "SYM_ENGINE_CRANKS_SLOWLY",
+            "symptom_label": "Đề chậm",
+            "question": "Bạn có nhận thấy dấu hiệu này không: đề chậm?",
             "is_question": true,
             "yes_next": "flt_036_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện áp thấp",
-              "Điện áp đủ"
-            ]
+            "results": []
           },
           "flt_036_s2": {
             "id": "flt_036_s2",
-            "question": "Kiểm tra rỉ sét cọc bình ắc quy?",
+            "symptom_id": "SYM_CLICKING_SOUND_WHEN_STARTING",
+            "symptom_label": "Tiếng kêu lạch cạch khi đề máy",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đầu cực bị oxy hóa",
-              "Vệ sinh các cực điện"
-            ]
+            "results": []
           }
         }
       },
@@ -3555,6 +3869,17 @@
             "Kết quả có thể: Vệ sinh các cực điện"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra điện áp ắc quy",
+        "Kết quả có thể: Điện áp thấp",
+        "Kết quả có thể: Điện áp đủ",
+        "Kiểm tra rỉ sét cọc bình ắc quy",
+        "Kết quả có thể: Đầu cực bị oxy hóa",
+        "Kết quả có thể: Vệ sinh các cực điện"
       ],
       "status": "approved"
     },
@@ -3587,7 +3912,8 @@
         "FLT_045",
         "FLT_046",
         "FLT_047",
-        "FLT_071"
+        "FLT_071",
+        "FLT_101"
       ],
       "cf": 0.5,
       "symptoms": [
@@ -3607,27 +3933,25 @@
         "steps": {
           "flt_037_s1": {
             "id": "flt_037_s1",
-            "question": "Kiểm tra đầu ra máy phát?",
+            "symptom_id": "SYM_BATTERY_WARNING_LIGHT_ON",
+            "symptom_label": "Đèn báo ắc quy sáng",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "flt_037_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đầu ra thấp",
-              "Đầu ra bình thường"
-            ]
+            "results": []
           },
           "flt_037_s2": {
             "id": "flt_037_s2",
-            "question": "Kiểm tra độ căng dây curoa máy phát?",
+            "symptom_id": "SYM_DIM_HEADLIGHTS",
+            "symptom_label": "Đèn pha bị tối",
+            "question": "Bạn có nhận thấy dấu hiệu này không: đèn pha bị tối?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây curoa chùng",
-              "Dây curoa đủ độ căng"
-            ]
+            "results": []
           }
         }
       },
@@ -3658,6 +3982,17 @@
             "Kết quả có thể: Dây curoa đủ độ căng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra đầu ra máy phát",
+        "Kết quả có thể: Đầu ra thấp",
+        "Kết quả có thể: Đầu ra bình thường",
+        "Kiểm tra độ căng dây curoa máy phát",
+        "Kết quả có thể: Dây curoa chùng",
+        "Kết quả có thể: Dây curoa đủ độ căng"
       ],
       "status": "approved"
     },
@@ -3696,7 +4031,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 0.1429,
       "symptoms": [
@@ -3716,27 +4052,25 @@
         "steps": {
           "flt_038_s1": {
             "id": "flt_038_s1",
-            "question": "Quét mã lỗi (DTC)?",
-            "is_question": false,
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
+            "is_question": true,
             "yes_next": "flt_038_s2",
             "no_next": "REFUTED",
-            "instruction": "Quét mã lỗi (DTC). Kết quả kỳ vọng: Có mã lỗi DTC, Không có mã lỗi",
-            "results": [
-              "Có mã lỗi DTC",
-              "Không có mã lỗi"
-            ]
+            "instruction": null,
+            "results": []
           },
           "flt_038_s2": {
             "id": "flt_038_s2",
-            "question": "Kiểm tra các cảm biến liên quan đến mã lỗi?",
+            "symptom_id": "SYM_POOR_ENGINE_PERFORMANCE",
+            "symptom_label": "Động cơ hoạt động kém",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ hoạt động kém?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cảm biến lỗi",
-              "Cảm biến hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -3767,6 +4101,17 @@
             "Kết quả có thể: Cảm biến hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Quét mã lỗi (DTC)",
+        "Kết quả có thể: Có mã lỗi DTC",
+        "Kết quả có thể: Không có mã lỗi",
+        "Kiểm tra các cảm biến liên quan đến mã lỗi",
+        "Kết quả có thể: Cảm biến lỗi",
+        "Kết quả có thể: Cảm biến hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -3799,7 +4144,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -3819,27 +4165,25 @@
         "steps": {
           "flt_039_s1": {
             "id": "flt_039_s1",
-            "question": "Kiểm tra nguồn cấp mô tơ kính?",
+            "symptom_id": "SYM_WINDOW_DOES_NOT_MOVE",
+            "symptom_label": "Kính không lên xuống được",
+            "question": "Bạn có nhận thấy dấu hiệu này không: kính không lên xuống được?",
             "is_question": true,
             "yes_next": "flt_039_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mất điện/mất công suất",
-              "Có nguồn điện"
-            ]
+            "results": []
           },
           "flt_039_s2": {
             "id": "flt_039_s2",
-            "question": "Kiểm tra hư hỏng cơ cấu nâng hạ kính?",
+            "symptom_id": "SYM_WINDOW_MOVES_INTERMITTENTLY",
+            "symptom_label": "Kính lên xuống chập chờn",
+            "question": "Bạn có nhận thấy dấu hiệu này không: kính lên xuống chập chờn?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bộ điều áp bị hỏng",
-              "Bộ điều áp nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -3870,6 +4214,17 @@
             "Kết quả có thể: Bộ điều áp nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nguồn cấp mô tơ kính",
+        "Kết quả có thể: Mất điện/mất công suất",
+        "Kết quả có thể: Có nguồn điện",
+        "Kiểm tra hư hỏng cơ cấu nâng hạ kính",
+        "Kết quả có thể: Bộ điều áp bị hỏng",
+        "Kết quả có thể: Bộ điều áp nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -3902,7 +4257,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -3922,27 +4278,25 @@
         "steps": {
           "flt_040_s1": {
             "id": "flt_040_s1",
-            "question": "Kiểm tra cơ cấu nâng hạ kính?",
+            "symptom_id": "SYM_WINDOW_OFF_TRACK",
+            "symptom_label": "Kính bị trượt khỏi ray",
+            "question": "Bạn có nhận thấy dấu hiệu này không: kính bị trượt khỏi ray?",
             "is_question": true,
             "yes_next": "flt_040_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cơ cấu bị kẹt",
-              "Cơ cấu hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_040_s2": {
             "id": "flt_040_s2",
-            "question": "Kiểm tra độ thẳng hàng của kính trong ray?",
+            "symptom_id": "SYM_WINDOW_STUCK_IN_ONE_POSITION",
+            "symptom_label": "Kính bị kẹt",
+            "question": "Bạn có nhận thấy dấu hiệu này không: kính bị kẹt?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Kính cửa bị lệch",
-              "Cửa sổ căn chỉnh đúng"
-            ]
+            "results": []
           }
         }
       },
@@ -3973,6 +4327,17 @@
             "Kết quả có thể: Cửa sổ căn chỉnh đúng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra cơ cấu nâng hạ kính",
+        "Kết quả có thể: Cơ cấu bị kẹt",
+        "Kết quả có thể: Cơ cấu hoạt động bình thường",
+        "Kiểm tra độ thẳng hàng của kính trong ray",
+        "Kết quả có thể: Kính cửa bị lệch",
+        "Kết quả có thể: Cửa sổ căn chỉnh đúng"
       ],
       "status": "approved"
     },
@@ -4005,7 +4370,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -4025,27 +4391,25 @@
         "steps": {
           "flt_041_s1": {
             "id": "flt_041_s1",
-            "question": "Kiểm tra tình trạng dây tóc bóng đèn pha?",
+            "symptom_id": "SYM_HEADLIGHT_NOT_WORKING",
+            "symptom_label": "Đèn pha không sáng",
+            "question": "Bạn có nhận thấy dấu hiệu này không: đèn pha không sáng?",
             "is_question": true,
             "yes_next": "flt_041_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đứt dây tóc bóng đèn",
-              "Sợi đốt còn tốt"
-            ]
+            "results": []
           },
           "flt_041_s2": {
             "id": "flt_041_s2",
-            "question": "Kiểm tra rỉ sét giắc cắm đèn pha?",
+            "symptom_id": "SYM_DIM_HEADLIGHT",
+            "symptom_label": "Đèn pha bị tối",
+            "question": "Bạn có nhận thấy dấu hiệu này không: đèn pha bị tối?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Giắc cắm bị oxy hóa",
-              "Vệ sinh ổ cắm"
-            ]
+            "results": []
           }
         }
       },
@@ -4076,6 +4440,17 @@
             "Kết quả có thể: Vệ sinh ổ cắm"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tình trạng dây tóc bóng đèn pha",
+        "Kết quả có thể: Đứt dây tóc bóng đèn",
+        "Kết quả có thể: Sợi đốt còn tốt",
+        "Kiểm tra rỉ sét giắc cắm đèn pha",
+        "Kết quả có thể: Giắc cắm bị oxy hóa",
+        "Kết quả có thể: Vệ sinh ổ cắm"
       ],
       "status": "approved"
     },
@@ -4115,7 +4490,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 0.1111,
       "symptoms": [
@@ -4135,27 +4511,25 @@
         "steps": {
           "flt_042_s1": {
             "id": "flt_042_s1",
-            "question": "Kiểm tra nứt hoặc vệt than nắp bộ chia điện?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_042_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Nắp bị nứt/hỏng",
-              "Nắp đậy còn tốt"
-            ]
+            "results": []
           },
           "flt_042_s2": {
             "id": "flt_042_s2",
-            "question": "Kiểm tra độ mòn con quay chia điện?",
+            "symptom_id": "SYM_DIFFICULTY_STARTING_ENGINE",
+            "symptom_label": "Khó nổ máy",
+            "question": "Xe có khó nổ máy không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đĩa phanh bị mòn",
-              "Đĩa phanh tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -4186,6 +4560,17 @@
             "Kết quả có thể: Đĩa phanh tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nứt hoặc vệt than nắp bộ chia điện",
+        "Kết quả có thể: Nắp bị nứt/hỏng",
+        "Kết quả có thể: Nắp đậy còn tốt",
+        "Kiểm tra độ mòn con quay chia điện",
+        "Kết quả có thể: Đĩa phanh bị mòn",
+        "Kết quả có thể: Đĩa phanh tốt"
       ],
       "status": "approved"
     },
@@ -4225,7 +4610,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 0.1111,
       "symptoms": [
@@ -4245,27 +4631,25 @@
         "steps": {
           "flt_043_s1": {
             "id": "flt_043_s1",
-            "question": "Kiểm tra thông mạch dây cao áp?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_043_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đứt dây điện",
-              "Dây điện bình thường"
-            ]
+            "results": []
           },
           "flt_043_s2": {
             "id": "flt_043_s2",
-            "question": "Kiểm tra hư hỏng chụp bugi?",
+            "symptom_id": "SYM_POOR_FUEL_ECONOMY",
+            "symptom_label": "Tốn nhiên liệu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốn nhiên liệu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cao su chắn bụi bị hỏng",
-              "Chụp bụi nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -4296,6 +4680,17 @@
             "Kết quả có thể: Chụp bụi nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra thông mạch dây cao áp",
+        "Kết quả có thể: Đứt dây điện",
+        "Kết quả có thể: Dây điện bình thường",
+        "Kiểm tra hư hỏng chụp bugi",
+        "Kết quả có thể: Cao su chắn bụi bị hỏng",
+        "Kết quả có thể: Chụp bụi nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -4328,7 +4723,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -4348,27 +4744,25 @@
         "steps": {
           "flt_044_s1": {
             "id": "flt_044_s1",
-            "question": "Kiểm tra nguồn cấp cơ cấu khóa cửa?",
+            "symptom_id": "SYM_DOOR_LOCK_NOT_RESPONDING",
+            "symptom_label": "Khóa cửa không phản hồi",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khóa cửa không phản hồi?",
             "is_question": true,
             "yes_next": "flt_044_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mất điện/mất công suất",
-              "Có nguồn điện"
-            ]
+            "results": []
           },
           "flt_044_s2": {
             "id": "flt_044_s2",
-            "question": "Kiểm tra vật cản cơ cấu chấp hành?",
+            "symptom_id": "SYM_CLICKING_SOUND_FROM_DOOR",
+            "symptom_label": "Tiếng kêu lạch cạch từ cửa",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cơ cấu bị kẹt",
-              "Thông cơ cấu"
-            ]
+            "results": []
           }
         }
       },
@@ -4399,6 +4793,17 @@
             "Kết quả có thể: Thông cơ cấu"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nguồn cấp cơ cấu khóa cửa",
+        "Kết quả có thể: Mất điện/mất công suất",
+        "Kết quả có thể: Có nguồn điện",
+        "Kiểm tra vật cản cơ cấu chấp hành",
+        "Kết quả có thể: Cơ cấu bị kẹt",
+        "Kết quả có thể: Thông cơ cấu"
       ],
       "status": "approved"
     },
@@ -4431,7 +4836,8 @@
         "FLT_046",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -4451,27 +4857,25 @@
         "steps": {
           "flt_045_s1": {
             "id": "flt_045_s1",
-            "question": "Kiểm tra solenoid củ đề?",
+            "symptom_id": "SYM_ENGINE_DOES_NOT_CRANK",
+            "symptom_label": "Không đề được",
+            "question": "Bạn có nhận thấy dấu hiệu này không: không đề được?",
             "is_question": true,
             "yes_next": "flt_045_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Solenoid lỗi",
-              "Solenoid hoạt động tốt"
-            ]
+            "results": []
           },
           "flt_045_s2": {
             "id": "flt_045_s2",
-            "question": "Kiểm tra độ mòn chổi than máy đề?",
+            "symptom_id": "SYM_CLICKING_SOUND_WHEN_KEY_IS_TURNED",
+            "symptom_label": "Tiếng kêu lạch cạch khi vặn chìa khóa",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Chổi than bị mòn",
-              "Chổi than còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -4502,6 +4906,17 @@
             "Kết quả có thể: Chổi than còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra solenoid củ đề",
+        "Kết quả có thể: Solenoid lỗi",
+        "Kết quả có thể: Solenoid hoạt động tốt",
+        "Kiểm tra độ mòn chổi than máy đề",
+        "Kết quả có thể: Chổi than bị mòn",
+        "Kết quả có thể: Chổi than còn tốt"
       ],
       "status": "approved"
     },
@@ -4535,7 +4950,8 @@
         "FLT_045",
         "FLT_047",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 0.5,
       "symptoms": [
@@ -4555,27 +4971,25 @@
         "steps": {
           "flt_046_s1": {
             "id": "flt_046_s1",
-            "question": "Kiểm tra nguồn cấp bơm nước rửa kính?",
+            "symptom_id": "SYM_NO_WASHER_FLUID_SPRAY",
+            "symptom_label": "Nước rửa kính không phun",
+            "question": "Bạn có nhận thấy dấu hiệu này không: nước rửa kính không phun?",
             "is_question": true,
             "yes_next": "flt_046_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mất điện/mất công suất",
-              "Có nguồn điện"
-            ]
+            "results": []
           },
           "flt_046_s2": {
             "id": "flt_046_s2",
-            "question": "Kiểm tra tắc nghẽn hoặc hư hỏng bơm nước rửa kính?",
+            "symptom_id": "SYM_WEAK_WASHER_FLUID_SPRAY",
+            "symptom_label": "Vòi phun nước rửa kính yếu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: vòi phun nước rửa kính yếu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bơm bị tắc/hỏng",
-              "Bơm sạch/nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -4606,6 +5020,17 @@
             "Kết quả có thể: Bơm sạch/nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nguồn cấp bơm nước rửa kính",
+        "Kết quả có thể: Mất điện/mất công suất",
+        "Kết quả có thể: Có nguồn điện",
+        "Kiểm tra tắc nghẽn hoặc hư hỏng bơm nước rửa kính",
+        "Kết quả có thể: Bơm bị tắc/hỏng",
+        "Kết quả có thể: Bơm sạch/nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -4638,7 +5063,8 @@
         "FLT_045",
         "FLT_046",
         "FLT_071",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -4658,27 +5084,25 @@
         "steps": {
           "flt_047_s1": {
             "id": "flt_047_s1",
-            "question": "Kiểm tra nguồn cấp mô tơ gạt mưa?",
+            "symptom_id": "SYM_WIPERS_NOT_WORKING",
+            "symptom_label": "Gạt mưa không hoạt động",
+            "question": "Bạn có nhận thấy dấu hiệu này không: gạt mưa không hoạt động?",
             "is_question": true,
             "yes_next": "flt_047_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mất điện/mất công suất",
-              "Có nguồn điện"
-            ]
+            "results": []
           },
           "flt_047_s2": {
             "id": "flt_047_s2",
-            "question": "Kiểm tra độ mòn cơ cấu mô-tơ gạt mưa?",
+            "symptom_id": "SYM_WIPERS_OPERATE_INTERMITTENTLY",
+            "symptom_label": "Gạt mưa hoạt động chập chờn",
+            "question": "Bạn có nhận thấy dấu hiệu này không: gạt mưa hoạt động chập chờn?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cơ cấu liên kết bị mòn",
-              "Cơ cấu liên kết nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -4709,6 +5133,17 @@
             "Kết quả có thể: Cơ cấu liên kết nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nguồn cấp mô tơ gạt mưa",
+        "Kết quả có thể: Mất điện/mất công suất",
+        "Kết quả có thể: Có nguồn điện",
+        "Kiểm tra độ mòn cơ cấu mô-tơ gạt mưa",
+        "Kết quả có thể: Cơ cấu liên kết bị mòn",
+        "Kết quả có thể: Cơ cấu liên kết nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -4757,27 +5192,25 @@
         "steps": {
           "flt_048_s1": {
             "id": "flt_048_s1",
-            "question": "Kiểm tra hoạt động van thông hơi bình than?",
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
             "is_question": true,
             "yes_next": "flt_048_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Xupap bị kẹt mở/đóng",
-              "Xupap hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_048_s2": {
             "id": "flt_048_s2",
-            "question": "Kiểm tra rò rỉ ống van thông hơi bình xăng?",
+            "symptom_id": "SYM_ROUGH_IDLE",
+            "symptom_label": "Garanti không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Các ống dẫn rò rỉ",
-              "Không rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -4808,6 +5241,17 @@
             "Kết quả có thể: Không rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động van thông hơi bình than",
+        "Kết quả có thể: Xupap bị kẹt mở/đóng",
+        "Kết quả có thể: Xupap hoạt động bình thường",
+        "Kiểm tra rò rỉ ống van thông hơi bình xăng",
+        "Kết quả có thể: Các ống dẫn rò rỉ",
+        "Kết quả có thể: Không rò rỉ"
       ],
       "status": "approved"
     },
@@ -4855,27 +5299,25 @@
         "steps": {
           "flt_049_s1": {
             "id": "flt_049_s1",
-            "question": "Kiểm tra hư hỏng vật lý bộ xúc tác khí thải?",
+            "symptom_id": "SYM_ROTTEN_EGG_SMELL_FROM_EXHAUST",
+            "symptom_label": "Khí xả có mùi trứng thối",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "flt_049_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bộ biến mô bị hỏng",
-              "Bộ biến mô còn nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_049_s2": {
             "id": "flt_049_s2",
-            "question": "Kiểm tra hiệu suất bộ xúc tác khí thải?",
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Hiệu suất thấp",
-              "Hiệu suất cao"
-            ]
+            "results": []
           }
         }
       },
@@ -4906,6 +5348,17 @@
             "Kết quả có thể: Hiệu suất cao"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hư hỏng vật lý bộ xúc tác khí thải",
+        "Kết quả có thể: Bộ biến mô bị hỏng",
+        "Kết quả có thể: Bộ biến mô còn nguyên vẹn",
+        "Kiểm tra hiệu suất bộ xúc tác khí thải",
+        "Kết quả có thể: Hiệu suất thấp",
+        "Kết quả có thể: Hiệu suất cao"
       ],
       "status": "approved"
     },
@@ -4953,27 +5406,25 @@
         "steps": {
           "flt_050_s1": {
             "id": "flt_050_s1",
-            "question": "Kiểm tra van thông hơi bình than?",
+            "symptom_id": "SYM_FUEL_ODOR_FROM_VEHICLE",
+            "symptom_label": "Mùi nhiên liệu từ xe",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "flt_050_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Xupap bị kẹt mở/đóng",
-              "Xupap hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_050_s2": {
             "id": "flt_050_s2",
-            "question": "Kiểm tra nứt hoặc hư hỏng bầu lọc than hoạt tính?",
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bầu lọc than hoạt tính bị nứt/hỏng",
-              "Bình than hoạt tính nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -5004,6 +5455,17 @@
             "Kết quả có thể: Bình than hoạt tính nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra van thông hơi bình than",
+        "Kết quả có thể: Xupap bị kẹt mở/đóng",
+        "Kết quả có thể: Xupap hoạt động bình thường",
+        "Kiểm tra nứt hoặc hư hỏng bầu lọc than hoạt tính",
+        "Kết quả có thể: Bầu lọc than hoạt tính bị nứt/hỏng",
+        "Kết quả có thể: Bình than hoạt tính nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -5051,27 +5513,25 @@
         "steps": {
           "flt_051_s1": {
             "id": "flt_051_s1",
-            "question": "Kiểm tra nứt hoặc rò rỉ cổ góp xả?",
+            "symptom_id": "SYM_LOUD_EXHAUST_NOISE",
+            "symptom_label": "Ống xả kêu to",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_051_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cổ hút/xả bị nứt/rò rỉ",
-              "Cổ hút/xả nguyên vẹn"
-            ]
+            "results": []
           },
           "flt_051_s2": {
             "id": "flt_051_s2",
-            "question": "Kiểm tra rò rỉ gioăng cổ góp xả?",
+            "symptom_id": "SYM_EXHAUST_SMELL_IN_CABIN",
+            "symptom_label": "Mùi khí thải trong cabin",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ gioăng",
-              "Gioăng còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -5102,6 +5562,17 @@
             "Kết quả có thể: Gioăng còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra nứt hoặc rò rỉ cổ góp xả",
+        "Kết quả có thể: Cổ hút/xả bị nứt/rò rỉ",
+        "Kết quả có thể: Cổ hút/xả nguyên vẹn",
+        "Kiểm tra rò rỉ gioăng cổ góp xả",
+        "Kết quả có thể: Rò rỉ gioăng",
+        "Kết quả có thể: Gioăng còn tốt"
       ],
       "status": "approved"
     },
@@ -5149,27 +5620,25 @@
         "steps": {
           "flt_052_s1": {
             "id": "flt_052_s1",
-            "question": "Kiểm tra rò rỉ gioăng cổ góp xả?",
+            "symptom_id": "SYM_LOUD_EXHAUST_NOISE",
+            "symptom_label": "Ống xả kêu to",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_052_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ gioăng",
-              "Gioăng còn tốt"
-            ]
+            "results": []
           },
           "flt_052_s2": {
             "id": "flt_052_s2",
-            "question": "Kiểm tra độ chặt bu lông cổ góp xả?",
+            "symptom_id": "SYM_VISIBLE_EXHAUST_LEAKS",
+            "symptom_label": "Rò rỉ khí xả",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bu lông lỏng",
-              "Bu lông chặt"
-            ]
+            "results": []
           }
         }
       },
@@ -5200,6 +5669,17 @@
             "Kết quả có thể: Bu lông chặt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ gioăng cổ góp xả",
+        "Kết quả có thể: Rò rỉ gioăng",
+        "Kết quả có thể: Gioăng còn tốt",
+        "Kiểm tra độ chặt bu lông cổ góp xả",
+        "Kết quả có thể: Bu lông lỏng",
+        "Kết quả có thể: Bu lông chặt"
       ],
       "status": "approved"
     },
@@ -5248,27 +5728,25 @@
         "steps": {
           "flt_053_s1": {
             "id": "flt_053_s1",
-            "question": "Kiểm tra cảm biến áp suất bình xăng?",
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
             "is_question": true,
             "yes_next": "flt_053_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cảm biến lỗi",
-              "Cảm biến hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_053_s2": {
             "id": "flt_053_s2",
-            "question": "Kiểm tra độ kín nắp bình nhiên liệu?",
+            "symptom_id": "SYM_GAS_CAP_WARNING_LIGHT",
+            "symptom_label": "Đèn báo nắp bình xăng",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Nắp đậy lỏng",
-              "Nắp đậy kín"
-            ]
+            "results": []
           }
         }
       },
@@ -5299,6 +5777,17 @@
             "Kết quả có thể: Nắp đậy kín"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra cảm biến áp suất bình xăng",
+        "Kết quả có thể: Cảm biến lỗi",
+        "Kết quả có thể: Cảm biến hoạt động bình thường",
+        "Kiểm tra độ kín nắp bình nhiên liệu",
+        "Kết quả có thể: Nắp đậy lỏng",
+        "Kết quả có thể: Nắp đậy kín"
       ],
       "status": "approved"
     },
@@ -5346,27 +5835,25 @@
         "steps": {
           "flt_054_s1": {
             "id": "flt_054_s1",
-            "question": "Kiểm tra hoạt động cảm biến kích nổ?",
+            "symptom_id": "SYM_ENGINE_KNOCKING_PINGING",
+            "symptom_label": "Động cơ bị gõ/kích nổ",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bị gõ/kích nổ?",
             "is_question": true,
             "yes_next": "flt_054_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cảm biến lỗi",
-              "Cảm biến hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_054_s2": {
             "id": "flt_054_s2",
-            "question": "Kiểm tra mã lỗi bỏ máy?",
+            "symptom_id": "SYM_POOR_FUEL_ECONOMY",
+            "symptom_label": "Tốn nhiên liệu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốn nhiên liệu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có mã lỗi bỏ máy",
-              "Không có mã lỗi bỏ máy"
-            ]
+            "results": []
           }
         }
       },
@@ -5397,6 +5884,17 @@
             "Kết quả có thể: Không có mã lỗi bỏ máy"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động cảm biến kích nổ",
+        "Kết quả có thể: Cảm biến lỗi",
+        "Kết quả có thể: Cảm biến hoạt động bình thường",
+        "Kiểm tra mã lỗi bỏ máy",
+        "Kết quả có thể: Có mã lỗi bỏ máy",
+        "Kết quả có thể: Không có mã lỗi bỏ máy"
       ],
       "status": "approved"
     },
@@ -5445,27 +5943,25 @@
         "steps": {
           "flt_055_s1": {
             "id": "flt_055_s1",
-            "question": "Kiểm tra điện áp cảm biến MAP?",
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
             "is_question": true,
             "yes_next": "flt_055_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện áp thấp",
-              "Điện áp bình thường"
-            ]
+            "results": []
           },
           "flt_055_s2": {
             "id": "flt_055_s2",
-            "question": "Kiểm tra ống chân không cảm biến MAP?",
+            "symptom_id": "SYM_ROUGH_IDLE",
+            "symptom_label": "Garanti không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ ống dẫn",
-              "Ống dẫn nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -5496,6 +5992,17 @@
             "Kết quả có thể: Ống dẫn nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra điện áp cảm biến MAP",
+        "Kết quả có thể: Điện áp thấp",
+        "Kết quả có thể: Điện áp bình thường",
+        "Kiểm tra ống chân không cảm biến MAP",
+        "Kết quả có thể: Rò rỉ ống dẫn",
+        "Kết quả có thể: Ống dẫn nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -5544,27 +6051,25 @@
         "steps": {
           "flt_056_s1": {
             "id": "flt_056_s1",
-            "question": "Kiểm tra điện áp cảm biến oxy?",
+            "symptom_id": "SYM_CHECK_ENGINE_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi động cơ sáng",
+            "question": "Đèn báo lỗi động cơ có sáng không?",
             "is_question": true,
             "yes_next": "flt_056_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện áp thấp",
-              "Điện áp bình thường"
-            ]
+            "results": []
           },
           "flt_056_s2": {
             "id": "flt_056_s2",
-            "question": "Kiểm tra hư hỏng dây điện cảm biến oxy?",
+            "symptom_id": "SYM_POOR_FUEL_ECONOMY",
+            "symptom_label": "Tốn nhiên liệu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốn nhiên liệu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây điện bị hỏng",
-              "Dây điện nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -5595,6 +6100,17 @@
             "Kết quả có thể: Dây điện nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra điện áp cảm biến oxy",
+        "Kết quả có thể: Điện áp thấp",
+        "Kết quả có thể: Điện áp bình thường",
+        "Kiểm tra hư hỏng dây điện cảm biến oxy",
+        "Kết quả có thể: Dây điện bị hỏng",
+        "Kết quả có thể: Dây điện nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -5648,27 +6164,25 @@
         "steps": {
           "flt_057_s1": {
             "id": "flt_057_s1",
-            "question": "Kiểm tra mòn hoặc hư hỏng trục cân bằng?",
+            "symptom_id": "SYM_ENGINE_VIBRATION",
+            "symptom_label": "Động cơ rung lắc",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "flt_057_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trục bị mòn/hỏng",
-              "Trục ở tình trạng tốt"
-            ]
+            "results": []
           },
           "flt_057_s2": {
             "id": "flt_057_s2",
-            "question": "Kiểm tra dấu trục cân bằng?",
+            "symptom_id": "SYM_ROUGH_IDLE",
+            "symptom_label": "Garanti không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trục bị lệch",
-              "Trục thẳng hàng"
-            ]
+            "results": []
           }
         }
       },
@@ -5699,6 +6213,17 @@
             "Kết quả có thể: Trục thẳng hàng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mòn hoặc hư hỏng trục cân bằng",
+        "Kết quả có thể: Trục bị mòn/hỏng",
+        "Kết quả có thể: Trục ở tình trạng tốt",
+        "Kiểm tra dấu trục cân bằng",
+        "Kết quả có thể: Trục bị lệch",
+        "Kết quả có thể: Trục thẳng hàng"
       ],
       "status": "approved"
     },
@@ -5753,27 +6278,25 @@
         "steps": {
           "flt_058_s1": {
             "id": "flt_058_s1",
-            "question": "Kiểm tra áp suất tăng áp bằng đồng hồ đo?",
+            "symptom_id": "SYM_LOSS_OF_POWER",
+            "symptom_label": "Mất công suất",
+            "question": "Bạn có nhận thấy dấu hiệu này không: mất công suất?",
             "is_question": true,
             "yes_next": "flt_058_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất tăng áp thấp",
-              "Áp suất tăng áp bình thường"
-            ]
+            "results": []
           },
           "flt_058_s2": {
             "id": "flt_058_s2",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng két làm mát khí nạp?",
+            "symptom_id": "SYM_TURBO_LAG",
+            "symptom_label": "Trễ turbo",
+            "question": "Bạn có nhận thấy dấu hiệu này không: trễ turbo?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Két làm mát khí nạp rò rỉ/hư hỏng",
-              "Két làm mát khí nạp nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -5804,6 +6327,17 @@
             "Kết quả có thể: Két làm mát khí nạp nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất tăng áp bằng đồng hồ đo",
+        "Kết quả có thể: Áp suất tăng áp thấp",
+        "Kết quả có thể: Áp suất tăng áp bình thường",
+        "Kiểm tra rò rỉ hoặc hư hỏng két làm mát khí nạp",
+        "Kết quả có thể: Két làm mát khí nạp rò rỉ/hư hỏng",
+        "Kết quả có thể: Két làm mát khí nạp nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -5861,27 +6395,25 @@
         "steps": {
           "flt_059_s1": {
             "id": "flt_059_s1",
-            "question": "Kiểm tra áp suất bơm cao áp?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_059_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất thấp",
-              "Áp suất bình thường"
-            ]
+            "results": []
           },
           "flt_059_s2": {
             "id": "flt_059_s2",
-            "question": "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu?",
+            "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+            "symptom_label": "Khói đen từ ống xả",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khói đen từ ống xả?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Các kim phun rò rỉ/tắc",
-              "Các kim phun sạch/đúng tiêu chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -5912,6 +6444,17 @@
             "Kết quả có thể: Các kim phun sạch/đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất bơm cao áp",
+        "Kết quả có thể: Áp suất thấp",
+        "Kết quả có thể: Áp suất bình thường",
+        "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu",
+        "Kết quả có thể: Các kim phun rò rỉ/tắc",
+        "Kết quả có thể: Các kim phun sạch/đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -5965,27 +6508,25 @@
         "steps": {
           "flt_060_s1": {
             "id": "flt_060_s1",
-            "question": "Kiểm tra điện trở bugi sấy?",
+            "symptom_id": "SYM_HARD_STARTING_IN_COLD_WEATHER",
+            "symptom_label": "Khó nổ máy khi trời lạnh",
+            "question": "Xe có khó nổ máy không?",
             "is_question": true,
             "yes_next": "flt_060_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện trở cao",
-              "Điện trở bình thường"
-            ]
+            "results": []
           },
           "flt_060_s2": {
             "id": "flt_060_s2",
-            "question": "Kiểm tra muội than bugi sấy?",
+            "symptom_id": "SYM_GLOW_PLUG_INDICATOR_LIGHT_STAYS_ON",
+            "symptom_label": "Đèn báo sấy bugi sáng liên tục",
+            "question": "Bạn có nhận thấy dấu hiệu này không: đèn báo sấy bugi sáng liên tục?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Đóng cặn muội than",
-              "Vệ sinh giắc cắm"
-            ]
+            "results": []
           }
         }
       },
@@ -6016,6 +6557,17 @@
             "Kết quả có thể: Vệ sinh giắc cắm"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra điện trở bugi sấy",
+        "Kết quả có thể: Điện trở cao",
+        "Kết quả có thể: Điện trở bình thường",
+        "Kiểm tra muội than bugi sấy",
+        "Kết quả có thể: Đóng cặn muội than",
+        "Kết quả có thể: Vệ sinh giắc cắm"
       ],
       "status": "approved"
     },
@@ -6069,27 +6621,25 @@
         "steps": {
           "flt_061_s1": {
             "id": "flt_061_s1",
-            "question": "Kiểm tra mòn hoặc hư hỏng cao su chân máy?",
+            "symptom_id": "SYM_EXCESSIVE_ENGINE_MOVEMENT",
+            "symptom_label": "Động cơ rung lắc mạnh",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "flt_061_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cao su chân máy bị mòn/hỏng",
-              "Cao su chân máy bình thường"
-            ]
+            "results": []
           },
           "flt_061_s2": {
             "id": "flt_061_s2",
-            "question": "Kiểm tra độ chặt bu lông bắt chân máy/số?",
+            "symptom_id": "SYM_CLUNKING_NOISE_WHEN_ACCELERATING",
+            "symptom_label": "Tiếng kêu lục cục khi tăng tốc",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bu lông lỏng",
-              "Bu lông chặt"
-            ]
+            "results": []
           }
         }
       },
@@ -6120,6 +6670,17 @@
             "Kết quả có thể: Bu lông chặt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mòn hoặc hư hỏng cao su chân máy",
+        "Kết quả có thể: Cao su chân máy bị mòn/hỏng",
+        "Kết quả có thể: Cao su chân máy bình thường",
+        "Kiểm tra độ chặt bu lông bắt chân máy/số",
+        "Kết quả có thể: Bu lông lỏng",
+        "Kết quả có thể: Bu lông chặt"
       ],
       "status": "approved"
     },
@@ -6177,27 +6738,25 @@
         "steps": {
           "flt_062_s1": {
             "id": "flt_062_s1",
-            "question": "Kiểm tra muội than xupap xả?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_062_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Muội than bám trên xupap",
-              "Vệ sinh van"
-            ]
+            "results": []
           },
           "flt_062_s2": {
             "id": "flt_062_s2",
-            "question": "Kiểm tra khe hở nhiệt xupap?",
+            "symptom_id": "SYM_ROUGH_IDLE",
+            "symptom_label": "Garanti không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Khe hở không đúng",
-              "Khe hở đúng tiêu chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -6228,6 +6787,17 @@
             "Kết quả có thể: Khe hở đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra muội than xupap xả",
+        "Kết quả có thể: Muội than bám trên xupap",
+        "Kết quả có thể: Vệ sinh van",
+        "Kiểm tra khe hở nhiệt xupap",
+        "Kết quả có thể: Khe hở không đúng",
+        "Kết quả có thể: Khe hở đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -6285,27 +6855,25 @@
         "steps": {
           "flt_063_s1": {
             "id": "flt_063_s1",
-            "question": "Kiểm tra tia phun kim phun?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_063_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Tia phun không đều",
-              "Dạng phun đều"
-            ]
+            "results": []
           },
           "flt_063_s2": {
             "id": "flt_063_s2",
-            "question": "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun?",
+            "symptom_id": "SYM_POOR_FUEL_ECONOMY",
+            "symptom_label": "Tốn nhiên liệu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốn nhiên liệu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Kim phun rò rỉ/tắc",
-              "Kim phun sạch/đúng tiêu chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -6336,6 +6904,17 @@
             "Kết quả có thể: Kim phun sạch/đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tia phun kim phun",
+        "Kết quả có thể: Tia phun không đều",
+        "Kết quả có thể: Dạng phun đều",
+        "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun",
+        "Kết quả có thể: Kim phun rò rỉ/tắc",
+        "Kết quả có thể: Kim phun sạch/đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -6389,27 +6968,25 @@
         "steps": {
           "flt_064_s1": {
             "id": "flt_064_s1",
-            "question": "Kiểm tra hoạt động van không tải?",
+            "symptom_id": "SYM_ERRATIC_IDLE_SPEED",
+            "symptom_label": "Garanti không ổn định",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "flt_064_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Xupap bị kẹt mở/đóng",
-              "Xupap hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_064_s2": {
             "id": "flt_064_s2",
-            "question": "Vệ sinh họng ga và van không tải?",
-            "is_question": false,
+            "symptom_id": "SYM_STALLING_AT_IDLE",
+            "symptom_label": "Tắt máy khi chạy không tải",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tắt máy khi chạy không tải?",
+            "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
-            "instruction": "Vệ sinh họng ga và van không tải. Kết quả kỳ vọng: Các bộ phận bị bẩn, Vệ sinh các bộ phận",
-            "results": [
-              "Các bộ phận bị bẩn",
-              "Vệ sinh các bộ phận"
-            ]
+            "instruction": null,
+            "results": []
           }
         }
       },
@@ -6440,6 +7017,17 @@
             "Kết quả có thể: Vệ sinh các bộ phận"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động van không tải",
+        "Kết quả có thể: Xupap bị kẹt mở/đóng",
+        "Kết quả có thể: Xupap hoạt động bình thường",
+        "Vệ sinh họng ga và van không tải",
+        "Kết quả có thể: Các bộ phận bị bẩn",
+        "Kết quả có thể: Vệ sinh các bộ phận"
       ],
       "status": "approved"
     },
@@ -6497,27 +7085,25 @@
         "steps": {
           "flt_065_s1": {
             "id": "flt_065_s1",
-            "question": "Kiểm tra muội than xupap nạp?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_065_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Muội than bám trên xupap",
-              "Vệ sinh van"
-            ]
+            "results": []
           },
           "flt_065_s2": {
             "id": "flt_065_s2",
-            "question": "Kiểm tra khe hở nhiệt xupap?",
+            "symptom_id": "SYM_ROUGH_IDLE",
+            "symptom_label": "Garanti không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Khe hở không đúng",
-              "Khe hở đúng tiêu chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -6548,6 +7134,17 @@
             "Kết quả có thể: Khe hở đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra muội than xupap nạp",
+        "Kết quả có thể: Muội than bám trên xupap",
+        "Kết quả có thể: Vệ sinh van",
+        "Kiểm tra khe hở nhiệt xupap",
+        "Kết quả có thể: Khe hở không đúng",
+        "Kết quả có thể: Khe hở đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -6602,27 +7199,25 @@
         "steps": {
           "flt_066_s1": {
             "id": "flt_066_s1",
-            "question": "Kiểm tra áp suất dầu bằng đồng hồ?",
+            "symptom_id": "SYM_LOW_OIL_PRESSURE_WARNING_LIGHT",
+            "symptom_label": "Đèn báo áp suất dầu",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "flt_066_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất dầu thấp",
-              "Áp suất dầu bình thường"
-            ]
+            "results": []
           },
           "flt_066_s2": {
             "id": "flt_066_s2",
-            "question": "Kiểm tra độ mòn hoặc hư hỏng bơm nhớt?",
+            "symptom_id": "SYM_ENGINE_KNOCKING_NOISE",
+            "symptom_label": "Tiếng gõ máy",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bơm bị mòn/hỏng",
-              "Bơm ở tình trạng tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -6653,6 +7248,17 @@
             "Kết quả có thể: Bơm ở tình trạng tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất dầu bằng đồng hồ",
+        "Kết quả có thể: Áp suất dầu thấp",
+        "Kết quả có thể: Áp suất dầu bình thường",
+        "Kiểm tra độ mòn hoặc hư hỏng bơm nhớt",
+        "Kết quả có thể: Bơm bị mòn/hỏng",
+        "Kết quả có thể: Bơm ở tình trạng tốt"
       ],
       "status": "approved"
     },
@@ -6706,27 +7312,25 @@
         "steps": {
           "flt_067_s1": {
             "id": "flt_067_s1",
-            "question": "Kiểm tra áp suất buồng đốt?",
+            "symptom_id": "SYM_BLUE_SMOKE_FROM_EXHAUST",
+            "symptom_label": "Khói xanh từ ống xả",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khói xanh từ ống xả?",
             "is_question": true,
             "yes_next": "flt_067_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất buồng đốt thấp",
-              "Áp suất buồng đốt tốt"
-            ]
+            "results": []
           },
           "flt_067_s2": {
             "id": "flt_067_s2",
-            "question": "Kiểm tra độ mòn hoặc hư hỏng xéc-măng?",
+            "symptom_id": "SYM_LOSS_OF_ENGINE_POWER",
+            "symptom_label": "Động cơ mất công suất",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ mất công suất?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Xéc măng bị mòn/hỏng",
-              "Xéc-măng tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -6757,6 +7361,17 @@
             "Kết quả có thể: Xéc-măng tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất buồng đốt",
+        "Kết quả có thể: Áp suất buồng đốt thấp",
+        "Kết quả có thể: Áp suất buồng đốt tốt",
+        "Kiểm tra độ mòn hoặc hư hỏng xéc-măng",
+        "Kết quả có thể: Xéc măng bị mòn/hỏng",
+        "Kết quả có thể: Xéc-măng tốt"
       ],
       "status": "approved"
     },
@@ -6814,27 +7429,25 @@
         "steps": {
           "flt_068_s1": {
             "id": "flt_068_s1",
-            "question": "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_068_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây curoa bị mòn/hỏng",
-              "Dây curoa còn tốt"
-            ]
+            "results": []
           },
           "flt_068_s2": {
             "id": "flt_068_s2",
-            "question": "Kiểm tra dấu cam?",
+            "symptom_id": "SYM_ENGINE_WON_T_START",
+            "symptom_label": "Động cơ không nổ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ không nổ máy?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dấu cam bị lệch",
-              "Dấu căn chỉnh đúng"
-            ]
+            "results": []
           }
         }
       },
@@ -6865,6 +7478,17 @@
             "Kết quả có thể: Dấu căn chỉnh đúng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam",
+        "Kết quả có thể: Dây curoa bị mòn/hỏng",
+        "Kết quả có thể: Dây curoa còn tốt",
+        "Kiểm tra dấu cam",
+        "Kết quả có thể: Dấu cam bị lệch",
+        "Kết quả có thể: Dấu căn chỉnh đúng"
       ],
       "status": "approved"
     },
@@ -6918,27 +7542,25 @@
         "steps": {
           "flt_069_s1": {
             "id": "flt_069_s1",
-            "question": "Kiểm tra rò rỉ gioăng nắp dàn cò?",
+            "symptom_id": "SYM_OIL_LEAK_AROUND_VALVE_COVER",
+            "symptom_label": "Rò rỉ dầu nắp giàn cò",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "flt_069_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ gioăng",
-              "Gioăng làm kín tốt"
-            ]
+            "results": []
           },
           "flt_069_s2": {
             "id": "flt_069_s2",
-            "question": "Kiểm tra độ chặt bu lông nắp giàn cò?",
+            "symptom_id": "SYM_BURNING_OIL_SMELL_FROM_ENGINE_BAY",
+            "symptom_label": "Mùi khét dầu từ khoang động cơ",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bu lông lỏng",
-              "Bu lông chặt"
-            ]
+            "results": []
           }
         }
       },
@@ -6969,6 +7591,17 @@
             "Kết quả có thể: Bu lông chặt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ gioăng nắp dàn cò",
+        "Kết quả có thể: Rò rỉ gioăng",
+        "Kết quả có thể: Gioăng làm kín tốt",
+        "Kiểm tra độ chặt bu lông nắp giàn cò",
+        "Kết quả có thể: Bu lông lỏng",
+        "Kết quả có thể: Bu lông chặt"
       ],
       "status": "approved"
     },
@@ -7028,27 +7661,25 @@
         "steps": {
           "flt_070_s1": {
             "id": "flt_070_s1",
-            "question": "Kiểm tra cắt hoặc mòn dây curoa quạt?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_070_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây curoa bị cắt/mòn",
-              "Dây curoa còn tốt"
-            ]
+            "results": []
           },
           "flt_070_s2": {
             "id": "flt_070_s2",
-            "question": "Kiểm tra độ căng và căn chỉnh dây curoa?",
+            "symptom_id": "SYM_SQUEALING_NOISE_FROM_ENGINE_BAY",
+            "symptom_label": "Tiếng rít từ khoang động cơ",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây curoa chùng/lệch",
-              "Dây curoa căng/thẳng hàng"
-            ]
+            "results": []
           }
         }
       },
@@ -7079,6 +7710,17 @@
             "Kết quả có thể: Dây curoa căng/thẳng hàng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra cắt hoặc mòn dây curoa quạt",
+        "Kết quả có thể: Dây curoa bị cắt/mòn",
+        "Kết quả có thể: Dây curoa còn tốt",
+        "Kiểm tra độ căng và căn chỉnh dây curoa",
+        "Kết quả có thể: Dây curoa chùng/lệch",
+        "Kết quả có thể: Dây curoa căng/thẳng hàng"
       ],
       "status": "approved"
     },
@@ -7111,7 +7753,8 @@
         "FLT_045",
         "FLT_046",
         "FLT_047",
-        "FLT_072"
+        "FLT_072",
+        "FLT_101"
       ],
       "cf": 1.0,
       "symptoms": [
@@ -7126,27 +7769,14 @@
         "steps": {
           "flt_071_s1": {
             "id": "flt_071_s1",
-            "question": "Kiểm tra cầu chì còi?",
-            "is_question": true,
-            "yes_next": "flt_071_s2",
-            "no_next": "REFUTED",
-            "instruction": null,
-            "results": [
-              "Đứt cầu chì",
-              "Cầu chì còn tốt"
-            ]
-          },
-          "flt_071_s2": {
-            "id": "flt_071_s2",
-            "question": "Kiểm tra hoạt động rơ-le còi?",
+            "symptom_id": "SYM_NO_SOUND_WHEN_HORN_BUTTON_PRESSED",
+            "symptom_label": "Bấm còi không kêu",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rơ-le lỗi",
-              "Rơ-le hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -7177,6 +7807,17 @@
             "Kết quả có thể: Rơ-le hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra cầu chì còi",
+        "Kết quả có thể: Đứt cầu chì",
+        "Kết quả có thể: Cầu chì còn tốt",
+        "Kiểm tra hoạt động rơ-le còi",
+        "Kết quả có thể: Rơ-le lỗi",
+        "Kết quả có thể: Rơ-le hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -7209,7 +7850,8 @@
         "FLT_045",
         "FLT_046",
         "FLT_047",
-        "FLT_071"
+        "FLT_071",
+        "FLT_101"
       ],
       "cf": 0.5,
       "symptoms": [
@@ -7229,27 +7871,25 @@
         "steps": {
           "flt_072_s1": {
             "id": "flt_072_s1",
-            "question": "Kiểm tra điện áp ắc quy?",
+            "symptom_id": "SYM_BATTERY_WARNING_LIGHT_ON",
+            "symptom_label": "Đèn báo ắc quy sáng",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "flt_072_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện áp thấp",
-              "Điện áp bình thường"
-            ]
+            "results": []
           },
           "flt_072_s2": {
             "id": "flt_072_s2",
-            "question": "Kiểm tra hoạt động của máy phát điện?",
+            "symptom_id": "SYM_LOW_VOLTAGE",
+            "symptom_label": "Điện áp thấp",
+            "question": "Đèn hoặc thiết bị điện trên xe có yếu bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Máy phát điện lỗi",
-              "Máy phát điện hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -7280,6 +7920,17 @@
             "Kết quả có thể: Máy phát điện hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra điện áp ắc quy",
+        "Kết quả có thể: Điện áp thấp",
+        "Kết quả có thể: Điện áp bình thường",
+        "Kiểm tra hoạt động của máy phát điện",
+        "Kết quả có thể: Máy phát điện lỗi",
+        "Kết quả có thể: Máy phát điện hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -7333,27 +7984,25 @@
         "steps": {
           "flt_073_s1": {
             "id": "flt_073_s1",
-            "question": "Kiểm tra cắt hoặc mòn dây curoa động cơ?",
+            "symptom_id": "SYM_ENGINE_PERFORMANCE_ISSUES",
+            "symptom_label": "Động cơ hoạt động kém",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ hoạt động kém?",
             "is_question": true,
             "yes_next": "flt_073_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây curoa bị cắt/mòn",
-              "Dây curoa còn tốt"
-            ]
+            "results": []
           },
           "flt_073_s2": {
             "id": "flt_073_s2",
-            "question": "Kiểm tra độ căng và căn chỉnh dây curoa?",
+            "symptom_id": "SYM_SQUEALING_NOISE_FROM_ENGINE_BAY",
+            "symptom_label": "Tiếng rít từ khoang động cơ",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây curoa chùng/lệch",
-              "Dây curoa căng/thẳng hàng"
-            ]
+            "results": []
           }
         }
       },
@@ -7384,6 +8033,17 @@
             "Kết quả có thể: Dây curoa căng/thẳng hàng"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra cắt hoặc mòn dây curoa động cơ",
+        "Kết quả có thể: Dây curoa bị cắt/mòn",
+        "Kết quả có thể: Dây curoa còn tốt",
+        "Kiểm tra độ căng và căn chỉnh dây curoa",
+        "Kết quả có thể: Dây curoa chùng/lệch",
+        "Kết quả có thể: Dây curoa căng/thẳng hàng"
       ],
       "status": "approved"
     },
@@ -7418,27 +8078,14 @@
         "steps": {
           "flt_074_s1": {
             "id": "flt_074_s1",
-            "question": "Kiểm tra mức dầu trợ lực lái?",
-            "is_question": true,
-            "yes_next": "flt_074_s2",
-            "no_next": "REFUTED",
-            "instruction": null,
-            "results": [
-              "Mức dầu/dung dịch thấp",
-              "Mức dầu đủ"
-            ]
-          },
-          "flt_074_s2": {
-            "id": "flt_074_s2",
-            "question": "Kiểm tra rò rỉ bơm và ống dầu trợ lực lái?",
+            "symptom_id": "SYM_NOISE_WHEN_TURNING_STEERING_WHEEL",
+            "symptom_label": "Tiếng kêu khi đánh lái",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ bơm/ống dẫn",
-              "Bơm và ống dẫn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -7469,6 +8116,17 @@
             "Kết quả có thể: Bơm và ống dẫn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức dầu trợ lực lái",
+        "Kết quả có thể: Mức dầu/dung dịch thấp",
+        "Kết quả có thể: Mức dầu đủ",
+        "Kiểm tra rò rỉ bơm và ống dầu trợ lực lái",
+        "Kết quả có thể: Rò rỉ bơm/ống dẫn",
+        "Kết quả có thể: Bơm và ống dẫn tốt"
       ],
       "status": "approved"
     },
@@ -7519,27 +8177,25 @@
         "steps": {
           "flt_075_s1": {
             "id": "flt_075_s1",
-            "question": "Kiểm tra độ cân bằng và căn chỉnh trục?",
+            "symptom_id": "SYM_UNEVEN_TIRE_WEAR",
+            "symptom_label": "Lốp mòn không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "flt_075_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Trục bị mất cân bằng hoặc lệch tâm",
-              "Trục cân bằng/thẳng hàng"
-            ]
+            "results": []
           },
           "flt_075_s2": {
             "id": "flt_075_s2",
-            "question": "Kiểm tra áp suất và tình trạng lốp?",
+            "symptom_id": "SYM_VIBRATION_WHILE_DRIVING",
+            "symptom_label": "Rung lắc khi lái xe",
+            "question": "Xe có bị rung bất thường khi vận hành không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất thấp/không phù hợp",
-              "Áp suất và tình trạng lốp đạt chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -7570,6 +8226,17 @@
             "Kết quả có thể: Áp suất và tình trạng lốp đạt chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ cân bằng và căn chỉnh trục",
+        "Kết quả có thể: Trục bị mất cân bằng hoặc lệch tâm",
+        "Kết quả có thể: Trục cân bằng/thẳng hàng",
+        "Kiểm tra áp suất và tình trạng lốp",
+        "Kết quả có thể: Áp suất thấp/không phù hợp",
+        "Kết quả có thể: Áp suất và tình trạng lốp đạt chuẩn"
       ],
       "status": "approved"
     },
@@ -7614,27 +8281,25 @@
         "steps": {
           "flt_076_s1": {
             "id": "flt_076_s1",
-            "question": "Kiểm tra tắc nghẽn hoặc bụi bẩn lọc gió?",
+            "symptom_id": "SYM_DECREASED_ENGINE_PERFORMANCE",
+            "symptom_label": "Hiệu suất động cơ giảm",
+            "question": "Bạn có nhận thấy dấu hiệu này không: hiệu suất động cơ giảm?",
             "is_question": true,
             "yes_next": "flt_076_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Lọc bị tắc/bẩn",
-              "Vệ sinh lọc"
-            ]
+            "results": []
           },
           "flt_076_s2": {
             "id": "flt_076_s2",
-            "question": "Thay lọc gió nếu cần?",
+            "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+            "symptom_label": "Khói đen từ ống xả",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khói đen từ ống xả?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Thay lọc",
-              "Lọc còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -7665,6 +8330,17 @@
             "Kết quả có thể: Lọc còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tắc nghẽn hoặc bụi bẩn lọc gió",
+        "Kết quả có thể: Lọc bị tắc/bẩn",
+        "Kết quả có thể: Vệ sinh lọc",
+        "Thay lọc gió nếu cần",
+        "Kết quả có thể: Thay lọc",
+        "Kết quả có thể: Lọc còn tốt"
       ],
       "status": "approved"
     },
@@ -7717,27 +8393,25 @@
         "steps": {
           "flt_077_s1": {
             "id": "flt_077_s1",
-            "question": "Kiểm tra mã lỗi trong ECU?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_077_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có mã lỗi",
-              "Không có mã lỗi"
-            ]
+            "results": []
           },
           "flt_077_s2": {
             "id": "flt_077_s2",
-            "question": "Kiểm tra hư hỏng giắc cắm và dây điện ECU?",
+            "symptom_id": "SYM_POOR_FUEL_ECONOMY",
+            "symptom_label": "Tốn nhiên liệu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốn nhiên liệu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bó dây điện bị hỏng",
-              "Bó dây điện nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -7768,6 +8442,17 @@
             "Kết quả có thể: Bó dây điện nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mã lỗi trong ECU",
+        "Kết quả có thể: Có mã lỗi",
+        "Kết quả có thể: Không có mã lỗi",
+        "Kiểm tra hư hỏng giắc cắm và dây điện ECU",
+        "Kết quả có thể: Bó dây điện bị hỏng",
+        "Kết quả có thể: Bó dây điện nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -7813,27 +8498,25 @@
         "steps": {
           "flt_078_s1": {
             "id": "flt_078_s1",
-            "question": "Kiểm tra mức và tình trạng dầu động cơ?",
+            "symptom_id": "SYM_LOW_OIL_PRESSURE_WARNING_LIGHT",
+            "symptom_label": "Đèn báo áp suất dầu",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "flt_078_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu máy thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           },
           "flt_078_s2": {
             "id": "flt_078_s2",
-            "question": "Kiểm tra rò rỉ dầu?",
+            "symptom_id": "SYM_LOUD_ENGINE_NOISE",
+            "symptom_label": "Động cơ kêu to",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có rò rỉ dầu",
-              "Không phát hiện rò rỉ"
-            ]
+            "results": []
           }
         }
       },
@@ -7864,6 +8547,17 @@
             "Kết quả có thể: Không phát hiện rò rỉ"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức và tình trạng dầu động cơ",
+        "Kết quả có thể: Dầu máy thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức",
+        "Kiểm tra rò rỉ dầu",
+        "Kết quả có thể: Có rò rỉ dầu",
+        "Kết quả có thể: Không phát hiện rò rỉ"
       ],
       "status": "approved"
     },
@@ -7908,27 +8602,25 @@
         "steps": {
           "flt_079_s1": {
             "id": "flt_079_s1",
-            "question": "Kiểm tra tắc nghẽn hoặc cặn bẩn lọc nhiên liệu?",
+            "symptom_id": "SYM_ENGINE_STALLS_AT_HIGH_SPEEDS",
+            "symptom_label": "Động cơ tắt máy ở tốc độ cao",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ tắt máy ở tốc độ cao?",
             "is_question": true,
             "yes_next": "flt_079_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Lọc bị tắc/bẩn",
-              "Vệ sinh lọc"
-            ]
+            "results": []
           },
           "flt_079_s2": {
             "id": "flt_079_s2",
-            "question": "Thay lọc nhiên liệu nếu cần?",
+            "symptom_id": "SYM_POOR_ACCELERATION",
+            "symptom_label": "Tăng tốc yếu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tăng tốc yếu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Thay lọc",
-              "Lọc còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -7959,6 +8651,17 @@
             "Kết quả có thể: Lọc còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tắc nghẽn hoặc cặn bẩn lọc nhiên liệu",
+        "Kết quả có thể: Lọc bị tắc/bẩn",
+        "Kết quả có thể: Vệ sinh lọc",
+        "Thay lọc nhiên liệu nếu cần",
+        "Kết quả có thể: Thay lọc",
+        "Kết quả có thể: Lọc còn tốt"
       ],
       "status": "approved"
     },
@@ -8003,27 +8706,25 @@
         "steps": {
           "flt_080_s1": {
             "id": "flt_080_s1",
-            "question": "Kiểm tra tắc nghẽn van PCV?",
+            "symptom_id": "SYM_OIL_LEAKS",
+            "symptom_label": "Rò rỉ dầu",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "flt_080_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Van bị tắc",
-              "Khe hở xupap chuẩn"
-            ]
+            "results": []
           },
           "flt_080_s2": {
             "id": "flt_080_s2",
-            "question": "Kiểm tra ống van PCV xem có nứt không?",
+            "symptom_id": "SYM_ROUGH_IDLE",
+            "symptom_label": "Garanti không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ống dẫn bị nứt",
-              "Ống dẫn nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -8054,6 +8755,17 @@
             "Kết quả có thể: Ống dẫn nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tắc nghẽn van PCV",
+        "Kết quả có thể: Van bị tắc",
+        "Kết quả có thể: Khe hở xupap chuẩn",
+        "Kiểm tra ống van PCV xem có nứt không",
+        "Kết quả có thể: Ống dẫn bị nứt",
+        "Kết quả có thể: Ống dẫn nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -8098,27 +8810,25 @@
         "steps": {
           "flt_081_s1": {
             "id": "flt_081_s1",
-            "question": "Kiểm tra muội than họng ga?",
+            "symptom_id": "SYM_POOR_ACCELERATION",
+            "symptom_label": "Tăng tốc yếu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tăng tốc yếu?",
             "is_question": true,
             "yes_next": "flt_081_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Có đóng cặn/muội than",
-              "Vệ sinh họng ga"
-            ]
+            "results": []
           },
           "flt_081_s2": {
             "id": "flt_081_s2",
-            "question": "Kiểm tra cảm biến vị trí bướm ga?",
+            "symptom_id": "SYM_STALLING_AT_IDLE",
+            "symptom_label": "Tắt máy khi chạy không tải",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tắt máy khi chạy không tải?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cảm biến bướm ga (TPS) lỗi",
-              "Cảm biến bướm ga hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -8149,6 +8859,17 @@
             "Kết quả có thể: Cảm biến bướm ga hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra muội than họng ga",
+        "Kết quả có thể: Có đóng cặn/muội than",
+        "Kết quả có thể: Vệ sinh họng ga",
+        "Kiểm tra cảm biến vị trí bướm ga",
+        "Kết quả có thể: Cảm biến bướm ga (TPS) lỗi",
+        "Kết quả có thể: Cảm biến bướm ga hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -8200,27 +8921,25 @@
         "steps": {
           "flt_082_s1": {
             "id": "flt_082_s1",
-            "question": "Kiểm tra tia phun kim phun?",
+            "symptom_id": "SYM_ENGINE_MISFIRES",
+            "symptom_label": "Động cơ bỏ máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ bỏ máy?",
             "is_question": true,
             "yes_next": "flt_082_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Tia phun không đều",
-              "Dạng phun đều"
-            ]
+            "results": []
           },
           "flt_082_s2": {
             "id": "flt_082_s2",
-            "question": "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun?",
+            "symptom_id": "SYM_POOR_FUEL_ECONOMY",
+            "symptom_label": "Tốn nhiên liệu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tốn nhiên liệu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Kim phun rò rỉ/tắc",
-              "Kim phun sạch/đúng tiêu chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -8251,6 +8970,17 @@
             "Kết quả có thể: Kim phun sạch/đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tia phun kim phun",
+        "Kết quả có thể: Tia phun không đều",
+        "Kết quả có thể: Dạng phun đều",
+        "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun",
+        "Kết quả có thể: Kim phun rò rỉ/tắc",
+        "Kết quả có thể: Kim phun sạch/đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -8294,27 +9024,25 @@
         "steps": {
           "flt_083_s1": {
             "id": "flt_083_s1",
-            "question": "Kiểm tra hoạt động bộ điều áp nhiên liệu?",
+            "symptom_id": "SYM_ENGINE_STALLS",
+            "symptom_label": "Động cơ tắt máy",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ tắt máy?",
             "is_question": true,
             "yes_next": "flt_083_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bộ điều áp lỗi",
-              "Bộ điều áp hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_083_s2": {
             "id": "flt_083_s2",
-            "question": "Kiểm tra áp suất nhiên liệu tại bộ điều áp?",
+            "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+            "symptom_label": "Khói đen từ ống xả",
+            "question": "Bạn có nhận thấy dấu hiệu này không: khói đen từ ống xả?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất thấp/cao",
-              "Áp suất đúng tiêu chuẩn"
-            ]
+            "results": []
           }
         }
       },
@@ -8345,6 +9073,17 @@
             "Kết quả có thể: Áp suất đúng tiêu chuẩn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra hoạt động bộ điều áp nhiên liệu",
+        "Kết quả có thể: Bộ điều áp lỗi",
+        "Kết quả có thể: Bộ điều áp hoạt động bình thường",
+        "Kiểm tra áp suất nhiên liệu tại bộ điều áp",
+        "Kết quả có thể: Áp suất thấp/cao",
+        "Kết quả có thể: Áp suất đúng tiêu chuẩn"
       ],
       "status": "approved"
     },
@@ -8388,27 +9127,25 @@
         "steps": {
           "flt_084_s1": {
             "id": "flt_084_s1",
-            "question": "Kiểm tra áp suất bơm xăng?",
+            "symptom_id": "SYM_ENGINE_SPUTTERS_AT_HIGH_SPEEDS",
+            "symptom_label": "Động cơ hụt hơi ở tốc độ cao",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ hụt hơi ở tốc độ cao?",
             "is_question": true,
             "yes_next": "flt_084_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất thấp",
-              "Áp suất bình thường"
-            ]
+            "results": []
           },
           "flt_084_s2": {
             "id": "flt_084_s2",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng bơm nhiên liệu?",
+            "symptom_id": "SYM_LOSS_OF_POWER",
+            "symptom_label": "Mất công suất",
+            "question": "Bạn có nhận thấy dấu hiệu này không: mất công suất?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bơm rò rỉ/hư hỏng",
-              "Bơm nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -8439,6 +9176,17 @@
             "Kết quả có thể: Bơm nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất bơm xăng",
+        "Kết quả có thể: Áp suất thấp",
+        "Kết quả có thể: Áp suất bình thường",
+        "Kiểm tra rò rỉ hoặc hư hỏng bơm nhiên liệu",
+        "Kết quả có thể: Bơm rò rỉ/hư hỏng",
+        "Kết quả có thể: Bơm nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -8482,27 +9230,25 @@
         "steps": {
           "flt_085_s1": {
             "id": "flt_085_s1",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng bình nhiên liệu?",
+            "symptom_id": "SYM_FUEL_ODOR_INSIDE_VEHICLE",
+            "symptom_label": "Mùi nhiên liệu trong xe",
+            "question": "Bạn có ngửi thấy mùi bất thường khi xe hoạt động không?",
             "is_question": true,
             "yes_next": "flt_085_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bình chứa rò rỉ/hư hỏng",
-              "Bình chứa tốt"
-            ]
+            "results": []
           },
           "flt_085_s2": {
             "id": "flt_085_s2",
-            "question": "Kiểm tra độ kín nắp bình xăng?",
+            "symptom_id": "SYM_VISIBLE_FUEL_LEAK_UNDER_VEHICLE",
+            "symptom_label": "Rò rỉ nhiên liệu dưới gầm xe",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Nắp đậy lỏng/vỡ",
-              "Nắp đậy kín"
-            ]
+            "results": []
           }
         }
       },
@@ -8533,6 +9279,17 @@
             "Kết quả có thể: Nắp đậy kín"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ hoặc hư hỏng bình nhiên liệu",
+        "Kết quả có thể: Bình chứa rò rỉ/hư hỏng",
+        "Kết quả có thể: Bình chứa tốt",
+        "Kiểm tra độ kín nắp bình xăng",
+        "Kết quả có thể: Nắp đậy lỏng/vỡ",
+        "Kết quả có thể: Nắp đậy kín"
       ],
       "status": "approved"
     },
@@ -8576,27 +9333,25 @@
         "steps": {
           "flt_086_s1": {
             "id": "flt_086_s1",
-            "question": "Kiểm tra điện áp cảm biến vị trí bướm ga?",
+            "symptom_id": "SYM_ENGINE_HESITATES_ON_ACCELERATION",
+            "symptom_label": "Động cơ hụt ga khi tăng tốc",
+            "question": "Bạn có nhận thấy dấu hiệu này không: động cơ hụt ga khi tăng tốc?",
             "is_question": true,
             "yes_next": "flt_086_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Điện áp thấp",
-              "Điện áp bình thường"
-            ]
+            "results": []
           },
           "flt_086_s2": {
             "id": "flt_086_s2",
-            "question": "Kiểm tra hư hỏng hoặc rỉ sét dây điện cảm biến bướm ga?",
+            "symptom_id": "SYM_STALLING_AT_IDLE",
+            "symptom_label": "Tắt máy khi chạy không tải",
+            "question": "Bạn có nhận thấy dấu hiệu này không: tắt máy khi chạy không tải?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây điện bị hỏng/oxy hóa",
-              "Dây điện nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -8627,6 +9382,17 @@
             "Kết quả có thể: Dây điện nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra điện áp cảm biến vị trí bướm ga",
+        "Kết quả có thể: Điện áp thấp",
+        "Kết quả có thể: Điện áp bình thường",
+        "Kiểm tra hư hỏng hoặc rỉ sét dây điện cảm biến bướm ga",
+        "Kết quả có thể: Dây điện bị hỏng/oxy hóa",
+        "Kết quả có thể: Dây điện nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -8671,27 +9437,25 @@
         "steps": {
           "flt_087_s1": {
             "id": "flt_087_s1",
-            "question": "Kiểm tra mức và tình trạng dầu phanh?",
+            "symptom_id": "SYM_SOFT_BRAKE_PEDAL",
+            "symptom_label": "Bàn đạp phanh mềm",
+            "question": "Bàn đạp phanh có cảm giác bất thường không?",
             "is_question": true,
             "yes_next": "flt_087_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           },
           "flt_087_s2": {
             "id": "flt_087_s2",
-            "question": "Kiểm tra rò rỉ đường ống phanh?",
+            "symptom_id": "SYM_BRAKE_WARNING_LIGHT_ON",
+            "symptom_label": "Đèn báo lỗi phanh sáng",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ đường ống",
-              "Đường ống bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -8722,6 +9486,17 @@
             "Kết quả có thể: Đường ống bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức và tình trạng dầu phanh",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức",
+        "Kiểm tra rò rỉ đường ống phanh",
+        "Kết quả có thể: Rò rỉ đường ống",
+        "Kết quả có thể: Đường ống bình thường"
       ],
       "status": "approved"
     },
@@ -8770,27 +9545,25 @@
         "steps": {
           "flt_088_s1": {
             "id": "flt_088_s1",
-            "question": "Kiểm tra mức nước làm mát trong bình phụ?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_088_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mức nước làm mát thấp",
-              "Mức nước làm mát đủ"
-            ]
+            "results": []
           },
           "flt_088_s2": {
             "id": "flt_088_s2",
-            "question": "Kiểm tra nứt hoặc rò rỉ bình chứa?",
+            "symptom_id": "SYM_LOW_COOLANT_WARNING_LIGHT",
+            "symptom_label": "Đèn báo mức nước làm mát",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bình chứa bị nứt/rò rỉ",
-              "Bình chứa nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -8821,6 +9594,17 @@
             "Kết quả có thể: Bình chứa nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức nước làm mát trong bình phụ",
+        "Kết quả có thể: Mức nước làm mát thấp",
+        "Kết quả có thể: Mức nước làm mát đủ",
+        "Kiểm tra nứt hoặc rò rỉ bình chứa",
+        "Kết quả có thể: Bình chứa bị nứt/rò rỉ",
+        "Kết quả có thể: Bình chứa nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -8864,27 +9648,25 @@
         "steps": {
           "flt_089_s1": {
             "id": "flt_089_s1",
-            "question": "Kiểm tra mức dầu trợ lực lái?",
+            "symptom_id": "SYM_WHINING_NOISE_WHEN_TURNING",
+            "symptom_label": "Kêu hú khi vào cua",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_089_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mức dầu/dung dịch thấp",
-              "Mức dầu đủ"
-            ]
+            "results": []
           },
           "flt_089_s2": {
             "id": "flt_089_s2",
-            "question": "Kiểm tra rò rỉ ống dầu trợ lực lái?",
+            "symptom_id": "SYM_STIFF_STEERING_WHEEL",
+            "symptom_label": "Vô lăng nặng",
+            "question": "Bạn có nhận thấy dấu hiệu này không: vô lăng nặng?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Các ống dẫn rò rỉ",
-              "Ống dẫn trong tình trạng tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -8915,6 +9697,17 @@
             "Kết quả có thể: Ống dẫn trong tình trạng tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức dầu trợ lực lái",
+        "Kết quả có thể: Mức dầu/dung dịch thấp",
+        "Kết quả có thể: Mức dầu đủ",
+        "Kiểm tra rò rỉ ống dầu trợ lực lái",
+        "Kết quả có thể: Các ống dẫn rò rỉ",
+        "Kết quả có thể: Ống dẫn trong tình trạng tốt"
       ],
       "status": "approved"
     },
@@ -8963,27 +9756,25 @@
         "steps": {
           "flt_090_s1": {
             "id": "flt_090_s1",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng két nước?",
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "flt_090_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Két nước rò rỉ/hư hỏng",
-              "Két nước tốt"
-            ]
+            "results": []
           },
           "flt_090_s2": {
             "id": "flt_090_s2",
-            "question": "Kiểm tra độ kín nắp két nước?",
+            "symptom_id": "SYM_COOLANT_LEAK",
+            "symptom_label": "Rò rỉ nước làm mát",
+            "question": "Bạn có thấy dấu hiệu rò rỉ bất thường không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Nắp đậy lỏng/vỡ",
-              "Nắp đậy kín"
-            ]
+            "results": []
           }
         }
       },
@@ -9014,6 +9805,17 @@
             "Kết quả có thể: Nắp đậy kín"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ hoặc hư hỏng két nước",
+        "Kết quả có thể: Két nước rò rỉ/hư hỏng",
+        "Kết quả có thể: Két nước tốt",
+        "Kiểm tra độ kín nắp két nước",
+        "Kết quả có thể: Nắp đậy lỏng/vỡ",
+        "Kết quả có thể: Nắp đậy kín"
       ],
       "status": "approved"
     },
@@ -9058,27 +9860,25 @@
         "steps": {
           "flt_091_s1": {
             "id": "flt_091_s1",
-            "question": "Kiểm tra mức nước rửa kính?",
+            "symptom_id": "SYM_NO_WASHER_FLUID_SPRAY",
+            "symptom_label": "Nước rửa kính không phun",
+            "question": "Bạn có nhận thấy dấu hiệu này không: nước rửa kính không phun?",
             "is_question": true,
             "yes_next": "flt_091_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mức dầu/dung dịch thấp",
-              "Mức dầu đủ"
-            ]
+            "results": []
           },
           "flt_091_s2": {
             "id": "flt_091_s2",
-            "question": "Kiểm tra hoạt động bơm nước rửa kính?",
+            "symptom_id": "SYM_WEAK_WASHER_FLUID_SPRAY",
+            "symptom_label": "Vòi phun nước rửa kính yếu",
+            "question": "Bạn có nhận thấy dấu hiệu này không: vòi phun nước rửa kính yếu?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bơm lỗi",
-              "Bơm hoạt động bình thường"
-            ]
+            "results": []
           }
         }
       },
@@ -9109,6 +9909,17 @@
             "Kết quả có thể: Bơm hoạt động bình thường"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức nước rửa kính",
+        "Kết quả có thể: Mức dầu/dung dịch thấp",
+        "Kết quả có thể: Mức dầu đủ",
+        "Kiểm tra hoạt động bơm nước rửa kính",
+        "Kết quả có thể: Bơm lỗi",
+        "Kết quả có thể: Bơm hoạt động bình thường"
       ],
       "status": "approved"
     },
@@ -9152,27 +9963,25 @@
         "steps": {
           "flt_092_s1": {
             "id": "flt_092_s1",
-            "question": "Kiểm tra mức dầu côn?",
+            "symptom_id": "SYM_SOFT_CLUTCH_PEDAL",
+            "symptom_label": "Bàn đạp côn mềm",
+            "question": "Bạn có nhận thấy dấu hiệu này không: bàn đạp côn mềm?",
             "is_question": true,
             "yes_next": "flt_092_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Mức dầu/dung dịch thấp",
-              "Mức dầu đủ"
-            ]
+            "results": []
           },
           "flt_092_s2": {
             "id": "flt_092_s2",
-            "question": "Kiểm tra rò rỉ tổng phanh?",
+            "symptom_id": "SYM_CLUTCH_SLIPPING",
+            "symptom_label": "Trượt côn",
+            "question": "Bạn có nhận thấy dấu hiệu này không: trượt côn?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ xi-lanh",
-              "Xi lanh còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -9203,6 +10012,17 @@
             "Kết quả có thể: Xi lanh còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức dầu côn",
+        "Kết quả có thể: Mức dầu/dung dịch thấp",
+        "Kết quả có thể: Mức dầu đủ",
+        "Kiểm tra rò rỉ tổng phanh",
+        "Kết quả có thể: Rò rỉ xi-lanh",
+        "Kết quả có thể: Xi lanh còn tốt"
       ],
       "status": "approved"
     },
@@ -9246,27 +10066,25 @@
         "steps": {
           "flt_093_s1": {
             "id": "flt_093_s1",
-            "question": "Kiểm tra rò rỉ hoặc hư hỏng bộ biến mô?",
+            "symptom_id": "SYM_SLIPPING_GEARS",
+            "symptom_label": "Trượt số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: trượt số?",
             "is_question": true,
             "yes_next": "flt_093_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Bộ biến mô rò rỉ/hư hỏng",
-              "Bộ biến mô còn tốt"
-            ]
+            "results": []
           },
           "flt_093_s2": {
             "id": "flt_093_s2",
-            "question": "Kiểm tra mức và tình trạng dầu hộp số?",
+            "symptom_id": "SYM_SHUDDERING_DURING_ACCELERATION",
+            "symptom_label": "Rung giật khi tăng tốc",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           }
         }
       },
@@ -9297,6 +10115,17 @@
             "Kết quả có thể: Dầu sạch/đủ mức"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra rò rỉ hoặc hư hỏng bộ biến mô",
+        "Kết quả có thể: Bộ biến mô rò rỉ/hư hỏng",
+        "Kết quả có thể: Bộ biến mô còn tốt",
+        "Kiểm tra mức và tình trạng dầu hộp số",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức"
       ],
       "status": "approved"
     },
@@ -9340,27 +10169,25 @@
         "steps": {
           "flt_094_s1": {
             "id": "flt_094_s1",
-            "question": "Kiểm tra mức và tình trạng dầu hộp số?",
+            "symptom_id": "SYM_GEARS_SLIPPING",
+            "symptom_label": "Trượt số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: trượt số?",
             "is_question": true,
             "yes_next": "flt_094_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dầu/dung dịch thấp/bẩn",
-              "Dầu sạch/đủ mức"
-            ]
+            "results": []
           },
           "flt_094_s2": {
             "id": "flt_094_s2",
-            "question": "Kiểm tra rò rỉ đáy các-te và phớt hộp số?",
+            "symptom_id": "SYM_TRANSMISSION_OVERHEATING",
+            "symptom_label": "Hộp số quá nhiệt",
+            "question": "Kim nhiệt độ có tăng cao hoặc vào vùng đỏ không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Rò rỉ đáy các-te/phớt",
-              "Cacte/gioăng ở tình trạng tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -9391,6 +10218,17 @@
             "Kết quả có thể: Cacte/gioăng ở tình trạng tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra mức và tình trạng dầu hộp số",
+        "Kết quả có thể: Dầu/dung dịch thấp/bẩn",
+        "Kết quả có thể: Dầu sạch/đủ mức",
+        "Kiểm tra rò rỉ đáy các-te và phớt hộp số",
+        "Kết quả có thể: Rò rỉ đáy các-te/phớt",
+        "Kết quả có thể: Cacte/gioăng ở tình trạng tốt"
       ],
       "status": "approved"
     },
@@ -9434,27 +10272,25 @@
         "steps": {
           "flt_095_s1": {
             "id": "flt_095_s1",
-            "question": "Kiểm tra tắc nghẽn hoặc cặn bẩn lọc hộp số?",
+            "symptom_id": "SYM_DELAYED_SHIFTING",
+            "symptom_label": "Sang số bị trễ",
+            "question": "Bạn có nhận thấy dấu hiệu này không: sang số bị trễ?",
             "is_question": true,
             "yes_next": "flt_095_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Lọc bị tắc/bẩn",
-              "Vệ sinh lọc"
-            ]
+            "results": []
           },
           "flt_095_s2": {
             "id": "flt_095_s2",
-            "question": "Thay lọc hộp số nếu cần?",
+            "symptom_id": "SYM_TRANSMISSION_SLIPPING",
+            "symptom_label": "Trượt số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: trượt số?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Thay lọc",
-              "Lọc còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -9485,6 +10321,17 @@
             "Kết quả có thể: Lọc còn tốt"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra tắc nghẽn hoặc cặn bẩn lọc hộp số",
+        "Kết quả có thể: Lọc bị tắc/bẩn",
+        "Kết quả có thể: Vệ sinh lọc",
+        "Thay lọc hộp số nếu cần",
+        "Kết quả có thể: Thay lọc",
+        "Kết quả có thể: Lọc còn tốt"
       ],
       "status": "approved"
     },
@@ -9528,27 +10375,25 @@
         "steps": {
           "flt_096_s1": {
             "id": "flt_096_s1",
-            "question": "Kiểm tra thông mạch solenoid hộp số?",
+            "symptom_id": "SYM_ERRATIC_SHIFTING",
+            "symptom_label": "Sang số không ổn định",
+            "question": "Bạn có nhận thấy dấu hiệu này không: sang số không ổn định?",
             "is_question": true,
             "yes_next": "flt_096_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Solenoid lỗi",
-              "Solenoid hoạt động bình thường"
-            ]
+            "results": []
           },
           "flt_096_s2": {
             "id": "flt_096_s2",
-            "question": "Kiểm tra hư hỏng hoặc oxy hóa bó dây điện?",
+            "symptom_id": "SYM_TRANSMISSION_WON_T_SHIFT_GEARS",
+            "symptom_label": "Hộp số không sang số",
+            "question": "Bạn có nhận thấy dấu hiệu này không: hộp số không sang số?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Dây điện bị hỏng/oxy hóa",
-              "Dây điện nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -9579,6 +10424,17 @@
             "Kết quả có thể: Dây điện nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra thông mạch solenoid hộp số",
+        "Kết quả có thể: Solenoid lỗi",
+        "Kết quả có thể: Solenoid hoạt động bình thường",
+        "Kiểm tra hư hỏng hoặc oxy hóa bó dây điện",
+        "Kết quả có thể: Dây điện bị hỏng/oxy hóa",
+        "Kết quả có thể: Dây điện nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -9620,27 +10476,25 @@
         "steps": {
           "flt_097_s1": {
             "id": "flt_097_s1",
-            "question": "Kiểm tra độ rơ ổ bi bánh xe?",
+            "symptom_id": "SYM_GRINDING_NOISE_FROM_WHEELS",
+            "symptom_label": "Tiếng kêu rít từ bánh xe",
+            "question": "Xe có phát ra tiếng nghiến hoặc tiếng mài bất thường không?",
             "is_question": true,
             "yes_next": "flt_097_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ổ bi lỏng/mòn",
-              "Ổ bi còn tốt"
-            ]
+            "results": []
           },
           "flt_097_s2": {
             "id": "flt_097_s2",
-            "question": "Kiểm tra dấu hiệu hư hỏng hoặc rỉ sét ổ bi?",
+            "symptom_id": "SYM_UNEVEN_TIRE_WEAR",
+            "symptom_label": "Lốp mòn không đều",
+            "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ổ bi bị hỏng/oxy hóa",
-              "Ổ bi sạch/nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -9671,6 +10525,17 @@
             "Kết quả có thể: Ổ bi sạch/nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ rơ ổ bi bánh xe",
+        "Kết quả có thể: Ổ bi lỏng/mòn",
+        "Kết quả có thể: Ổ bi còn tốt",
+        "Kiểm tra dấu hiệu hư hỏng hoặc rỉ sét ổ bi",
+        "Kết quả có thể: Ổ bi bị hỏng/oxy hóa",
+        "Kết quả có thể: Ổ bi sạch/nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -9712,27 +10577,25 @@
         "steps": {
           "flt_098_s1": {
             "id": "flt_098_s1",
-            "question": "Kiểm tra áp suất lốp bằng đồng hồ đo?",
+            "symptom_id": "SYM_TPMS_WARNING_LIGHT_ON",
+            "symptom_label": "Đèn báo áp suất lốp sáng",
+            "question": "Có đèn cảnh báo nào sáng trên bảng đồng hồ không?",
             "is_question": true,
             "yes_next": "flt_098_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Áp suất thấp/cao",
-              "Áp suất đúng tiêu chuẩn"
-            ]
+            "results": []
           },
           "flt_098_s2": {
             "id": "flt_098_s2",
-            "question": "Kiểm tra hư hỏng hoặc rỉ sét cảm biến áp suất lốp?",
+            "symptom_id": "SYM_LOW_TIRE_PRESSURE",
+            "symptom_label": "Áp suất lốp thấp",
+            "question": "Bạn có nhận thấy dấu hiệu này không: áp suất lốp thấp?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Cảm biến bị hỏng/oxy hóa",
-              "Các cảm biến sạch/nguyên vẹn"
-            ]
+            "results": []
           }
         }
       },
@@ -9763,6 +10626,17 @@
             "Kết quả có thể: Các cảm biến sạch/nguyên vẹn"
           ]
         }
+      ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra áp suất lốp bằng đồng hồ đo",
+        "Kết quả có thể: Áp suất thấp/cao",
+        "Kết quả có thể: Áp suất đúng tiêu chuẩn",
+        "Kiểm tra hư hỏng hoặc rỉ sét cảm biến áp suất lốp",
+        "Kết quả có thể: Cảm biến bị hỏng/oxy hóa",
+        "Kết quả có thể: Các cảm biến sạch/nguyên vẹn"
       ],
       "status": "approved"
     },
@@ -9804,27 +10678,25 @@
         "steps": {
           "flt_099_s1": {
             "id": "flt_099_s1",
-            "question": "Kiểm tra độ rơ hoặc tiếng ồn ổ bi moay-ơ?",
+            "symptom_id": "SYM_CLICKING_OR_POPPING_NOISE_WHEN_TURNING",
+            "symptom_label": "Tiếng kêu lụp cụp khi đánh lái",
+            "question": "Xe có tiếng ồn bất thường không?",
             "is_question": true,
             "yes_next": "flt_099_s2",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Moay ơ lỏng/mòn",
-              "Moay ơ trong tình trạng tốt"
-            ]
+            "results": []
           },
           "flt_099_s2": {
             "id": "flt_099_s2",
-            "question": "Kiểm tra độ mòn ổ bi bánh xe?",
+            "symptom_id": "SYM_WHEEL_WOBBLING",
+            "symptom_label": "Bánh xe bị đảo",
+            "question": "Bạn có nhận thấy dấu hiệu này không: bánh xe bị đảo?",
             "is_question": true,
             "yes_next": "DIAGNOSED",
             "no_next": "REFUTED",
             "instruction": null,
-            "results": [
-              "Ổ bi bị mòn",
-              "Các ổ bi còn tốt"
-            ]
+            "results": []
           }
         }
       },
@@ -9856,7 +10728,464 @@
           ]
         }
       ],
+      "causes": [],
+      "severity": "medium",
+      "safety_notes": [],
+      "diagnostic_steps": [
+        "Kiểm tra độ rơ hoặc tiếng ồn ổ bi moay-ơ",
+        "Kết quả có thể: Moay ơ lỏng/mòn",
+        "Kết quả có thể: Moay ơ trong tình trạng tốt",
+        "Kiểm tra độ mòn ổ bi bánh xe",
+        "Kết quả có thể: Ổ bi bị mòn",
+        "Kết quả có thể: Các ổ bi còn tốt"
+      ],
       "status": "approved"
+    },
+    {
+      "fault_id": "critical_system_failure",
+      "fault_name": "l_i_h_th_ng_nghi_m_tr_ng",
+      "fault": "l_i_h_th_ng_nghi_m_tr_ng",
+      "display_name": "Lỗi hệ thống nghiêm trọng",
+      "label_vi": "Lỗi hệ thống nghiêm trọng",
+      "system": "SYS_ENGINE",
+      "system_id": "SYS_ENGINE",
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "subsystem_id": "SUB_ENGINE_MECHANICAL",
+      "affected_components": [
+        "CMP_ENGINE_MOUNT"
+      ],
+      "symptom": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+      "primary_symptom": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+      "candidate_fault_ids": [
+        "critical_system_failure"
+      ],
+      "cf": 0.3333,
+      "symptoms": [
+        {
+          "symptom_id": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+          "cf": 0.3333,
+          "priority": 1
+        }
+      ],
+      "procedure": {
+        "entry_step": null,
+        "steps": {}
+      },
+      "resolution": {
+        "parts": [
+          "Bộ điều khiển động cơ (ECU)"
+        ],
+        "tools": [
+          "Cầu nâng",
+          "Đèn soi gầm",
+          "Dụng cụ kiểm tra cơ khí"
+        ],
+        "procedure": "Sử dụng máy quét lỗi OBDII đọc mã lỗi. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Ngừng vận hành xe. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Liên hệ cứu hộ đưa xe về gara. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+        "difficulty": "advanced",
+        "labor_hours": 2
+      },
+      "repairs": [
+        {
+          "repair_id": "REP_failure",
+          "repair_name": "diagnose_l_i_h_th_ng_nghi_m_tr_ng",
+          "display_name": "Quy trình kiểm tra/sửa chữa: Lỗi hệ thống nghiêm trọng",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Lỗi hệ thống nghiêm trọng",
+          "steps": [
+            "Sử dụng máy quét lỗi OBDII đọc mã lỗi",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Ngừng vận hành xe",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Liên hệ cứu hộ đưa xe về gara",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường"
+          ]
+        }
+      ],
+      "causes": [
+        "Lỗi cảm biến quan trọng",
+        "Hỏng hệ thống cung cấp nhiên liệu",
+        "Chập mạch hệ thống điện"
+      ],
+      "severity": "advanced",
+      "safety_notes": [
+        "Không cố gắng lái xe khi đèn đỏ nhấp nháy"
+      ],
+      "diagnostic_steps": [
+        "Sử dụng máy quét lỗi OBDII đọc mã lỗi",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Ngừng vận hành xe",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Liên hệ cứu hộ đưa xe về gara",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường"
+      ],
+      "status": "approved"
+    },
+    {
+      "fault_id": "unknown_mechanical_wear",
+      "fault_name": "hao_m_n_c_kh_ch_a_x_c_nh",
+      "fault": "hao_m_n_c_kh_ch_a_x_c_nh",
+      "display_name": "Hao mòn cơ khí chưa xác định",
+      "label_vi": "Hao mòn cơ khí chưa xác định",
+      "system": "SYS_ELECTRICAL",
+      "system_id": "SYS_ELECTRICAL",
+      "subsystem": "SUB_STARTING",
+      "subsystem_id": "SUB_STARTING",
+      "affected_components": [
+        "CMP_STARTER_MOTOR"
+      ],
+      "symptom": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+      "primary_symptom": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+      "candidate_fault_ids": [
+        "unknown_mechanical_wear"
+      ],
+      "cf": 0.3333,
+      "symptoms": [
+        {
+          "symptom_id": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+          "cf": 0.3333,
+          "priority": 1
+        }
+      ],
+      "procedure": {
+        "entry_step": null,
+        "steps": {}
+      },
+      "resolution": {
+        "parts": [
+          "Các bộ phận chuyển động chung"
+        ],
+        "tools": [
+          "Cầu nâng",
+          "Đèn soi gầm",
+          "Dụng cụ kiểm tra cơ khí"
+        ],
+        "procedure": "Kiểm tra mực dầu và nước làm mát. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Quan sát các vị trí có dấu hiệu rò rỉ. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Kiểm tra bảo dưỡng định kỳ. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Theo dõi sát sao nếu hiện tượng không tái diễn. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+        "difficulty": "intermediate",
+        "labor_hours": 2
+      },
+      "repairs": [
+        {
+          "repair_id": "REP_wear",
+          "repair_name": "diagnose_hao_m_n_c_kh_ch_a_x_c_nh",
+          "display_name": "Quy trình kiểm tra/sửa chữa: Hao mòn cơ khí chưa xác định",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Hao mòn cơ khí chưa xác định",
+          "steps": [
+            "Kiểm tra mực dầu và nước làm mát",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Quan sát các vị trí có dấu hiệu rò rỉ",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Kiểm tra bảo dưỡng định kỳ",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Theo dõi sát sao nếu hiện tượng không tái diễn",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường"
+          ]
+        }
+      ],
+      "causes": [
+        "Hao mòn tự nhiên",
+        "Dầu bôi trơn kém",
+        "Lỏng giắc cắm"
+      ],
+      "severity": "intermediate",
+      "safety_notes": [
+        "Chú ý quan sát sự thay đổi nhiệt độ động cơ"
+      ],
+      "diagnostic_steps": [
+        "Kiểm tra mực dầu và nước làm mát",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Quan sát các vị trí có dấu hiệu rò rỉ",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Kiểm tra bảo dưỡng định kỳ",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Theo dõi sát sao nếu hiện tượng không tái diễn",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường"
+      ],
+      "status": "approved"
+    },
+    {
+      "fault_id": "accessory_drive_belt_failure",
+      "fault_name": "h_ng_d_y_curoa_ho_c_b_ph_n_ph_tr",
+      "fault": "h_ng_d_y_curoa_ho_c_b_ph_n_ph_tr",
+      "display_name": "Hỏng dây curoa hoặc bộ phận phụ trợ",
+      "label_vi": "Hỏng dây curoa hoặc bộ phận phụ trợ",
+      "system": "SYS_ENGINE",
+      "system_id": "SYS_ENGINE",
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "subsystem_id": "SUB_ENGINE_MECHANICAL",
+      "affected_components": [
+        "CMP_ENGINE_MOUNT"
+      ],
+      "symptom": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+      "primary_symptom": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+      "candidate_fault_ids": [
+        "accessory_drive_belt_failure"
+      ],
+      "cf": 0.3333,
+      "symptoms": [
+        {
+          "symptom_id": "SYM_TRI_U_CH_NG_HO_N_TO_N_M_I",
+          "cf": 0.3333,
+          "priority": 1
+        }
+      ],
+      "procedure": {
+        "entry_step": null,
+        "steps": {}
+      },
+      "resolution": {
+        "parts": [
+          "Dây curoa tổng"
+        ],
+        "tools": [
+          "Cầu nâng",
+          "Đèn soi gầm",
+          "Dụng cụ kiểm tra cơ khí"
+        ],
+        "procedure": "Kiểm tra độ căng của dây curoa bằng mắt thường. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Lắng nghe vị trí phát ra tiếng kêu. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Thay thế dây curoa. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Kiểm tra các pulley liên quan. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+        "difficulty": "advanced",
+        "labor_hours": 2
+      },
+      "repairs": [
+        {
+          "repair_id": "REP_failure",
+          "repair_name": "diagnose_h_ng_d_y_curoa_ho_c_b_ph_n_ph_tr",
+          "display_name": "Quy trình kiểm tra/sửa chữa: Hỏng dây curoa hoặc bộ phận phụ trợ",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Hỏng dây curoa hoặc bộ phận phụ trợ",
+          "steps": [
+            "Kiểm tra độ căng của dây curoa bằng mắt thường",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Lắng nghe vị trí phát ra tiếng kêu",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Thay thế dây curoa",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường",
+            "Kiểm tra các pulley liên quan",
+            "Kết quả có thể: Bất thường",
+            "Kết quả có thể: Bình thường"
+          ]
+        }
+      ],
+      "causes": [
+        "Dây curoa bị nứt/chùng",
+        "Bạc đạn máy phát bị kẹt"
+      ],
+      "severity": "advanced",
+      "safety_notes": [
+        "Cẩn thận khi đưa tay vào khoang máy khi động cơ còn nóng"
+      ],
+      "diagnostic_steps": [
+        "Kiểm tra độ căng của dây curoa bằng mắt thường",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Lắng nghe vị trí phát ra tiếng kêu",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Thay thế dây curoa",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường",
+        "Kiểm tra các pulley liên quan",
+        "Kết quả có thể: Bất thường",
+        "Kết quả có thể: Bình thường"
+      ],
+      "status": "approved"
+    }
+  ],
+  "decision_trees": [
+    {
+      "candidate_id": "gen_diag_001",
+      "source": "expert_approved_llm_tree",
+      "root_symptom": {
+        "symptom_id": "new_unidentified_symptom",
+        "label_vi": "Triệu chứng hoàn toàn mới",
+        "aliases": [
+          "hiện tượng lạ",
+          "hành vi bất thường",
+          "vấn đề mới phát sinh"
+        ]
+      },
+      "tree": {
+        "root_node_id": "q1",
+        "nodes": [
+          {
+            "node_id": "q1",
+            "type": "question",
+            "question": "Xe có xuất hiện đèn báo lỗi trên bảng điều khiển (Check Engine/ABS/Battery) không?",
+            "answer_type": "yes_no",
+            "yes_next": "q2",
+            "no_next": "q3",
+            "unknown_next": "q_unknown_1",
+            "purpose": "Xác định xem hệ thống máy tính có ghi nhận lỗi điện tử hay không"
+          },
+          {
+            "node_id": "q2",
+            "type": "question",
+            "question": "Đèn báo lỗi có màu đỏ hoặc nhấp nháy liên tục không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "q4",
+            "unknown_next": "r2",
+            "purpose": "Phân loại mức độ nguy hiểm của lỗi hệ thống"
+          },
+          {
+            "node_id": "q3",
+            "type": "question",
+            "question": "Có tiếng động lạ (kêu lạch cạch, rít, gõ) phát ra từ khoang động cơ không?",
+            "answer_type": "yes_no",
+            "yes_next": "r3",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Kiểm tra các vấn đề cơ khí vật lý"
+          },
+          {
+            "node_id": "q4",
+            "type": "question",
+            "question": "Xe có bị mất công suất hoặc chết máy đột ngột khi đang di chuyển không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Đánh giá tình trạng vận hành của động cơ"
+          },
+          {
+            "node_id": "q_unknown_1",
+            "type": "question",
+            "question": "Bạn có ngửi thấy mùi khét hoặc mùi nhiên liệu không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Kiểm tra nguy cơ cháy nổ tiềm ẩn"
+          },
+          {
+            "node_id": "r1",
+            "type": "result",
+            "fault": {
+              "fault_id": "critical_system_failure",
+              "fault_name": "Lỗi hệ thống nghiêm trọng",
+              "system": "engine",
+              "severity": "critical",
+              "confidence": 0.85
+            },
+            "components": [
+              {
+                "component_id": "ecu",
+                "name_vi": "Bộ điều khiển động cơ (ECU)"
+              }
+            ],
+            "causes": [
+              "Lỗi cảm biến quan trọng",
+              "Hỏng hệ thống cung cấp nhiên liệu",
+              "Chập mạch hệ thống điện"
+            ],
+            "diagnostic_steps": [
+              "Sử dụng máy quét lỗi OBDII đọc mã lỗi"
+            ],
+            "repair_steps": [
+              "Ngừng vận hành xe",
+              "Liên hệ cứu hộ đưa xe về gara"
+            ],
+            "safety_notes": [
+              "Không cố gắng lái xe khi đèn đỏ nhấp nháy"
+            ],
+            "when_to_stop": [
+              "Dừng ngay lập tức nếu thấy khói hoặc có mùi khét"
+            ]
+          },
+          {
+            "node_id": "r2",
+            "type": "result",
+            "fault": {
+              "fault_id": "unknown_mechanical_wear",
+              "fault_name": "Hao mòn cơ khí chưa xác định",
+              "system": "unknown",
+              "severity": "medium",
+              "confidence": 0.6
+            },
+            "components": [
+              {
+                "component_id": "general_components",
+                "name_vi": "Các bộ phận chuyển động chung"
+              }
+            ],
+            "causes": [
+              "Hao mòn tự nhiên",
+              "Dầu bôi trơn kém",
+              "Lỏng giắc cắm"
+            ],
+            "diagnostic_steps": [
+              "Kiểm tra mực dầu và nước làm mát",
+              "Quan sát các vị trí có dấu hiệu rò rỉ"
+            ],
+            "repair_steps": [
+              "Kiểm tra bảo dưỡng định kỳ",
+              "Theo dõi sát sao nếu hiện tượng không tái diễn"
+            ],
+            "safety_notes": [
+              "Chú ý quan sát sự thay đổi nhiệt độ động cơ"
+            ],
+            "when_to_stop": [
+              "Nếu hiện tượng diễn ra liên tục hoặc tăng dần cường độ"
+            ]
+          },
+          {
+            "node_id": "r3",
+            "type": "result",
+            "fault": {
+              "fault_id": "accessory_drive_belt_failure",
+              "fault_name": "Hỏng dây curoa hoặc bộ phận phụ trợ",
+              "system": "engine",
+              "severity": "high",
+              "confidence": 0.75
+            },
+            "components": [
+              {
+                "component_id": "serpentine_belt",
+                "name_vi": "Dây curoa tổng"
+              }
+            ],
+            "causes": [
+              "Dây curoa bị nứt/chùng",
+              "Bạc đạn máy phát bị kẹt"
+            ],
+            "diagnostic_steps": [
+              "Kiểm tra độ căng của dây curoa bằng mắt thường",
+              "Lắng nghe vị trí phát ra tiếng kêu"
+            ],
+            "repair_steps": [
+              "Thay thế dây curoa",
+              "Kiểm tra các pulley liên quan"
+            ],
+            "safety_notes": [
+              "Cẩn thận khi đưa tay vào khoang máy khi động cơ còn nóng"
+            ],
+            "when_to_stop": [
+              "Nếu dây curoa có dấu hiệu đứt hoàn toàn"
+            ]
+          }
+        ],
+        "expert_review": {
+          "candidate_ready": true,
+          "status": "pending_expert_review"
+        }
+      },
+      "approved_at": "2026-05-14T17:27:54.552298+00:00",
+      "approved_by": "expert",
+      "selected_paths": []
     }
   ]
 }

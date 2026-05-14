@@ -40,6 +40,15 @@ def ensure_database():
             "last_answer": "TEXT",
             "active_fault_id": "TEXT",
             "total_steps_est": "INTEGER",
+            "asked_questions": "TEXT DEFAULT '[]'",
+            "symptoms_normalized": "TEXT DEFAULT '[]'",
+            "vehicle_context": "TEXT DEFAULT '{}'",
+            "llm_candidate_generated": "INTEGER DEFAULT 0",
+            "candidate_id": "TEXT",
+            "decision_tree": "TEXT DEFAULT '{}'",
+            "current_node_id": "TEXT",
+            "selected_result_node_id": "TEXT",
+            "selected_path": "TEXT DEFAULT '[]'",
         }
         for column, ddl in migrations.items():
             if column not in existing_columns:

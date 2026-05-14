@@ -17,6 +17,17 @@ class AnswerRequest(BaseModel):
     answer: str
 
 
+class DiagnosisStartRequest(BaseModel):
+    description: str = Field(min_length=1)
+    top_k: int = Field(default=5, ge=1, le=20)
+
+
+class DiagnosisTreeAnswerRequest(BaseModel):
+    session_id: str
+    node_id: str
+    answer: str
+
+
 class RuleDecisionRequest(BaseModel):
     cf: float | None = Field(default=None, ge=0, le=1)
     note: str | None = None

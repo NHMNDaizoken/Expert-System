@@ -139,26 +139,28 @@ class TestValidation:
 # 2. Offline fallback tests
 # ---------------------------------------------------------------------------
 
-class TestOfflineFallback:
-    def test_offline_returns_llm_kb_patch_shape(self):
-        result = _offline_response("xe bị rung mạnh")
-        assert result["review_type"] == "llm_kb_patch"
-        assert result["needs_expert_review"] is True
-        assert result["candidate_faults"]
-        assert result["procedure_trees"]
-
-        # Validate the shape
-        ok, errors = validate_llm_kb_patch(result)
-        assert ok, f"Offline response failed validation: {errors}"
-
+class TestLLMFallback:
     def test_diagnose_with_llm_without_api_key(self):
-        """Without API key, should return offline fallback in llm_kb_patch format."""
-        result = diagnose_with_llm("xe bị rung mạnh", top_k=3)
-        assert result["review_type"] == "llm_kb_patch"
-        assert result["needs_expert_review"] is True
-        assert result.get("queued_for_review") is True or result.get("queued_for_review") is False
-        assert result["candidate_faults"]
-        assert result["procedure_trees"]
+        """Without API key, should return an error or status indicating missing key."""
+        # Mocking _has_api_key to return False if needed, or assuming it's False in CI
+        with patch("src.expert_system.llm_fallback._has_api_key", return_value=False):
+            result = diagnose_with_llm("xe bị rung mạnh", session={})
+            assert result["status"] == "error"
+            assert "API Key" in result["error"]
+
+    @patch("src.expert_system.llm_fallback._get_model")
+    def test_diagnose_with_llm_flow(self, mock_get_model):
+        """Test the flow where LLM asks a question first."""
+        mock_model = mock_get_model.return_value
+        mock_model.generate_content.return_value.text = json.dumps({
+            "next_question": "Tiếng kêu xuất hiện khi nào?"
+        })
+        
+        with patch("src.expert_system.llm_fallback._has_api_key", return_value=True):
+            result = diagnose_with_llm("xe kêu to", session={"asked_questions": []})
+            assert result["status"] == "need_more_info"
+            assert "next_question" in result["next_question"]
+            assert result["asked_question_text"] == "Tiếng kêu xuất hiện khi nào?"
 
 
 # ---------------------------------------------------------------------------
@@ -177,17 +179,30 @@ class TestDiagnosisServiceFallback:
         assert resp["source"] == "llm_fallback"
 
     def test_llm_response_has_patch_suggestion(self):
-        resp = llm_response("xe bị rung mạnh")
-        assert "llm_patch_suggestion" in resp
-        assert resp["review_type"] == "llm_kb_patch"
-        assert resp["review_status"] == "pending"
+        # We need to mock diagnose_with_llm to return a pending_expert_review status
+        with patch("backend.services.diagnosis_service.diagnose_with_llm") as mock_fallback:
+            mock_fallback.return_value = {
+                "status": "pending_expert_review",
+                "candidate": {"faults": []},
+                "llm_candidate_generated": True
+            }
+            resp = llm_response("xe bị rung mạnh")
+            assert "llm_patch_suggestion" in resp
+            assert resp["llm_candidate_generated"] is True
+            assert resp["status"] == "pending_expert_review"
 
     def test_llm_response_has_next_question(self):
-        resp = llm_response("xe bị rung mạnh")
-        nq = resp.get("next_question")
-        assert nq is not None
-        assert "question" in nq
-        assert nq.get("mode") == "llm_fallback"
+        with patch("backend.services.diagnosis_service.diagnose_with_llm") as mock_fallback:
+            mock_fallback.return_value = {
+                "status": "need_more_info",
+                "next_question": {"question": "Tiếng kêu ở đâu?"},
+                "asked_question_text": "Tiếng kêu ở đâu?"
+            }
+            resp = llm_response("xe kêu to")
+            nq = resp.get("next_question")
+            assert nq is not None
+            assert nq["question"] == "Tiếng kêu ở đâu?"
+            assert resp["status"] == "need_more_info"
 
     def test_extract_patch_next_question(self):
         q = _extract_patch_next_question(SAMPLE_PATCH)
