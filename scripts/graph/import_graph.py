@@ -29,6 +29,7 @@ from scripts.validate.validate_knowledge import validate_all
 ONTOLOGY_PATH = PROJECT_ROOT / "data" / "staging" / "ontology.json"
 SYMPTOM_ALIASES_PATH = PROJECT_ROOT / "data" / "staging" / "symptom_aliases.json"
 RULES_PATH = PROJECT_ROOT / "data" / "staging" / "kg_rules_from_dataset.json"
+DECISION_TREES_STAGING = PROJECT_ROOT / "data" / "staging" / "decision_trees.json"
 
 
 def load_json(path: str | Path) -> Any:
@@ -458,13 +459,25 @@ def import_rules(args):
     print(f"Imported {len(rules)} rules into Neo4j")
 
 
+DECISION_TREES_STAGING = PROJECT_ROOT / "data" / "staging" / "decision_trees.json"
+
+
 def import_knowledge_graph(args):
     ontology = load_json(args.ontology)
     symptom_aliases = load_json(args.symptom_aliases)
     data = load_json(args.path)
     rules = extract_rules(data)
-    decision_trees = data.get("decision_trees", []) if isinstance(data, dict) else []
-    validate_decision_trees(decision_trees)
+    decision_trees: list[dict[str, Any]] = []
+    if getattr(args, "import_decision_trees", False):
+        dt_path = Path(args.decision_trees_path)
+        if dt_path.exists():
+            blob = load_json(dt_path)
+            if isinstance(blob, dict) and isinstance(blob.get("trees"), list):
+                decision_trees = [t for t in blob["trees"] if isinstance(t, dict)]
+            elif isinstance(blob, list):
+                decision_trees = [t for t in blob if isinstance(t, dict)]
+        if decision_trees:
+            validate_decision_trees(decision_trees)
     driver = get_driver()
 
     try:
@@ -509,6 +522,17 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("rules", "graph"),
         default="graph",
         help="Import just the rules graph or rebuild ontology + symptoms + rules.",
+    )
+    parser.add_argument(
+        "--import-decision-trees",
+        action="store_true",
+        help="Import optional LLM Yes/No tree nodes (DecisionTree/Question/Result) from staging decision_trees.json for debugging.",
+    )
+    parser.add_argument(
+        "--decision-trees-path",
+        type=Path,
+        default=DECISION_TREES_STAGING,
+        help="Path to decision_trees.json when --import-decision-trees is set.",
     )
     return parser
 

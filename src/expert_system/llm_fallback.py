@@ -452,8 +452,8 @@ def diagnose_with_llm(user_input: str, session: dict[str, Any]) -> dict[str, Any
     Main entry point for LLM fallback flow.
     Generates a complete diagnostic decision tree once for the initial symptom.
     """
-    existing = (session or {}).get("decision_tree")
-    if existing:
+    existing = (session or {}).get("decision_tree") or {}
+    if isinstance(existing, dict) and (existing.get("tree") or {}).get("nodes"):
         return {
             "status": "pending_expert_review",
             "candidate": existing,

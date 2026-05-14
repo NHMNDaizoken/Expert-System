@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": "1.0",
-    "generated_at": "2026-05-14T17:27:54.938966+00:00",
-    "total_trees": 1
+    "generated_at": "2026-05-14T17:46:29.673487+00:00",
+    "total_trees": 2
   },
   "trees": [
     {
@@ -185,6 +185,194 @@
       "approved_at": "2026-05-14T17:27:54.552298+00:00",
       "approved_by": "expert",
       "selected_paths": []
+    },
+    {
+      "candidate_id": "suspension_vibration_001",
+      "source": "expert_approved_llm_tree",
+      "root_symptom": {
+        "symptom_id": "underbody_noise_vibration",
+        "label_vi": "Gầm xe kêu hoặc rung không đều",
+        "aliases": [
+          "xe rung lắc",
+          "tiếng ồn dưới gầm",
+          "khua khoắng gầm"
+        ]
+      },
+      "tree": {
+        "root_node_id": "q1",
+        "nodes": [
+          {
+            "node_id": "q1",
+            "type": "question",
+            "question": "Tiếng kêu hoặc rung có thay đổi theo tốc độ vòng quay của bánh xe hay không?",
+            "answer_type": "yes_no",
+            "yes_next": "q2",
+            "no_next": "q3",
+            "unknown_next": "q_unknown_1",
+            "purpose": "Phân biệt hư hỏng liên quan đến hệ thống truyền động/bánh xe và hệ thống treo"
+          },
+          {
+            "node_id": "q2",
+            "type": "question",
+            "question": "Khi đánh lái hoặc vào cua, tiếng kêu có trở nên rõ rệt hơn không?",
+            "answer_type": "yes_no",
+            "yes_next": "r1",
+            "no_next": "r2",
+            "unknown_next": "r2",
+            "purpose": "Xác định xem vấn đề nằm ở vòng bi moay-ơ hay hệ thống dẫn động"
+          },
+          {
+            "node_id": "q3",
+            "type": "question",
+            "question": "Tiếng kêu xuất hiện rõ nhất khi xe đi qua đường xấu hoặc gờ giảm tốc?",
+            "answer_type": "yes_no",
+            "yes_next": "r3",
+            "no_next": "q_unknown_1",
+            "unknown_next": "q_unknown_1",
+            "purpose": "Xác định các thành phần hệ thống treo bị lỏng hoặc hư hỏng"
+          },
+          {
+            "node_id": "q_unknown_1",
+            "type": "result",
+            "fault": {
+              "fault_id": "general_inspection_needed",
+              "fault_name": "Cần kiểm tra tổng quát tại xưởng",
+              "system": "unknown",
+              "severity": "medium",
+              "confidence": 0.5
+            },
+            "components": [
+              "khung gầm xe"
+            ],
+            "causes": [
+              "Nguyên nhân chưa xác định rõ qua kiểm tra sơ bộ"
+            ],
+            "diagnostic_steps": [
+              "Nâng xe trên cầu",
+              "Kiểm tra bằng mắt thường toàn bộ các chi tiết gầm"
+            ],
+            "repair_steps": [
+              "Đưa xe đến trung tâm bảo dưỡng uy tín"
+            ],
+            "safety_notes": [
+              "Không tự ý tháo dỡ các bộ phận gầm khi không đủ thiết bị nâng"
+            ],
+            "when_to_stop": [
+              "Khi nghe tiếng va đập lớn dưới gầm hoặc mất lái"
+            ]
+          },
+          {
+            "node_id": "r1",
+            "type": "result",
+            "fault": {
+              "fault_id": "wheel_bearing_fault",
+              "fault_name": "Hỏng vòng bi moay-ơ",
+              "system": "suspension",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "components": [
+              "vòng bi bánh xe"
+            ],
+            "causes": [
+              "Vòng bi bị mòn hoặc thiếu mỡ bôi trơn do đi vào đường ngập nước"
+            ],
+            "diagnostic_steps": [
+              "Nâng bánh xe",
+              "Lắc bánh theo phương dọc/ngang để kiểm tra độ rơ"
+            ],
+            "repair_steps": [
+              "Thay thế cụm vòng bi bánh xe mới"
+            ],
+            "safety_notes": [
+              "Vòng bi hỏng có thể gây kẹt bánh khi đang chạy"
+            ],
+            "when_to_stop": [
+              "Ngừng lái xe ngay lập tức nếu bánh xe có độ rơ lớn"
+            ]
+          },
+          {
+            "node_id": "r2",
+            "type": "result",
+            "fault": {
+              "fault_id": "cv_joint_fault",
+              "fault_name": "Hỏng khớp đồng tốc (trục láp)",
+              "system": "transmission",
+              "severity": "medium",
+              "confidence": 0.85
+            },
+            "components": [
+              "trục dẫn động",
+              "cao su chắn bụi"
+            ],
+            "causes": [
+              "Rách cao su chắn bụi khiến mỡ bị khô và cát bụi lọt vào"
+            ],
+            "diagnostic_steps": [
+              "Kiểm tra cao su chắn bụi xem có bị rách không",
+              "Kiểm tra độ rơ của khớp"
+            ],
+            "repair_steps": [
+              "Thay thế cao su hoặc thay cụm khớp đồng tốc"
+            ],
+            "safety_notes": [
+              "Khớp bị kẹt có thể làm gãy trục láp khi đang vận hành"
+            ],
+            "when_to_stop": [
+              "Khi xuất hiện tiếng kêu lục cục rõ rệt khi quay đầu xe"
+            ]
+          },
+          {
+            "node_id": "r3",
+            "type": "result",
+            "fault": {
+              "fault_id": "suspension_bushing_link_fault",
+              "fault_name": "Lỏng rô-tuyn hoặc bạc treo",
+              "system": "suspension",
+              "severity": "medium",
+              "confidence": 0.8
+            },
+            "components": [
+              "rô-tuyn",
+              "bạc treo",
+              "thanh cân bằng"
+            ],
+            "causes": [
+              "Các chi tiết cao su bị lão hóa hoặc khớp cầu bị mòn do thời gian"
+            ],
+            "diagnostic_steps": [
+              "Sử dụng đòn bẩy kiểm tra độ rơ của các khớp nối hệ thống treo"
+            ],
+            "repair_steps": [
+              "Thay thế các chi tiết bạc cao su hoặc rô-tuyn bị hỏng"
+            ],
+            "safety_notes": [
+              "Các chi tiết này ảnh hưởng đến khả năng điều hướng của xe"
+            ],
+            "when_to_stop": [
+              "Khi thấy xe mất cân bằng hoặc cảm giác lái không còn chính xác"
+            ]
+          }
+        ]
+      },
+      "approved_at": "2026-05-14T17:46:29.257191+00:00",
+      "approved_by": "expert",
+      "selected_paths": [
+        [
+          {
+            "node_id": "q1",
+            "question": "Tiếng kêu hoặc rung có thay đổi theo tốc độ vòng quay của bánh xe hay không?",
+            "answer": "yes",
+            "next_node_id": "q2"
+          },
+          {
+            "node_id": "q2",
+            "question": "Khi đánh lái hoặc vào cua, tiếng kêu có trở nên rõ rệt hơn không?",
+            "answer": "yes",
+            "next_node_id": "r1"
+          }
+        ]
+      ]
     }
   ]
 }

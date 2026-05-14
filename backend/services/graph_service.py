@@ -2,7 +2,10 @@ import json
 import re
 from pathlib import Path
 
-from neo4j import GraphDatabase
+try:
+    from neo4j import GraphDatabase
+except ImportError:  # optional: file-backed graph still works for API/tests
+    GraphDatabase = None  # type: ignore[misc, assignment]
 
 from backend.core.config import settings
 from backend.services.diagnosis_service import confidence_label
@@ -60,7 +63,7 @@ class GraphService:
     def __init__(self):
         self.driver = None
         self.translations = self._load_json(TRANSLATIONS_PATH, default={})
-        if settings.neo4j_uri and settings.neo4j_user and settings.neo4j_password:
+        if GraphDatabase is not None and settings.neo4j_uri and settings.neo4j_user and settings.neo4j_password:
             self.driver = GraphDatabase.driver(
                 settings.neo4j_uri,
                 auth=(settings.neo4j_user, settings.neo4j_password),
@@ -117,46 +120,39 @@ class GraphService:
         if self.driver is None:
             return None
 
-        # Cypher traversal: Symptom -> Fault -> Component/Repair
+        # Symptom -> Fault -> Component/Repair (production KG only)
         cypher = """
         MATCH (s:Symptom)
         WHERE toLower(toString(coalesce(s.name, ""))) CONTAINS toLower($query)
            OR toLower(toString(coalesce(s.display_name, ""))) CONTAINS toLower($query)
            OR toLower(toString(coalesce(s.label_vi, ""))) CONTAINS toLower($query)
            OR any(a IN s.aliases WHERE toLower(toString(a)) CONTAINS toLower($query))
-        
+
         OPTIONAL MATCH (f:Fault)-[:HAS_SYMPTOM]->(s)
         OPTIONAL MATCH (f)-[:AFFECTS]->(c:Component)
         OPTIONAL MATCH (f)-[:FIXED_BY]->(r:Repair)
-        OPTIONAL MATCH (s)-[:HAS_DECISION_TREE]->(dt:DecisionTree)
-        OPTIONAL MATCH (dt)-[:HAS_ROOT_QUESTION]->(q:Question)
-        OPTIONAL MATCH (q)-[:YES|NO|UNKNOWN*0..4]->(tree_node)
-        WHERE tree_node IS NULL OR tree_node:Question OR tree_node:Result
-        OPTIONAL MATCH (tree_node:Result)-[:DIAGNOSES]->(tf:Fault)
-        
-        RETURN 
+
+        RETURN
             collect(distinct s) as symptoms,
             collect(distinct f) as faults,
             collect(distinct c) as components,
-            collect(distinct r) as repairs,
-            collect(distinct dt) as decision_trees,
-            collect(distinct q) + collect(distinct tree_node) as question_path,
-            collect(distinct tf) as possible_faults
+            collect(distinct r) as repairs
         """
 
         with self.driver.session() as session:
             result = session.run(cypher, query=query).single()
             if not result:
                 return None
-                
+
+            faults = [self._format_node(n, ["Fault"]) for n in result["faults"] if n]
             return {
                 "matched_symptoms": [self._format_node(n, ["Symptom"]) for n in result["symptoms"]],
-                "decision_trees": [self._format_node(n, ["DecisionTree"]) for n in result["decision_trees"] if n],
-                "question_path": [self._format_node(n, self._labels(n) or ["Question"]) for n in result["question_path"] if n],
-                "possible_faults": [self._format_node(n, ["Fault"]) for n in result["possible_faults"] if n],
-                "related_faults": [self._format_node(n, ["Fault"]) for n in result["faults"]],
+                "decision_trees": [],
+                "question_path": [],
+                "possible_faults": faults,
+                "related_faults": faults,
                 "related_components": [self._format_node(n, ["Component"]) for n in result["components"]],
-                "repairs": [self._format_node(n, ["Repair"]) for n in result["repairs"]]
+                "repairs": [self._format_node(n, ["Repair"]) for n in result["repairs"]],
             }
 
     def _search_graph_from_files(self, query):
@@ -182,12 +178,10 @@ class GraphService:
         # Traverse to faults, components, repairs
         symptom_ids = {s["id"] for s in matched_symptoms}
         fault_ids = set()
-        
+
         for edge in graph["edges"]:
             if edge["type"] == "HAS_SYMPTOM" and edge["target"] in symptom_ids:
                 fault_ids.add(edge["source"])
-            if edge["type"] == "HAS_DECISION_TREE" and edge["source"] in symptom_ids:
-                decision_trees.append(next((n for n in graph["nodes"] if n["id"] == edge["target"]), None))
 
         for node in graph["nodes"]:
             if node["id"] in fault_ids and node["type"] == "Fault":
@@ -197,41 +191,21 @@ class GraphService:
                     if edge["source"] == node["id"]:
                         if edge["type"] == "AFFECTS":
                             target_node = next((n for n in graph["nodes"] if n["id"] == edge["target"]), None)
-                            if target_node: related_components.append(target_node)
+                            if target_node:
+                                related_components.append(target_node)
                         if edge["type"] == "FIXED_BY":
                             target_node = next((n for n in graph["nodes"] if n["id"] == edge["target"]), None)
-                            if target_node: repairs.append(target_node)
-        tree_ids = {node["id"] for node in decision_trees if node}
-        frontier = set()
-        for edge in graph["edges"]:
-            if edge["type"] == "HAS_ROOT_QUESTION" and edge["source"] in tree_ids:
-                frontier.add(edge["target"])
-        visited = set()
-        while frontier:
-            node_id = frontier.pop()
-            if node_id in visited:
-                continue
-            visited.add(node_id)
-            node = next((n for n in graph["nodes"] if n["id"] == node_id), None)
-            if node:
-                question_path.append(node)
-            for edge in graph["edges"]:
-                if edge["source"] == node_id and edge["type"] in {"YES", "NO", "UNKNOWN", "DIAGNOSES"}:
-                    if edge["type"] == "DIAGNOSES":
-                        fault_node = next((n for n in graph["nodes"] if n["id"] == edge["target"]), None)
-                        if fault_node:
-                            possible_faults.append(fault_node)
-                    else:
-                        frontier.add(edge["target"])
+                            if target_node:
+                                repairs.append(target_node)
 
         return {
             "matched_symptoms": matched_symptoms,
-            "decision_trees": [node for node in self._dedupe_nodes(decision_trees) if node],
-            "question_path": self._dedupe_nodes(question_path),
-            "possible_faults": self._dedupe_nodes(possible_faults),
+            "decision_trees": decision_trees,
+            "question_path": question_path,
+            "possible_faults": related_faults,
             "related_faults": related_faults,
             "related_components": related_components,
-            "repairs": repairs
+            "repairs": repairs,
         }
 
     def list_faults(self, query="", limit=200):
@@ -364,40 +338,6 @@ class GraphService:
             for rep in rule.get("repairs", []):
                 add_node(rep["repair_id"], self._display_label(rep), "Repair", status, rep)
                 add_edge(fault_id, rep["repair_id"], "FIXED_BY")
-        decision_tree_records = rules_data.get("decision_trees", []) if isinstance(rules_data, dict) else []
-        for tree in decision_tree_records:
-            tree_id = f"DT_{tree.get('candidate_id')}"
-            root = tree.get("root_symptom") or {}
-            root_label = root.get("label_vi") or root.get("symptom_id") or tree_id
-            symptom_id = f"SYM_{slugify(root_label).upper()}"
-            add_node(tree_id, root_label, "DecisionTree", "approved", tree)
-            if not any(n["id"] == symptom_id for n in nodes):
-                add_node(symptom_id, root_label, "Symptom", "approved", {"aliases": root.get("aliases", [])})
-            add_edge(symptom_id, tree_id, "HAS_DECISION_TREE")
-            node_ids = {}
-            for node in (tree.get("tree") or {}).get("nodes", []):
-                gid = f"{tree_id}_{node.get('node_id')}"
-                node_ids[node.get("node_id")] = gid
-                if node.get("type") == "question":
-                    add_node(gid, node.get("question"), "Question", "approved", node)
-                else:
-                    label = (node.get("fault") or {}).get("fault_name") or node.get("node_id")
-                    add_node(gid, label, "Result", "approved", node)
-                    fid = (node.get("fault") or {}).get("fault_id")
-                    if fid:
-                        add_edge(gid, fid, "DIAGNOSES")
-            root_node = node_ids.get((tree.get("tree") or {}).get("root_node_id"))
-            if root_node:
-                add_edge(tree_id, root_node, "HAS_ROOT_QUESTION")
-            node_map = {node.get("node_id"): node for node in (tree.get("tree") or {}).get("nodes", [])}
-            for node in node_map.values():
-                if node.get("type") != "question":
-                    continue
-                source = node_ids.get(node.get("node_id"))
-                for key, rel in (("yes_next", "YES"), ("no_next", "NO"), ("unknown_next", "UNKNOWN")):
-                    target = node_ids.get(node.get(key))
-                    if source and target:
-                        add_edge(source, target, rel)
         return {"nodes": self._dedupe_nodes(nodes), "edges": self._dedupe_edges(edges)}
 
     def _get_fault_graph_from_files(self, fault_id):

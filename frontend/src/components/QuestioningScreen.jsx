@@ -49,12 +49,17 @@ function breadcrumbParts(data) {
 }
 
 function questionText(data) {
-  const question = data?.next_question?.question || data?.next_question;
-  if (!question) return "Bạn có thấy dấu hiệu này không?";
-  if (data?.next_question?.mode === "information_gain" && data?.next_question?.label) {
-    return `Bạn có thấy thêm dấu hiệu: ${data.next_question.label.toLowerCase()} không?`;
+  const nq = data?.next_question;
+  const direct =
+    (typeof nq === "string" && nq.trim()) ? nq.trim()
+    : (nq && typeof nq === "object" && nq.question && String(nq.question).trim()) ? String(nq.question).trim()
+    : (data?.question && String(data.question).trim()) ? String(data.question).trim()
+    : "";
+  if (direct) return direct;
+  if (nq?.mode === "information_gain" && nq?.label) {
+    return `Bạn có thấy thêm dấu hiệu: ${String(nq.label).toLowerCase()} không?`;
   }
-  return question;
+  return "Bạn có thể mô tả chi tiết hơn về triệu chứng không?";
 }
 
 function questionType(data) {

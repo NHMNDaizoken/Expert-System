@@ -593,6 +593,17 @@
       "Tiếng kêu rít từ bánh xe"
     ]
   },
+  "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U": {
+    "name": "g_m_xe_k_u_ho_c_rung_kh_ng_u",
+    "display_name": "Gầm xe kêu hoặc rung không đều",
+    "label_vi": "Gầm xe kêu hoặc rung không đều",
+    "aliases": [
+      "Gầm xe kêu hoặc rung không đều",
+      "xe rung lắc",
+      "tiếng ồn dưới gầm",
+      "khua khoắng gầm"
+    ]
+  },
   "SYM_HARD_BRAKE_PEDAL": {
     "name": "hard_brake_pedal",
     "display_name": "Bàn đạp phanh bị cứng",

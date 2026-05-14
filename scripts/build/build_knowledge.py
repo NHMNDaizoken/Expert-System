@@ -621,6 +621,8 @@ def build_rules(
         procedure = (procedure_trees or {}).get(fault_id) or {"entry_step": None, "steps": {}}
         repair_display = repair_display_for(display_vi)
 
+        promo = record.get("promotion_metadata") if isinstance(record.get("promotion_metadata"), dict) else {}
+
         rule = {
             "fault_id": fault_id,
             "fault_name": fault_name,
@@ -655,7 +657,7 @@ def build_rules(
                 }
             ],
             "causes": [vi_label(c, translations) for c in record.get("causes", [])],
-            "severity": record.get("difficulty") or "medium",
+            "severity": promo.get("severity") or record.get("difficulty") or "medium",
             "safety_notes": [vi_label(s, translations) for s in record.get("safety_notes", [])],
             "diagnostic_steps": resolution["steps"],
             "status": "approved",
@@ -678,9 +680,29 @@ def load_existing_artifact(path: Path) -> Any | None:
     return load_json(path) if path.exists() else None
 
 
+def load_promoted_tree_candidate_ids() -> set[str]:
+    """candidate_ids already flattened into expert_accepted_faults.json (post-approval flow)."""
+    if not RAW_EXPERT_PATH.exists():
+        return set()
+    data = load_json(RAW_EXPERT_PATH)
+    rows = _extract_records(data)
+    promoted: set[str] = set()
+    for row in rows:
+        meta = row.get("promotion_metadata") if isinstance(row, dict) else None
+        if isinstance(meta, dict) and meta.get("candidate_id"):
+            promoted.add(str(meta["candidate_id"]))
+    return promoted
+
+
 def build_knowledge(rebuild_from_raw: bool = False) -> dict[str, Path]:
     accepted_trees = load_accepted_decision_trees()
-    records = load_records(RAW_PATH) + decision_tree_records(accepted_trees)
+    promoted_ids = load_promoted_tree_candidate_ids()
+    legacy_trees = [
+        tree
+        for tree in accepted_trees
+        if isinstance(tree, dict) and str(tree.get("candidate_id") or "") not in promoted_ids
+    ]
+    records = load_records(RAW_PATH) + decision_tree_records(legacy_trees)
     translations = load_translations()
 
     if rebuild_from_raw and records:
@@ -696,7 +718,6 @@ def build_knowledge(rebuild_from_raw: bool = False) -> dict[str, Path]:
         expert_tree = build_expert_tree(records, rules.get("rules", []), translations)
         aliases = load_existing_artifact(ALIASES_PATH) or merge_decision_tree_aliases(build_aliases(records, translations), accepted_trees)
 
-    rules["decision_trees"] = accepted_trees
     decision_trees = build_decision_tree_artifact(accepted_trees)
 
     save_json(CF_PATH, cf_data)

@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class DiagnoseRequest(BaseModel):
@@ -10,6 +10,20 @@ class DiagnoseRequest(BaseModel):
     user_input: str | None = Field(default=None, min_length=1)
     text: str | None = Field(default=None, min_length=1)
     top_k: int = Field(default=5, ge=1, le=20)
+
+    @model_validator(mode="after")
+    def session_requires_symptom_or_step_answer(self):
+        if not self.session_id:
+            return self
+        fields = getattr(self, "model_fields_set", set()) or set()
+        has_symptom = bool(
+            (self.symptom or "").strip()
+            or (self.user_input or "").strip()
+            or (self.text or "").strip()
+        )
+        if "step_answer" in fields or has_symptom:
+            return self
+        raise ValueError("Khi dùng session_id, hãy gửi symptom hoặc step_answer.")
 
 
 class AnswerRequest(BaseModel):

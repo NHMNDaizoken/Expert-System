@@ -2901,5 +2901,77 @@
         "results": []
       }
     }
+  },
+  "FLT_103": {
+    "fault_id": "FLT_103",
+    "fault_name": "Cần kiểm tra tổng quát tại xưởng",
+    "entry_step": "flt_103_s1",
+    "steps": {
+      "flt_103_s1": {
+        "id": "flt_103_s1",
+        "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+        "symptom_label": "Gầm xe kêu hoặc rung không đều",
+        "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": []
+      }
+    }
+  },
+  "FLT_104": {
+    "fault_id": "FLT_104",
+    "fault_name": "Hỏng vòng bi moay-ơ",
+    "entry_step": "flt_104_s1",
+    "steps": {
+      "flt_104_s1": {
+        "id": "flt_104_s1",
+        "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+        "symptom_label": "Gầm xe kêu hoặc rung không đều",
+        "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": []
+      }
+    }
+  },
+  "FLT_105": {
+    "fault_id": "FLT_105",
+    "fault_name": "Hỏng khớp đồng tốc (trục láp)",
+    "entry_step": "flt_105_s1",
+    "steps": {
+      "flt_105_s1": {
+        "id": "flt_105_s1",
+        "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+        "symptom_label": "Gầm xe kêu hoặc rung không đều",
+        "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": []
+      }
+    }
+  },
+  "FLT_106": {
+    "fault_id": "FLT_106",
+    "fault_name": "Lỏng rô-tuyn hoặc bạc treo",
+    "entry_step": "flt_106_s1",
+    "steps": {
+      "flt_106_s1": {
+        "id": "flt_106_s1",
+        "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+        "symptom_label": "Gầm xe kêu hoặc rung không đều",
+        "question": "Khi chạy garanti, động cơ có rung hoặc không đều không?",
+        "is_question": true,
+        "yes_next": "DIAGNOSED",
+        "no_next": "REFUTED",
+        "instruction": null,
+        "results": []
+      }
+    }
   }
 }

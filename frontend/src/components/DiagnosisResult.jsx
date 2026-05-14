@@ -1,10 +1,10 @@
-import { TriangleAlert, Wrench, RefreshCw, CircleCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { TriangleAlert, Wrench, RefreshCw, CircleCheck, Send } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import DebugLogsPanel from "./DebugLogsPanel.jsx";
 import TechnicalPayloadPanel from "./TechnicalPayloadPanel.jsx";
 
 function scoreOf(result) {
-  return Number(result?.score ?? result?.final_cf ?? 0);
+  return Number(result?.confidence ?? result?.score ?? result?.final_cf ?? 0);
 }
 
 function procedureSteps(text = "") {
@@ -19,13 +19,22 @@ export default function DiagnosisResult({
   results: legacyResults,
   onRestart = () => {},
 }) {
-  const results = data?.results || legacyResults || [];
-  const resolution = data?.resolution || results[0]?.resolution || {};
-  const isReviewNeeded = data?.status === "llm_fallback" || data?.status === "review_needed";
+  const normalized = data || {};
+  const results = normalized?.results || legacyResults || [];
+  const resolution = normalized?.resolution || results[0]?.resolution || {};
+  const mode = normalized.mode || normalized._raw?.source || "kg";
+  const isKgSource =
+    mode === "kg" ||
+    mode === "knowledge_graph" ||
+    mode === "staging_files_kg" ||
+    normalized._raw?.source === "knowledge_graph" ||
+    normalized._raw?.source === "staging_files_kg";
+  const isReviewNeeded = normalized.expert_review?.candidate_ready || normalized._raw?.status === "review_needed";
+  const navigate = useNavigate();
 
   if (isReviewNeeded) {
-    const question = data?.next_question?.question || "Vui lòng cung cấp thêm thông tin để chuyên gia kiểm duyệt.";
-    const debug = data?.debug || { notes: data?.notes || data?.fallback_notes || [] };
+    const question = normalized?.current_question?.question || normalized._raw?.next_question?.question || "Vui lòng cung cấp thêm thông tin để chuyên gia kiểm duyệt.";
+    const debug = normalized?.debug || { notes: normalized?._raw?.notes || normalized?._raw?.fallback_notes || [] };
 
     return (
       <section className="result-section">
@@ -72,7 +81,9 @@ export default function DiagnosisResult({
   return (
     <section className="result-section">
       <div className="primary-result-card glass-panel">
-        <span className="result-badge">Khả năng cao nhất</span>
+        <span className="result-badge">
+          {isKgSource ? "Từ cây tri thức" : mode === "llm_fallback" ? "LLM đề xuất - cần chuyên gia duyệt" : "Kết hợp KG + LLM"}
+        </span>
         <h2>{top.fault_label_vi || top.fault_label || top.fault_name}</h2>
 
         <div className="confidence-row">
@@ -82,7 +93,7 @@ export default function DiagnosisResult({
           <div className="confidence-text">Độ tin cậy: {confidence}%</div>
         </div>
 
-        {data?.repair_plan ? (
+        {normalized?.repair_plan ? (
           <>
             {data.repair_plan.inspect_or_replace && data.repair_plan.inspect_or_replace.length > 0 && (
               <div className="repair-section">
@@ -206,6 +217,26 @@ export default function DiagnosisResult({
         <RefreshCw size={18} />
         Chẩn đoán lỗi khác
       </button>
+      {normalized?.expert_review?.candidate_ready && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "12px" }}>
+          <button
+            className="primary-btn"
+            onClick={() => {
+              // Navigate to review page with payload draft
+              try {
+                const payload = normalized.expert_review.payload || { root_symptom: normalized.root_symptom, results };
+                navigate("/review", { state: { draftSuggestion: { user_input: normalized.root_symptom?.label, llm_output: payload } } });
+              } catch (e) {
+                // fallback: open review page
+                navigate("/review");
+              }
+            }}
+          >
+            <Send size={18} />
+            Gửi chuyên gia duyệt
+          </button>
+        </div>
+      )}
     </section>
   );
 }

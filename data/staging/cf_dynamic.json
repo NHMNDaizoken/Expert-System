@@ -1,9 +1,9 @@
 {
   "_meta": {
-    "total_records": 102,
-    "total_symptoms": 144,
-    "total_faults": 102,
-    "generated_at": "2026-05-14T17:27:54.905504+00:00",
+    "total_records": 106,
+    "total_symptoms": 145,
+    "total_faults": 106,
+    "generated_at": "2026-05-14T17:46:29.642556+00:00",
     "low_cf_threshold": 0.15
   },
   "symptoms": {
@@ -231,6 +231,12 @@
     },
     "SYM_GRINDING_NOISE_FROM_WHEELS": {
       "FLT_097": 1.0
+    },
+    "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U": {
+      "cv_joint_fault": 0.25,
+      "general_inspection_needed": 0.25,
+      "suspension_bushing_link_fault": 0.25,
+      "wheel_bearing_fault": 0.25
     },
     "SYM_HARD_BRAKE_PEDAL": {
       "FLT_003": 1.0

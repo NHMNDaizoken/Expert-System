@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Check, Edit3, HelpCircle, RefreshCw, X } from "lucide-react";
 import { adminHeaders, api } from "../api/client.js";
 import DebugLogsPanel from "../components/DebugLogsPanel.jsx";
@@ -117,6 +118,7 @@ export default function ExpertReview() {
   const [loading, setLoading] = useState(false);
   const [rebuildOutput, setRebuildOutput] = useState(null);
   const [isEditingPayload, setIsEditingPayload] = useState(false);
+  const location = useLocation();
 
   const selected = useMemo(
     () => suggestions.find((suggestion) => suggestion.id === selectedId) || suggestions[0],
@@ -213,10 +215,20 @@ export default function ExpertReview() {
   }
 
   useEffect(() => {
+    // If a draft suggestion was passed via navigation state, prefer it when nothing selected
+    const draft = location?.state?.draftSuggestion;
     if (selected) {
       setPayloadText(JSON.stringify(buildApprovedPayload(selected), null, 2));
       setRejectReason("");
       setIsEditingPayload(false);
+    } else if (draft) {
+      try {
+        const base = draft.llm_output || draft;
+        setPayloadText(JSON.stringify(base, null, 2));
+        setIsEditingPayload(true);
+      } catch {
+        setPayloadText("");
+      }
     } else {
       setPayloadText("");
     }

@@ -323,9 +323,10 @@ class SessionService:
             )
         return self.get(session_id)
 
-    def attach_decision_tree(self, session_id, candidate, current_node_id=None):
+    def attach_decision_tree(self, session_id, candidate, current_node_id=None, session_status=None):
         tree = candidate.get("tree", {}) if isinstance(candidate, dict) else {}
         root_node_id = current_node_id or tree.get("root_node_id")
+        row_status = session_status if session_status is not None else "diagnostic_decision_tree"
         with get_sqlite_connection() as connection:
             connection.execute(
                 """
@@ -342,7 +343,7 @@ class SessionService:
                 """,
                 (
                     utc_now(),
-                    "diagnostic_decision_tree",
+                    row_status,
                     candidate.get("candidate_id"),
                     json.dumps(candidate, ensure_ascii=False),
                     root_node_id,

@@ -14,7 +14,7 @@ def _input_text(payload: DiagnoseRequest):
     if not user_input:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Provide either user_input or text.",
+            detail="Provide symptom, user_input, or text.",
         )
     return user_input
 

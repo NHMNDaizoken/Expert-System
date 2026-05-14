@@ -24,6 +24,8 @@ def test_start_generates_complete_tree_once(tmp_path, monkeypatch):
 
     assert response["type"] == "diagnostic_decision_tree"
     assert response["current_node"]["answer_type"] == "yes_no"
+    assert response.get("decision_tree", {}).get("tree", {}).get("nodes")
+    assert response.get("source") == "llm_fallback"
     assert len(result_leaves) >= 3
     assert session["candidate_id"] == response["candidate_id"]
 

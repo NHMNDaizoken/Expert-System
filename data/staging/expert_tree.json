@@ -10,7 +10,7 @@
       "diagnosis_procedures",
       "confirmation_tests_parts_resolution"
     ],
-    "generated_at": "2026-05-14T17:27:54.925112+00:00"
+    "generated_at": "2026-05-14T17:46:29.659440+00:00"
   },
   "systems": {
     "SYS_BRAKE": {
@@ -3353,6 +3353,64 @@
               }
             }
           ]
+        },
+        "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U": {
+          "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+          "name": "g_m_xe_k_u_ho_c_rung_kh_ng_u",
+          "display_name": "Gầm xe kêu hoặc rung không đều",
+          "label_vi": "Gầm xe kêu hoặc rung không đều",
+          "secondary_symptoms": [],
+          "possible_faults": [
+            {
+              "fault_id": "general_inspection_needed",
+              "fault_name": "c_n_ki_m_tra_t_ng_qu_t_t_i_x_ng",
+              "display_name": "Cần kiểm tra tổng quát tại xưởng",
+              "label_vi": "Cần kiểm tra tổng quát tại xưởng",
+              "system_id": "SYS_ELECTRICAL",
+              "subsystem_id": "SUB_STARTING",
+              "affected_components": [
+                "CMP_STARTER_MOTOR"
+              ],
+              "confidence": 0.5,
+              "diagnosis_procedures": [
+                "Nâng xe trên cầu",
+                "Kiểm tra bằng mắt thường toàn bộ các chi tiết gầm",
+                "Đưa xe đến trung tâm bảo dưỡng uy tín"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Cần kiểm tra tổng quát tại xưởng"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Nâng xe trên cầu. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Kiểm tra bằng mắt thường toàn bộ các chi tiết gầm. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Đưa xe đến trung tâm bảo dưỡng uy tín. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "intermediate",
+                "labor_hours": 1,
+                "steps": [
+                  "Nâng xe trên cầu",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Kiểm tra bằng mắt thường toàn bộ các chi tiết gầm",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Đưa xe đến trung tâm bảo dưỡng uy tín",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
+                ]
+              }
+            }
+          ]
         }
       }
     },
@@ -5160,6 +5218,107 @@
               }
             }
           ]
+        },
+        "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U": {
+          "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+          "name": "g_m_xe_k_u_ho_c_rung_kh_ng_u",
+          "display_name": "Gầm xe kêu hoặc rung không đều",
+          "label_vi": "Gầm xe kêu hoặc rung không đều",
+          "secondary_symptoms": [],
+          "possible_faults": [
+            {
+              "fault_id": "wheel_bearing_fault",
+              "fault_name": "h_ng_v_ng_bi_moay",
+              "display_name": "Hỏng vòng bi moay-ơ",
+              "label_vi": "Hỏng vòng bi moay-ơ",
+              "system_id": "SYS_SUSPENSION_STEERING",
+              "subsystem_id": "SUB_SUSPENSION",
+              "affected_components": [
+                "CMP_SHOCK_ABSORBER"
+              ],
+              "confidence": 0.9,
+              "diagnosis_procedures": [
+                "Nâng bánh xe",
+                "Lắc bánh theo phương dọc/ngang để kiểm tra độ rơ",
+                "Thay thế cụm vòng bi bánh xe mới"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Hỏng vòng bi moay-ơ"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Nâng bánh xe. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Lắc bánh theo phương dọc/ngang để kiểm tra độ rơ. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Thay thế cụm vòng bi bánh xe mới. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "advanced",
+                "labor_hours": 1,
+                "steps": [
+                  "Nâng bánh xe",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Lắc bánh theo phương dọc/ngang để kiểm tra độ rơ",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Thay thế cụm vòng bi bánh xe mới",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
+                ]
+              }
+            },
+            {
+              "fault_id": "suspension_bushing_link_fault",
+              "fault_name": "l_ng_r_tuyn_ho_c_b_c_treo",
+              "display_name": "Lỏng rô-tuyn hoặc bạc treo",
+              "label_vi": "Lỏng rô-tuyn hoặc bạc treo",
+              "system_id": "SYS_SUSPENSION_STEERING",
+              "subsystem_id": "SUB_SUSPENSION",
+              "affected_components": [
+                "CMP_SHOCK_ABSORBER"
+              ],
+              "confidence": 0.8,
+              "diagnosis_procedures": [
+                "Sử dụng đòn bẩy kiểm tra độ rơ của các khớp nối hệ thống treo",
+                "Thay thế các chi tiết bạc cao su hoặc rô-tuyn bị hỏng"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Lỏng rô-tuyn hoặc bạc treo"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Sử dụng đòn bẩy kiểm tra độ rơ của các khớp nối hệ thống treo. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Thay thế các chi tiết bạc cao su hoặc rô-tuyn bị hỏng. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "intermediate",
+                "labor_hours": 1,
+                "steps": [
+                  "Sử dụng đòn bẩy kiểm tra độ rơ của các khớp nối hệ thống treo",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Thay thế các chi tiết bạc cao su hoặc rô-tuyn bị hỏng",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
+                ]
+              }
+            }
+          ]
         }
       }
     },
@@ -5750,6 +5909,64 @@
                   "Kiểm tra hư hỏng hoặc oxy hóa bó dây điện",
                   "Kết quả có thể: Dây điện bị hỏng/oxy hóa",
                   "Kết quả có thể: Dây điện nguyên vẹn"
+                ]
+              }
+            }
+          ]
+        },
+        "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U": {
+          "symptom_id": "SYM_G_M_XE_K_U_HO_C_RUNG_KH_NG_U",
+          "name": "g_m_xe_k_u_ho_c_rung_kh_ng_u",
+          "display_name": "Gầm xe kêu hoặc rung không đều",
+          "label_vi": "Gầm xe kêu hoặc rung không đều",
+          "secondary_symptoms": [],
+          "possible_faults": [
+            {
+              "fault_id": "cv_joint_fault",
+              "fault_name": "h_ng_kh_p_ng_t_c_tr_c_l_p",
+              "display_name": "Hỏng khớp đồng tốc (trục láp)",
+              "label_vi": "Hỏng khớp đồng tốc (trục láp)",
+              "system_id": "SYS_TRANSMISSION",
+              "subsystem_id": "SUB_AUTOMATIC_TRANSMISSION",
+              "affected_components": [
+                "CMP_TRANSMISSION"
+              ],
+              "confidence": 0.85,
+              "diagnosis_procedures": [
+                "Kiểm tra cao su chắn bụi xem có bị rách không",
+                "Kiểm tra độ rơ của khớp",
+                "Thay thế cao su hoặc thay cụm khớp đồng tốc"
+              ],
+              "confirmation_tests": [
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường",
+                "Bất thường",
+                "Bình thường"
+              ],
+              "required_parts": [
+                "Hỏng khớp đồng tốc (trục láp)"
+              ],
+              "tools": [
+                "Cầu nâng",
+                "Đèn soi gầm",
+                "Dụng cụ kiểm tra cơ khí"
+              ],
+              "resolution": {
+                "procedure": "Kiểm tra cao su chắn bụi xem có bị rách không. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Kiểm tra độ rơ của khớp. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường. Thay thế cao su hoặc thay cụm khớp đồng tốc. Kết quả có thể: Bất thường. Kết quả có thể: Bình thường",
+                "difficulty": "intermediate",
+                "labor_hours": 1,
+                "steps": [
+                  "Kiểm tra cao su chắn bụi xem có bị rách không",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Kiểm tra độ rơ của khớp",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường",
+                  "Thay thế cao su hoặc thay cụm khớp đồng tốc",
+                  "Kết quả có thể: Bất thường",
+                  "Kết quả có thể: Bình thường"
                 ]
               }
             }

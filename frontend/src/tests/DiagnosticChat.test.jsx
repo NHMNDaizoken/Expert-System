@@ -1,9 +1,14 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import DiagnosticChat from "../pages/DiagnosticChat.jsx";
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
+
+function renderWithRouter(ui) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+}
 
 const needMoreInfoResponse = {
   session_id: "s1",
@@ -18,6 +23,7 @@ const needMoreInfoResponse = {
 const diagnosedResponse = {
   session_id: "s1",
   status: "diagnosed",
+  is_final: true,
   results: [
     { fault_id: "battery_weak", fault_name: "Ắc quy yếu/hỏng", score: 0.87 },
     { fault_id: "cable_corroded", fault_name: "Cọc cáp ắc quy bị oxy hóa", score: 0.1 },
@@ -40,7 +46,7 @@ describe("Luồng DiagnosticChat", () => {
   });
 
   test("hiển thị màn nhập triệu chứng ban đầu", () => {
-    render(<DiagnosticChat />);
+    renderWithRouter(<DiagnosticChat />);
     expect(
       screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)
     ).toBeInTheDocument();
@@ -48,9 +54,8 @@ describe("Luồng DiagnosticChat", () => {
   });
 
   test("chuyển sang màn hỏi thêm khi API trả need_more_info", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
-    render(<DiagnosticChat />);
+    renderWithRouter(<DiagnosticChat />);
     fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
       target: { value: "xe khó nổ" },
     });
@@ -61,9 +66,8 @@ describe("Luồng DiagnosticChat", () => {
   });
 
   test("không hiển thị lỗi xem trước khi đang hỏi thêm", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
-    render(<DiagnosticChat />);
+    renderWithRouter(<DiagnosticChat />);
     fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
       target: { value: "xe khó nổ" },
     });
@@ -74,9 +78,8 @@ describe("Luồng DiagnosticChat", () => {
   });
 
   test("thanh tiến trình hiển thị số bước hiện tại", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
-    render(<DiagnosticChat />);
+    renderWithRouter(<DiagnosticChat />);
     fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
       target: { value: "xe khó nổ" },
     });
@@ -85,10 +88,9 @@ describe("Luồng DiagnosticChat", () => {
   });
 
   test("chuyển sang màn kết quả khi API trả diagnosed", async () => {
-    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ session_id: "s1" }) });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => needMoreInfoResponse });
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => diagnosedResponse });
-    render(<DiagnosticChat />);
+    renderWithRouter(<DiagnosticChat />);
     fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
       target: { value: "xe khó nổ" },
     });
@@ -100,14 +102,14 @@ describe("Luồng DiagnosticChat", () => {
   });
 
   test("hiển thị linh kiện và quy trình sửa chữa", () => {
-    render(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
+    renderWithRouter(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
     expect(screen.getByText(/Ắc quy 12V/i)).toBeInTheDocument();
     expect(screen.getByText(/Kẹp cọc ắc quy/i)).toBeInTheDocument();
     expect(screen.getByText(/Đo điện áp ắc quy/i)).toBeInTheDocument();
   });
 
   test("nút chẩn đoán lại quay về màn nhập", () => {
-    render(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
+    renderWithRouter(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
     fireEvent.click(screen.getByText(/chẩn đoán lỗi khác/i));
     expect(
       screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i)
@@ -116,7 +118,7 @@ describe("Luồng DiagnosticChat", () => {
 
   test("nút sửa mô tả reset kết quả hiện tại và xóa session", async () => {
     mockFetch.mockResolvedValueOnce({ ok: true, json: async () => ({ deleted: true }) });
-    render(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
+    renderWithRouter(<DiagnosticChat initialState="result" initialData={diagnosedResponse} />);
     expect(screen.getByText(/87%/)).toBeInTheDocument();
     fireEvent.click(screen.getByText(/sửa mô tả/i));
     await waitFor(() => expect(screen.queryByText(/87%/)).not.toBeInTheDocument());
