@@ -25,7 +25,13 @@ export default function DiagnosticChat({ initialState = "input", initialData = n
     const isFinal = Boolean(raw?.is_final);
     const hasResults = Array.isArray(data.results) && data.results.length > 0;
 
-    if (status === "diagnosed" || isFinal || (hasResults && status !== "need_more_info" && status !== "collecting_context")) {
+    if (
+      status === "diagnosed" ||
+      status === "inconclusive" ||
+      isFinal ||
+      data.ui_message ||
+      (hasResults && status !== "need_more_info" && status !== "collecting_context")
+    ) {
       setScreenState("result");
       return;
     }

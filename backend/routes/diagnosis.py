@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import HTTPException, status
 
-from backend.schemas import AnswerRequest, DiagnoseRequest, DiagnosisStartRequest, DiagnosisTreeAnswerRequest
+from backend.schemas import DiagnoseRequest
 from backend.services.diagnosis_service import DiagnosisService
 from backend.services.session_service import SessionService
 
@@ -9,19 +9,23 @@ from backend.services.session_service import SessionService
 router = APIRouter(tags=["diagnosis"])
 
 
-def _input_text(payload: DiagnoseRequest):
-    user_input = payload.symptom or payload.user_input or payload.text
-    if not user_input:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Provide symptom, user_input, or text.",
-        )
-    return user_input
-
-
 @router.post("/api/diagnose")
 @router.post("/diagnose")
 def diagnose(payload: DiagnoseRequest):
+    """Main diagnosis endpoint - uses KG/expert-system only.
+    
+    Initial request:
+    {
+        "symptom": "...",
+        "top_k": 5
+    }
+    
+    Follow-up request:
+    {
+        "session_id": "...",
+        "step_answer": true | false | "unknown"
+    }
+    """
     if payload.session_id:
         if hasattr(payload, "model_fields_set"):
             fields_set = payload.model_fields_set
@@ -34,26 +38,14 @@ def diagnose(payload: DiagnoseRequest):
             step_answer=payload.step_answer,
             step_answer_provided="step_answer" in fields_set,
         )
-    return DiagnosisService().diagnose(_input_text(payload), payload.top_k)
-
-
-@router.post("/api/answer")
-def answer(payload: AnswerRequest):
-    return DiagnosisService().answer(payload.session_id, payload.answer)
-
-
-@router.post("/api/diagnosis/start")
-def start_diagnosis(payload: DiagnosisStartRequest):
-    return DiagnosisService().start_decision_tree(payload.description, payload.top_k)
-
-
-@router.post("/api/diagnosis/answer")
-def answer_diagnosis_tree(payload: DiagnosisTreeAnswerRequest):
-    return DiagnosisService().answer_decision_tree(
-        payload.session_id,
-        payload.node_id,
-        payload.answer,
-    )
+    
+    user_input = payload.symptom or payload.user_input or payload.text
+    if not user_input:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Provide symptom, user_input, or text.",
+        )
+    return DiagnosisService().diagnose(user_input, payload.top_k)
 
 
 @router.post("/session/new")

@@ -1,0 +1,1450 @@
+{
+  "active_fault_path": [],
+  "candidate_faults": [
+    {
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "fault_id": "FLT_018",
+      "fault_label": "Nước làm mát",
+      "fault_name": "coolant_antifreeze",
+      "final_cf": 1.0,
+      "system": "SYS_COOLING"
+    },
+    {
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_020",
+      "fault_label": "Hệ thống làm mát động cơ",
+      "fault_name": "engine_cooling_system",
+      "final_cf": 0.1429,
+      "system": "SYS_COOLING"
+    },
+    {
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_023",
+      "fault_label": "Két nước/Quạt làm mát",
+      "fault_name": "radiator_cooling_fan",
+      "final_cf": 0.1429,
+      "system": "SYS_COOLING"
+    },
+    {
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_025",
+      "fault_label": "Bơm nước",
+      "fault_name": "water_pump",
+      "final_cf": 0.1429,
+      "system": "SYS_COOLING"
+    },
+    {
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_070",
+      "fault_label": "Dây curoa quạt",
+      "fault_name": "fan_belt",
+      "final_cf": 0.1429,
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "confirmed_context": [
+    "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+  ],
+  "confirmed_symptoms": [
+    "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+    "SYM_ENGINE_OVERHEATING"
+  ],
+  "current_hypotheses": [
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        },
+        {
+          "cf": 1.0,
+          "direction": "confirmed",
+          "symptom": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        }
+      ],
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "decision": "accepted",
+      "fault_id": "FLT_018",
+      "fault_label": "Nước làm mát",
+      "fault_name": "coolant_antifreeze",
+      "final_cf": 1.0,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        },
+        {
+          "cf": 1.0,
+          "priority": 2,
+          "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+          "symptom_label": "Rò rỉ nước làm mát dưới gầm xe",
+          "symptom_name": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Nước làm mát",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Nước làm mát",
+          "repair_id": "REP_018",
+          "repair_name": "diagnose_coolant_antifreeze",
+          "steps": [
+            "Kiểm tra mức và tình trạng nước làm mát",
+            "Kết quả có thể: Nước làm mát thấp/bẩn",
+            "Kết quả có thể: Nước làm mát đủ/sạch",
+            "Kiểm tra rò rỉ két nước và ống dẫn",
+            "Kết quả có thể: Rò rỉ két nước/ống dẫn",
+            "Kết quả có thể: Không rò rỉ"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Nước làm mát"
+        ],
+        "procedure": "Kiểm tra mức và tình trạng nước làm mát. Kết quả có thể: Nước làm mát thấp/bẩn. Kết quả có thể: Nước làm mát đủ/sạch. Kiểm tra rò rỉ két nước và ống dẫn. Kết quả có thể: Rò rỉ két nước/ống dẫn. Kết quả có thể: Không rò rỉ",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 1.0,
+      "score_breakdown": {
+        "cf_confidence": 1.0,
+        "confidence": 1.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_020",
+      "fault_label": "Hệ thống làm mát động cơ",
+      "fault_name": "engine_cooling_system",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Hệ thống làm mát động cơ",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Hệ thống làm mát động cơ",
+          "repair_id": "REP_020",
+          "repair_name": "diagnose_engine_cooling_system",
+          "steps": [
+            "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không",
+            "Kết quả có thể: Két nước bị tắc hoặc hư hỏng",
+            "Kết quả có thể: Két nước sạch/nguyên vẹn",
+            "Kiểm tra hoạt động van hằng nhiệt",
+            "Kết quả có thể: Van hằng nhiệt lỗi",
+            "Kết quả có thể: Van hằng nhiệt hoạt động tốt"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Hệ thống làm mát động cơ"
+        ],
+        "procedure": "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không. Kết quả có thể: Két nước bị tắc hoặc hư hỏng. Kết quả có thể: Két nước sạch/nguyên vẹn. Kiểm tra hoạt động van hằng nhiệt. Kết quả có thể: Van hằng nhiệt lỗi. Kết quả có thể: Van hằng nhiệt hoạt động tốt",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_023",
+      "fault_label": "Két nước/Quạt làm mát",
+      "fault_name": "radiator_cooling_fan",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Két nước/Quạt làm mát",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Két nước/Quạt làm mát",
+          "repair_id": "REP_023",
+          "repair_name": "diagnose_radiator_cooling_fan",
+          "steps": [
+            "Kiểm tra hoạt động quạt két nước",
+            "Kết quả có thể: Quạt không quay",
+            "Kết quả có thể: Quạt hoạt động bình thường",
+            "Kiểm tra mô-tơ quạt và rơ-le két nước",
+            "Kết quả có thể: Mô-tơ/rơ-le lỗi",
+            "Kết quả có thể: Mô tơ/rơ le hoạt động bình thường"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Két nước/Quạt làm mát"
+        ],
+        "procedure": "Kiểm tra hoạt động quạt két nước. Kết quả có thể: Quạt không quay. Kết quả có thể: Quạt hoạt động bình thường. Kiểm tra mô-tơ quạt và rơ-le két nước. Kết quả có thể: Mô-tơ/rơ-le lỗi. Kết quả có thể: Mô tơ/rơ le hoạt động bình thường",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_025",
+      "fault_label": "Bơm nước",
+      "fault_name": "water_pump",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Bơm nước",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Bơm nước",
+          "repair_id": "REP_025",
+          "repair_name": "diagnose_water_pump",
+          "steps": [
+            "Kiểm tra rò rỉ bơm nước",
+            "Kết quả có thể: Rò rỉ bơm",
+            "Kết quả có thể: Không phát hiện rò rỉ",
+            "Kiểm tra hoạt động bơm nước",
+            "Kết quả có thể: Bơm lỗi",
+            "Kết quả có thể: Bơm hoạt động bình thường"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Bơm nước"
+        ],
+        "procedure": "Kiểm tra rò rỉ bơm nước. Kết quả có thể: Rò rỉ bơm. Kết quả có thể: Không phát hiện rò rỉ. Kiểm tra hoạt động bơm nước. Kết quả có thể: Bơm lỗi. Kết quả có thể: Bơm hoạt động bình thường",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_070",
+      "fault_label": "Dây curoa quạt",
+      "fault_name": "fan_belt",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây curoa quạt",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây curoa quạt",
+          "repair_id": "REP_070",
+          "repair_name": "diagnose_fan_belt",
+          "steps": [
+            "Kiểm tra cắt hoặc mòn dây curoa quạt",
+            "Kết quả có thể: Dây curoa bị cắt/mòn",
+            "Kết quả có thể: Dây curoa còn tốt",
+            "Kiểm tra độ căng và căn chỉnh dây curoa",
+            "Kết quả có thể: Dây curoa chùng/lệch",
+            "Kết quả có thể: Dây curoa căng/thẳng hàng"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây curoa quạt"
+        ],
+        "procedure": "Kiểm tra cắt hoặc mòn dây curoa quạt. Kết quả có thể: Dây curoa bị cắt/mòn. Kết quả có thể: Dây curoa còn tốt. Kiểm tra độ căng và căn chỉnh dây curoa. Kết quả có thể: Dây curoa chùng/lệch. Kết quả có thể: Dây curoa căng/thẳng hàng",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "detected_systems": [
+    "SYS_COOLING",
+    "SYS_ELECTRICAL",
+    "SYS_ENGINE"
+  ],
+  "diagnoses": [
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        },
+        {
+          "cf": 1.0,
+          "direction": "confirmed",
+          "symptom": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        }
+      ],
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "decision": "accepted",
+      "fault_id": "FLT_018",
+      "fault_label": "Nước làm mát",
+      "fault_name": "coolant_antifreeze",
+      "final_cf": 1.0,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        },
+        {
+          "cf": 1.0,
+          "priority": 2,
+          "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+          "symptom_label": "Rò rỉ nước làm mát dưới gầm xe",
+          "symptom_name": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Nước làm mát",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Nước làm mát",
+          "repair_id": "REP_018",
+          "repair_name": "diagnose_coolant_antifreeze",
+          "steps": [
+            "Kiểm tra mức và tình trạng nước làm mát",
+            "Kết quả có thể: Nước làm mát thấp/bẩn",
+            "Kết quả có thể: Nước làm mát đủ/sạch",
+            "Kiểm tra rò rỉ két nước và ống dẫn",
+            "Kết quả có thể: Rò rỉ két nước/ống dẫn",
+            "Kết quả có thể: Không rò rỉ"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Nước làm mát"
+        ],
+        "procedure": "Kiểm tra mức và tình trạng nước làm mát. Kết quả có thể: Nước làm mát thấp/bẩn. Kết quả có thể: Nước làm mát đủ/sạch. Kiểm tra rò rỉ két nước và ống dẫn. Kết quả có thể: Rò rỉ két nước/ống dẫn. Kết quả có thể: Không rò rỉ",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 1.0,
+      "score_breakdown": {
+        "cf_confidence": 1.0,
+        "confidence": 1.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_020",
+      "fault_label": "Hệ thống làm mát động cơ",
+      "fault_name": "engine_cooling_system",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Hệ thống làm mát động cơ",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Hệ thống làm mát động cơ",
+          "repair_id": "REP_020",
+          "repair_name": "diagnose_engine_cooling_system",
+          "steps": [
+            "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không",
+            "Kết quả có thể: Két nước bị tắc hoặc hư hỏng",
+            "Kết quả có thể: Két nước sạch/nguyên vẹn",
+            "Kiểm tra hoạt động van hằng nhiệt",
+            "Kết quả có thể: Van hằng nhiệt lỗi",
+            "Kết quả có thể: Van hằng nhiệt hoạt động tốt"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Hệ thống làm mát động cơ"
+        ],
+        "procedure": "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không. Kết quả có thể: Két nước bị tắc hoặc hư hỏng. Kết quả có thể: Két nước sạch/nguyên vẹn. Kiểm tra hoạt động van hằng nhiệt. Kết quả có thể: Van hằng nhiệt lỗi. Kết quả có thể: Van hằng nhiệt hoạt động tốt",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_023",
+      "fault_label": "Két nước/Quạt làm mát",
+      "fault_name": "radiator_cooling_fan",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Két nước/Quạt làm mát",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Két nước/Quạt làm mát",
+          "repair_id": "REP_023",
+          "repair_name": "diagnose_radiator_cooling_fan",
+          "steps": [
+            "Kiểm tra hoạt động quạt két nước",
+            "Kết quả có thể: Quạt không quay",
+            "Kết quả có thể: Quạt hoạt động bình thường",
+            "Kiểm tra mô-tơ quạt và rơ-le két nước",
+            "Kết quả có thể: Mô-tơ/rơ-le lỗi",
+            "Kết quả có thể: Mô tơ/rơ le hoạt động bình thường"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Két nước/Quạt làm mát"
+        ],
+        "procedure": "Kiểm tra hoạt động quạt két nước. Kết quả có thể: Quạt không quay. Kết quả có thể: Quạt hoạt động bình thường. Kiểm tra mô-tơ quạt và rơ-le két nước. Kết quả có thể: Mô-tơ/rơ-le lỗi. Kết quả có thể: Mô tơ/rơ le hoạt động bình thường",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_025",
+      "fault_label": "Bơm nước",
+      "fault_name": "water_pump",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Bơm nước",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Bơm nước",
+          "repair_id": "REP_025",
+          "repair_name": "diagnose_water_pump",
+          "steps": [
+            "Kiểm tra rò rỉ bơm nước",
+            "Kết quả có thể: Rò rỉ bơm",
+            "Kết quả có thể: Không phát hiện rò rỉ",
+            "Kiểm tra hoạt động bơm nước",
+            "Kết quả có thể: Bơm lỗi",
+            "Kết quả có thể: Bơm hoạt động bình thường"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Bơm nước"
+        ],
+        "procedure": "Kiểm tra rò rỉ bơm nước. Kết quả có thể: Rò rỉ bơm. Kết quả có thể: Không phát hiện rò rỉ. Kiểm tra hoạt động bơm nước. Kết quả có thể: Bơm lỗi. Kết quả có thể: Bơm hoạt động bình thường",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_070",
+      "fault_label": "Dây curoa quạt",
+      "fault_name": "fan_belt",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây curoa quạt",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây curoa quạt",
+          "repair_id": "REP_070",
+          "repair_name": "diagnose_fan_belt",
+          "steps": [
+            "Kiểm tra cắt hoặc mòn dây curoa quạt",
+            "Kết quả có thể: Dây curoa bị cắt/mòn",
+            "Kết quả có thể: Dây curoa còn tốt",
+            "Kiểm tra độ căng và căn chỉnh dây curoa",
+            "Kết quả có thể: Dây curoa chùng/lệch",
+            "Kết quả có thể: Dây curoa căng/thẳng hàng"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây curoa quạt"
+        ],
+        "procedure": "Kiểm tra cắt hoặc mòn dây curoa quạt. Kết quả có thể: Dây curoa bị cắt/mòn. Kết quả có thể: Dây curoa còn tốt. Kiểm tra độ căng và căn chỉnh dây curoa. Kết quả có thể: Dây curoa chùng/lệch. Kết quả có thể: Dây curoa căng/thẳng hàng",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "explanation_summary": "Hệ thống làm mát > Động cơ quá nhiệt > Nước làm mát với CF 1.0. Trạng thái: diagnosed.",
+  "is_final": true,
+  "matched_symptoms": [
+    {
+      "confidence": 1.0,
+      "display_name": "Động cơ quá nhiệt",
+      "match_score": 100.0,
+      "matched_text": "động cơ quá nhiệt",
+      "name": "engine_overheating",
+      "source": "symptom_aliases",
+      "symptom_id": "SYM_ENGINE_OVERHEATING"
+    }
+  ],
+  "next_question": null,
+  "primary_symptom": "SYM_ENGINE_OVERHEATING",
+  "procedure_terminal": "DIAGNOSED",
+  "reasoning_trace": {
+    "backward_chaining": [
+      {
+        "fault_id": "FLT_018",
+        "if": [
+          {
+            "cf": 0.1429,
+            "priority": 1,
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt"
+          },
+          {
+            "cf": 1.0,
+            "priority": 2,
+            "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+            "symptom_label": "Rò rỉ nước làm mát dưới gầm xe"
+          }
+        ],
+        "rule_text": "NẾU Động cơ quá nhiệt VÀ Rò rỉ nước làm mát dưới gầm xe THÌ Nước làm mát",
+        "then": "Nước làm mát"
+      },
+      {
+        "fault_id": "FLT_020",
+        "if": [
+          {
+            "cf": 0.1429,
+            "priority": 1,
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt"
+          }
+        ],
+        "rule_text": "NẾU Động cơ quá nhiệt THÌ Hệ thống làm mát động cơ",
+        "then": "Hệ thống làm mát động cơ"
+      },
+      {
+        "fault_id": "FLT_023",
+        "if": [
+          {
+            "cf": 0.1429,
+            "priority": 1,
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt"
+          }
+        ],
+        "rule_text": "NẾU Động cơ quá nhiệt THÌ Két nước/Quạt làm mát",
+        "then": "Két nước/Quạt làm mát"
+      },
+      {
+        "fault_id": "FLT_025",
+        "if": [
+          {
+            "cf": 0.1429,
+            "priority": 1,
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt"
+          }
+        ],
+        "rule_text": "NẾU Động cơ quá nhiệt THÌ Bơm nước",
+        "then": "Bơm nước"
+      },
+      {
+        "fault_id": "FLT_070",
+        "if": [
+          {
+            "cf": 0.1429,
+            "priority": 1,
+            "symptom_id": "SYM_ENGINE_OVERHEATING",
+            "symptom_label": "Động cơ quá nhiệt"
+          }
+        ],
+        "rule_text": "NẾU Động cơ quá nhiệt THÌ Dây curoa quạt",
+        "then": "Dây curoa quạt"
+      }
+    ],
+    "cf_calculation_steps": [
+      {
+        "evidence_cf": 0.1429,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_018",
+        "fault_label": "Nước làm mát",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 1,
+        "symptom_id": "SYM_ENGINE_OVERHEATING",
+        "symptom_label": "Động cơ quá nhiệt"
+      },
+      {
+        "evidence_cf": 1.0,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_018",
+        "fault_label": "Nước làm mát",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 2,
+        "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+        "symptom_label": "Rò rỉ nước làm mát dưới gầm xe"
+      },
+      {
+        "cf_trace": {
+          "contributions": [
+            {
+              "cf": 0.1429,
+              "symptom_id": "SYM_ENGINE_OVERHEATING"
+            },
+            {
+              "cf": 1.0,
+              "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+            }
+          ],
+          "fault_id": "FLT_018",
+          "final_cf": 1.0,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_018",
+        "fault_label": "Nước làm mát",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 1.0,
+          "confidence": 1.0,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "evidence_cf": 0.1429,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_020",
+        "fault_label": "Hệ thống làm mát động cơ",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 1,
+        "symptom_id": "SYM_ENGINE_OVERHEATING",
+        "symptom_label": "Động cơ quá nhiệt"
+      },
+      {
+        "cf_trace": {
+          "contributions": [
+            {
+              "cf": 0.1429,
+              "symptom_id": "SYM_ENGINE_OVERHEATING"
+            }
+          ],
+          "fault_id": "FLT_020",
+          "final_cf": 0.1429,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_020",
+        "fault_label": "Hệ thống làm mát động cơ",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.1429,
+          "confidence": 0.1429,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "evidence_cf": 0.1429,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_023",
+        "fault_label": "Két nước/Quạt làm mát",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 1,
+        "symptom_id": "SYM_ENGINE_OVERHEATING",
+        "symptom_label": "Động cơ quá nhiệt"
+      },
+      {
+        "cf_trace": {
+          "contributions": [
+            {
+              "cf": 0.1429,
+              "symptom_id": "SYM_ENGINE_OVERHEATING"
+            }
+          ],
+          "fault_id": "FLT_023",
+          "final_cf": 0.1429,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_023",
+        "fault_label": "Két nước/Quạt làm mát",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.1429,
+          "confidence": 0.1429,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "evidence_cf": 0.1429,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_025",
+        "fault_label": "Bơm nước",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 1,
+        "symptom_id": "SYM_ENGINE_OVERHEATING",
+        "symptom_label": "Động cơ quá nhiệt"
+      },
+      {
+        "cf_trace": {
+          "contributions": [
+            {
+              "cf": 0.1429,
+              "symptom_id": "SYM_ENGINE_OVERHEATING"
+            }
+          ],
+          "fault_id": "FLT_025",
+          "final_cf": 0.1429,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_025",
+        "fault_label": "Bơm nước",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.1429,
+          "confidence": 0.1429,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "evidence_cf": 0.1429,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_070",
+        "fault_label": "Dây curoa quạt",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 1,
+        "symptom_id": "SYM_ENGINE_OVERHEATING",
+        "symptom_label": "Động cơ quá nhiệt"
+      },
+      {
+        "cf_trace": {
+          "contributions": [
+            {
+              "cf": 0.1429,
+              "symptom_id": "SYM_ENGINE_OVERHEATING"
+            }
+          ],
+          "fault_id": "FLT_070",
+          "final_cf": 0.1429,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_070",
+        "fault_label": "Dây curoa quạt",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.1429,
+          "confidence": 0.1429,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      }
+    ],
+    "final_decision": {
+      "status": "diagnosed",
+      "top_fault": {
+        "confidence": 1.0,
+        "decision": "accepted",
+        "fault_id": "FLT_018",
+        "fault_label": "Nước làm mát"
+      }
+    },
+    "hypothesis_generation": [
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_018",
+        "fault_label": "Nước làm mát",
+        "fault_name": "coolant_antifreeze",
+        "matched_rule_count": 2,
+        "system": "SYS_COOLING",
+        "triggered_by": [
+          "SYM_ENGINE_OVERHEATING",
+          "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        ]
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_020",
+        "fault_label": "Hệ thống làm mát động cơ",
+        "fault_name": "engine_cooling_system",
+        "matched_rule_count": 1,
+        "system": "SYS_COOLING",
+        "triggered_by": [
+          "SYM_ENGINE_OVERHEATING"
+        ]
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_023",
+        "fault_label": "Két nước/Quạt làm mát",
+        "fault_name": "radiator_cooling_fan",
+        "matched_rule_count": 1,
+        "system": "SYS_COOLING",
+        "triggered_by": [
+          "SYM_ENGINE_OVERHEATING"
+        ]
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_025",
+        "fault_label": "Bơm nước",
+        "fault_name": "water_pump",
+        "matched_rule_count": 1,
+        "system": "SYS_COOLING",
+        "triggered_by": [
+          "SYM_ENGINE_OVERHEATING"
+        ]
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_070",
+        "fault_label": "Dây curoa quạt",
+        "fault_name": "fan_belt",
+        "matched_rule_count": 1,
+        "system": "SYS_ENGINE",
+        "triggered_by": [
+          "SYM_ENGINE_OVERHEATING"
+        ]
+      }
+    ],
+    "input": "động cơ quá nhiệt",
+    "normalization": {
+      "confirmed_symptoms": [
+        "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+        "SYM_ENGINE_OVERHEATING"
+      ],
+      "fuzzy_trace": {
+        "input_text": "động cơ quá nhiệt",
+        "matched_symptoms": [
+          {
+            "confidence": 1.0,
+            "display_name": "Động cơ quá nhiệt",
+            "match_score": 100.0,
+            "matched_text": "động cơ quá nhiệt",
+            "name": "engine_overheating",
+            "source": "symptom_aliases",
+            "symptom_id": "SYM_ENGINE_OVERHEATING"
+          }
+        ]
+      },
+      "rejected_symptoms": [],
+      "status": "matched"
+    },
+    "primary_symptom": "SYM_ENGINE_OVERHEATING",
+    "question_selection": {
+      "explanation": "Không còn câu hỏi bổ sung hữu ích.",
+      "status": "not_selected"
+    },
+    "ranking": [
+      {
+        "confidence": 1.0,
+        "fault_id": "FLT_018",
+        "matched_symptom_count": 2,
+        "score": 1.0
+      },
+      {
+        "confidence": 0.1429,
+        "fault_id": "FLT_020",
+        "matched_symptom_count": 1,
+        "score": 0.1429
+      },
+      {
+        "confidence": 0.1429,
+        "fault_id": "FLT_023",
+        "matched_symptom_count": 1,
+        "score": 0.1429
+      },
+      {
+        "confidence": 0.1429,
+        "fault_id": "FLT_025",
+        "matched_symptom_count": 1,
+        "score": 0.1429
+      },
+      {
+        "confidence": 0.1429,
+        "fault_id": "FLT_070",
+        "matched_symptom_count": 1,
+        "score": 0.1429
+      }
+    ],
+    "rejected_candidates": [],
+    "system_selection": {
+      "detected_systems": [
+        "SYS_COOLING",
+        "SYS_ELECTRICAL",
+        "SYS_ENGINE"
+      ],
+      "explanation": "Hệ thống được chọn từ các luật liên kết với triệu chứng đã khớp và đã xác nhận."
+    }
+  },
+  "rejected_context": [],
+  "rejected_faults": [],
+  "rejected_symptoms": [],
+  "resolution": {
+    "difficulty": "intermediate",
+    "labor_hours": 6,
+    "parts": [
+      "Nước làm mát"
+    ],
+    "procedure": "Kiểm tra mức và tình trạng nước làm mát. Kết quả có thể: Nước làm mát thấp/bẩn. Kết quả có thể: Nước làm mát đủ/sạch. Kiểm tra rò rỉ két nước và ống dẫn. Kết quả có thể: Rò rỉ két nước/ống dẫn. Kết quả có thể: Không rò rỉ",
+    "tools": [
+      "Máy quét OBD",
+      "Đồng hồ vạn năng"
+    ]
+  },
+  "results": [
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        },
+        {
+          "cf": 1.0,
+          "direction": "confirmed",
+          "symptom": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        }
+      ],
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "decision": "accepted",
+      "fault_id": "FLT_018",
+      "fault_label": "Nước làm mát",
+      "fault_name": "coolant_antifreeze",
+      "final_cf": 1.0,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        },
+        {
+          "cf": 1.0,
+          "priority": 2,
+          "symptom_id": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE",
+          "symptom_label": "Rò rỉ nước làm mát dưới gầm xe",
+          "symptom_name": "SYM_COOLANT_LEAKS_UNDER_THE_VEHICLE"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Nước làm mát",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Nước làm mát",
+          "repair_id": "REP_018",
+          "repair_name": "diagnose_coolant_antifreeze",
+          "steps": [
+            "Kiểm tra mức và tình trạng nước làm mát",
+            "Kết quả có thể: Nước làm mát thấp/bẩn",
+            "Kết quả có thể: Nước làm mát đủ/sạch",
+            "Kiểm tra rò rỉ két nước và ống dẫn",
+            "Kết quả có thể: Rò rỉ két nước/ống dẫn",
+            "Kết quả có thể: Không rò rỉ"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Nước làm mát"
+        ],
+        "procedure": "Kiểm tra mức và tình trạng nước làm mát. Kết quả có thể: Nước làm mát thấp/bẩn. Kết quả có thể: Nước làm mát đủ/sạch. Kiểm tra rò rỉ két nước và ống dẫn. Kết quả có thể: Rò rỉ két nước/ống dẫn. Kết quả có thể: Không rò rỉ",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 1.0,
+      "score_breakdown": {
+        "cf_confidence": 1.0,
+        "confidence": 1.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_020",
+      "fault_label": "Hệ thống làm mát động cơ",
+      "fault_name": "engine_cooling_system",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Hệ thống làm mát động cơ",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Hệ thống làm mát động cơ",
+          "repair_id": "REP_020",
+          "repair_name": "diagnose_engine_cooling_system",
+          "steps": [
+            "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không",
+            "Kết quả có thể: Két nước bị tắc hoặc hư hỏng",
+            "Kết quả có thể: Két nước sạch/nguyên vẹn",
+            "Kiểm tra hoạt động van hằng nhiệt",
+            "Kết quả có thể: Van hằng nhiệt lỗi",
+            "Kết quả có thể: Van hằng nhiệt hoạt động tốt"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Hệ thống làm mát động cơ"
+        ],
+        "procedure": "Kiểm tra két nước xem có bị tắc hoặc hư hỏng không. Kết quả có thể: Két nước bị tắc hoặc hư hỏng. Kết quả có thể: Két nước sạch/nguyên vẹn. Kiểm tra hoạt động van hằng nhiệt. Kết quả có thể: Van hằng nhiệt lỗi. Kết quả có thể: Van hằng nhiệt hoạt động tốt",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_023",
+      "fault_label": "Két nước/Quạt làm mát",
+      "fault_name": "radiator_cooling_fan",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Két nước/Quạt làm mát",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Két nước/Quạt làm mát",
+          "repair_id": "REP_023",
+          "repair_name": "diagnose_radiator_cooling_fan",
+          "steps": [
+            "Kiểm tra hoạt động quạt két nước",
+            "Kết quả có thể: Quạt không quay",
+            "Kết quả có thể: Quạt hoạt động bình thường",
+            "Kiểm tra mô-tơ quạt và rơ-le két nước",
+            "Kết quả có thể: Mô-tơ/rơ-le lỗi",
+            "Kết quả có thể: Mô tơ/rơ le hoạt động bình thường"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Két nước/Quạt làm mát"
+        ],
+        "procedure": "Kiểm tra hoạt động quạt két nước. Kết quả có thể: Quạt không quay. Kết quả có thể: Quạt hoạt động bình thường. Kiểm tra mô-tơ quạt và rơ-le két nước. Kết quả có thể: Mô-tơ/rơ-le lỗi. Kết quả có thể: Mô tơ/rơ le hoạt động bình thường",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_025",
+      "fault_label": "Bơm nước",
+      "fault_name": "water_pump",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Bơm nước",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Bơm nước",
+          "repair_id": "REP_025",
+          "repair_name": "diagnose_water_pump",
+          "steps": [
+            "Kiểm tra rò rỉ bơm nước",
+            "Kết quả có thể: Rò rỉ bơm",
+            "Kết quả có thể: Không phát hiện rò rỉ",
+            "Kiểm tra hoạt động bơm nước",
+            "Kết quả có thể: Bơm lỗi",
+            "Kết quả có thể: Bơm hoạt động bình thường"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Bơm nước"
+        ],
+        "procedure": "Kiểm tra rò rỉ bơm nước. Kết quả có thể: Rò rỉ bơm. Kết quả có thể: Không phát hiện rò rỉ. Kiểm tra hoạt động bơm nước. Kết quả có thể: Bơm lỗi. Kết quả có thể: Bơm hoạt động bình thường",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_COOLANT_CIRCUIT",
+      "system": "SYS_COOLING"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 0.1429,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "confidence": 0.1429,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_070",
+      "fault_label": "Dây curoa quạt",
+      "fault_name": "fan_belt",
+      "final_cf": 0.1429,
+      "matched_rules": [
+        {
+          "cf": 0.1429,
+          "priority": 1,
+          "symptom_id": "SYM_ENGINE_OVERHEATING",
+          "symptom_label": "Động cơ quá nhiệt",
+          "symptom_name": "SYM_ENGINE_OVERHEATING"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây curoa quạt",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây curoa quạt",
+          "repair_id": "REP_070",
+          "repair_name": "diagnose_fan_belt",
+          "steps": [
+            "Kiểm tra cắt hoặc mòn dây curoa quạt",
+            "Kết quả có thể: Dây curoa bị cắt/mòn",
+            "Kết quả có thể: Dây curoa còn tốt",
+            "Kiểm tra độ căng và căn chỉnh dây curoa",
+            "Kết quả có thể: Dây curoa chùng/lệch",
+            "Kết quả có thể: Dây curoa căng/thẳng hàng"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây curoa quạt"
+        ],
+        "procedure": "Kiểm tra cắt hoặc mòn dây curoa quạt. Kết quả có thể: Dây curoa bị cắt/mòn. Kết quả có thể: Dây curoa còn tốt. Kiểm tra độ căng và căn chỉnh dây curoa. Kết quả có thể: Dây curoa chùng/lệch. Kết quả có thể: Dây curoa căng/thẳng hàng",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.1429,
+      "score_breakdown": {
+        "cf_confidence": 0.1429,
+        "confidence": 0.1429,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "source": "staging_files_kg",
+  "status": "diagnosed",
+  "tree_level": "confirmation"
+}

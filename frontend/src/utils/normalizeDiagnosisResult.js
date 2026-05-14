@@ -4,8 +4,12 @@ export default function normalizeDiagnosisResult(raw) {
 
   // Base model
   const model = {
-    mode: raw.source || raw.status || "kg",
+    mode: raw.source || "kg",
     type: "diagnosis",
+    status: raw.status || null,
+    is_final: raw.is_final || false,
+    confidence_level: raw.confidence_level || null,
+    ui_message: raw.ui_message || null,
     session_id: raw.session_id || raw.session || null,
     candidate_id: raw.candidate_id || raw.candidate?.candidate_id || null,
     root_symptom: { id: null, label: null, ...(raw.root_symptom || {}) },

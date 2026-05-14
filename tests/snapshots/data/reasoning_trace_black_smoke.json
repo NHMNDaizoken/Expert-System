@@ -1,0 +1,328 @@
+{
+  "backward_chaining": [
+    {
+      "fault_id": "FLT_059",
+      "if": [
+        {
+          "cf": 0.3333,
+          "priority": 2,
+          "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+          "symptom_label": "Khói đen từ ống xả"
+        }
+      ],
+      "rule_text": "NẾU Khói đen từ ống xả THÌ Bơm cao áp dầu",
+      "then": "Bơm cao áp dầu"
+    },
+    {
+      "fault_id": "FLT_076",
+      "if": [
+        {
+          "cf": 0.3333,
+          "priority": 2,
+          "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+          "symptom_label": "Khói đen từ ống xả"
+        }
+      ],
+      "rule_text": "NẾU Khói đen từ ống xả THÌ Lọc gió động cơ",
+      "then": "Lọc gió động cơ"
+    },
+    {
+      "fault_id": "FLT_083",
+      "if": [
+        {
+          "cf": 0.3333,
+          "priority": 2,
+          "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+          "symptom_label": "Khói đen từ ống xả"
+        }
+      ],
+      "rule_text": "NẾU Khói đen từ ống xả THÌ Bộ điều áp nhiên liệu",
+      "then": "Bộ điều áp nhiên liệu"
+    },
+    {
+      "fault_id": "FLT_042",
+      "if": [],
+      "rule_text": "NẾU chưa có triệu chứng khớp THÌ Nắp bộ chia điện",
+      "then": "Nắp bộ chia điện"
+    },
+    {
+      "fault_id": "FLT_043",
+      "if": [],
+      "rule_text": "NẾU chưa có triệu chứng khớp THÌ Dây cao áp",
+      "then": "Dây cao áp"
+    }
+  ],
+  "cf_calculation_steps": [
+    {
+      "evidence_cf": 0.3333,
+      "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu",
+      "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+      "priority": 2,
+      "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+      "symptom_label": "Khói đen từ ống xả"
+    },
+    {
+      "cf_trace": {
+        "contributions": [
+          {
+            "cf": 0.3333,
+            "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST"
+          }
+        ],
+        "fault_id": "FLT_059",
+        "final_cf": 0.3333,
+        "initial_cf": 0.0
+      },
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu",
+      "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+      "score_breakdown": {
+        "cf_confidence": 0.3333,
+        "confidence": 0.3333,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      }
+    },
+    {
+      "evidence_cf": 0.3333,
+      "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+      "fault_id": "FLT_076",
+      "fault_label": "Lọc gió động cơ",
+      "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+      "priority": 2,
+      "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+      "symptom_label": "Khói đen từ ống xả"
+    },
+    {
+      "cf_trace": {
+        "contributions": [
+          {
+            "cf": 0.3333,
+            "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST"
+          }
+        ],
+        "fault_id": "FLT_076",
+        "final_cf": 0.3333,
+        "initial_cf": 0.0
+      },
+      "fault_id": "FLT_076",
+      "fault_label": "Lọc gió động cơ",
+      "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+      "score_breakdown": {
+        "cf_confidence": 0.3333,
+        "confidence": 0.3333,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      }
+    },
+    {
+      "evidence_cf": 0.3333,
+      "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+      "fault_id": "FLT_083",
+      "fault_label": "Bộ điều áp nhiên liệu",
+      "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+      "priority": 2,
+      "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+      "symptom_label": "Khói đen từ ống xả"
+    },
+    {
+      "cf_trace": {
+        "contributions": [
+          {
+            "cf": 0.3333,
+            "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST"
+          }
+        ],
+        "fault_id": "FLT_083",
+        "final_cf": 0.3333,
+        "initial_cf": 0.0
+      },
+      "fault_id": "FLT_083",
+      "fault_label": "Bộ điều áp nhiên liệu",
+      "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+      "score_breakdown": {
+        "cf_confidence": 0.3333,
+        "confidence": 0.3333,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      }
+    },
+    {
+      "cf_trace": {
+        "contributions": [],
+        "fault_id": "FLT_042",
+        "final_cf": 0.0,
+        "initial_cf": 0.0
+      },
+      "fault_id": "FLT_042",
+      "fault_label": "Nắp bộ chia điện",
+      "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      }
+    },
+    {
+      "cf_trace": {
+        "contributions": [],
+        "fault_id": "FLT_043",
+        "final_cf": 0.0,
+        "initial_cf": 0.0
+      },
+      "fault_id": "FLT_043",
+      "fault_label": "Dây cao áp",
+      "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      }
+    }
+  ],
+  "final_decision": {
+    "status": "need_more_info",
+    "top_fault": {
+      "confidence": 0.3333,
+      "decision": "uncertain",
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu"
+    }
+  },
+  "hypothesis_generation": [
+    {
+      "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu",
+      "fault_name": "diesel_injection_pump",
+      "matched_rule_count": 1,
+      "system": "SYS_ENGINE",
+      "triggered_by": [
+        "SYM_BLACK_SMOKE_FROM_EXHAUST"
+      ]
+    },
+    {
+      "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+      "fault_id": "FLT_076",
+      "fault_label": "Lọc gió động cơ",
+      "fault_name": "air_filter",
+      "matched_rule_count": 1,
+      "system": "SYS_ENGINE",
+      "triggered_by": [
+        "SYM_BLACK_SMOKE_FROM_EXHAUST"
+      ]
+    },
+    {
+      "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+      "fault_id": "FLT_083",
+      "fault_label": "Bộ điều áp nhiên liệu",
+      "fault_name": "fuel_pressure_regulator",
+      "matched_rule_count": 1,
+      "system": "SYS_FUEL",
+      "triggered_by": [
+        "SYM_BLACK_SMOKE_FROM_EXHAUST"
+      ]
+    },
+    {
+      "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+      "fault_id": "FLT_042",
+      "fault_label": "Nắp bộ chia điện",
+      "fault_name": "ignition_distributor_cap",
+      "matched_rule_count": 0,
+      "system": "SYS_ELECTRICAL",
+      "triggered_by": []
+    },
+    {
+      "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+      "fault_id": "FLT_043",
+      "fault_label": "Dây cao áp",
+      "fault_name": "ignition_wire_set",
+      "matched_rule_count": 0,
+      "system": "SYS_ELECTRICAL",
+      "triggered_by": []
+    }
+  ],
+  "input": "khói đen từ ống xả",
+  "normalization": {
+    "confirmed_symptoms": [
+      "SYM_BLACK_SMOKE_FROM_EXHAUST"
+    ],
+    "fuzzy_trace": {
+      "input_text": "khói đen từ ống xả",
+      "matched_symptoms": [
+        {
+          "confidence": 1.0,
+          "display_name": "Khói đen từ ống xả",
+          "match_score": 100.0,
+          "matched_text": "khói đen từ ống xả",
+          "name": "black_smoke_from_exhaust",
+          "source": "symptom_aliases",
+          "symptom_id": "SYM_BLACK_SMOKE_FROM_EXHAUST"
+        }
+      ]
+    },
+    "rejected_symptoms": [],
+    "status": "matched"
+  },
+  "primary_symptom": "SYM_BLACK_SMOKE_FROM_EXHAUST",
+  "question_selection": {
+    "explanation": "Được chọn từ quy trình kiểm tra của giả thuyết lỗi mạnh nhất hiện tại.",
+    "fault_preview": {
+      "confidence": 0.3333,
+      "fault_id": "FLT_059",
+      "fault_name": "diesel_injection_pump",
+      "final_cf": 0.3333,
+      "score": 0.3333
+    },
+    "information_gain": null,
+    "mode": "procedure_tree",
+    "question": "Xe có dấu hiệu động cơ bỏ máy không?",
+    "selected_label": "Động cơ bỏ máy",
+    "selected_symptom": "SYM_ENGINE_MISFIRES",
+    "status": "selected",
+    "trace": {
+      "mode": "procedure_tree",
+      "question_id": "SYM_ENGINE_MISFIRES",
+      "score": 0.0
+    }
+  },
+  "ranking": [
+    {
+      "confidence": 0.3333,
+      "fault_id": "FLT_059",
+      "matched_symptom_count": 1,
+      "score": 0.3333
+    },
+    {
+      "confidence": 0.3333,
+      "fault_id": "FLT_076",
+      "matched_symptom_count": 1,
+      "score": 0.3333
+    },
+    {
+      "confidence": 0.3333,
+      "fault_id": "FLT_083",
+      "matched_symptom_count": 1,
+      "score": 0.3333
+    },
+    {
+      "confidence": 0.0,
+      "fault_id": "FLT_042",
+      "matched_symptom_count": 0,
+      "score": 0.0
+    },
+    {
+      "confidence": 0.0,
+      "fault_id": "FLT_043",
+      "matched_symptom_count": 0,
+      "score": 0.0
+    }
+  ],
+  "rejected_candidates": [],
+  "system_selection": {
+    "detected_systems": [
+      "SYS_ENGINE",
+      "SYS_FUEL"
+    ],
+    "explanation": "Hệ thống được chọn từ các luật liên kết với triệu chứng đã khớp và đã xác nhận."
+  }
+}

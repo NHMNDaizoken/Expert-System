@@ -16,6 +16,10 @@ def apply_response_policy(response: dict[str, Any]) -> dict[str, Any]:
         response["is_final"] = False
         return response
 
+    if response.get("status") == "suggested_diagnosis":
+        response["is_final"] = False
+        return response
+
     if response.get("status") != "diagnosed":
         response["results"] = []
         response["is_final"] = False

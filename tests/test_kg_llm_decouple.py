@@ -23,7 +23,7 @@ import pytest
 
 from backend.core.config import settings
 from backend.database import ensure_database
-from backend.services.diagnosis_service import DiagnosisService, should_use_llm_fallback
+from backend.services.diagnosis_service import DiagnosisService
 from backend.services.graph_service import GraphService
 from backend.services import expert_review_promotion as erp
 from scripts.build.build_knowledge import build_knowledge, load_json
@@ -156,10 +156,6 @@ def test_build_knowledge_rules_json_has_no_embedded_decision_trees(tmp_path, mon
     build_knowledge(rebuild_from_raw=True)
     data = load_json(kg_out)
     assert "decision_trees" not in data
-
-
-def test_should_use_llm_fallback_respects_need_more_info():
-    assert should_use_llm_fallback({"status": "need_more_info", "next_question": {"step_id": "x"}, "diagnoses": []}) is False
 
 
 def test_engine_regression_known_symptom():

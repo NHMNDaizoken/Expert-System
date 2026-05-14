@@ -4,7 +4,6 @@ from fastapi import HTTPException, status
 from backend.services.diagnosis_normalizer import normalize_diagnosis_response
 from backend.services.session_service import SessionService
 from backend.core.dependencies import get_engine
-from src.expert_system.inference.engine import ExpertSystemEngine
 from src.expert_system.knowledge.loader import KnowledgeBase
 from src.expert_system.inference.policy import apply_response_policy
 from src.expert_system.llm_fallback import diagnose_with_llm, enqueue_llm_suggestion
@@ -65,6 +64,18 @@ def parse_answer(answer):
     return answer
 
 def build_repair_plan(top_result, top_rule, resolution):
+    """Build repair plan with only actionable diagnostic/repair steps.
+    
+    Removes:
+    - Branch labels like "Bình thường", "Bất thường"
+    - Generic yes/no indicators
+    - Incomplete procedure fragments
+    
+    Keeps:
+    - Actual diagnostic procedures
+    - Repair steps
+    - Component replacement guidance
+    """
     if not top_result or not resolution:
         return None
         
@@ -72,40 +83,53 @@ def build_repair_plan(top_result, top_rule, resolution):
     parts_to_inspect = resolution.get("parts", [])
     
     checks = []
-    current_action = None
     
+    # Split and filter sentences, removing branch labels and incomplete fragments
     sentences = [s.strip() for s in re.split(r'[\.\n]', procedure_text) if s.strip()]
     
     for sentence in sentences:
         lower_sentence = sentence.lower()
-        if lower_sentence.startswith("kết quả có thể:"):
-            res = sentence.split(":", 1)[1].strip()
-            if current_action:
-                meaning = "Cần kiểm tra thêm hoặc thay thế nếu hỏng"
-                recommended_fix = "Thực hiện sửa chữa hoặc thay thế linh kiện liên quan"
-                
-                if any(word in res.lower() for word in ["nguyên vẹn", "tốt", "bình thường", "sạch", "không rò rỉ", "đạt", "phẳng", "chắc chắn", "đủ"]):
-                    meaning = "Hệ thống/linh kiện hoạt động bình thường"
-                    recommended_fix = "Chuyển sang bước kiểm tra tiếp theo"
-                elif any(word in res.lower() for word in ["lỏng", "cháy", "thổi", "lỗi", "hỏng", "bẩn", "rò rỉ", "kẹt", "mòn", "thấp", "xước", "vênh", "không đạt", "đứt"]):
-                    meaning = "Phát hiện dấu hiệu bất thường hoặc hư hỏng"
-                    recommended_fix = "Thay thế hoặc sửa chữa theo tiêu chuẩn của nhà sản xuất"
-                
-                checks.append({
-                    "action": current_action,
-                    "possible_result": res,
-                    "meaning": meaning,
-                    "recommended_fix": recommended_fix
-                })
-        else:
-            current_action = sentence
+        
+        # Skip branch labels and generic responses
+        if any(skip in lower_sentence for skip in [
+            "kết quả có thể:",
+            "yes/no",
+            "bình thường",
+            "bất thường",
+            "trả về",
+            "đi tới",
+            "đi đến",
+        ]):
+            continue
+        
+        # Skip if it looks like a decision tree instruction rather than diagnostic step
+        if any(skip in lower_sentence for skip in ["if ", "then ", "else "]):
+            continue
             
-    if not checks and current_action:
+        # Keep actionable procedures
+        if any(keep in lower_sentence for keep in [
+            "kiểm tra",
+            "kiểm định",
+            "đo",
+            "tháo",
+            "lắp",
+            "thay",
+            "thay thế",
+            "sửa chữa",
+            "sửa",
+            "vệ sinh",
+            "làm sạch",
+            "định lượng",
+            "định tính",
+        ]):
+            checks.append({
+                "action": sentence,
+            })
+    
+    # If no actionable steps found, provide generic guidance based on result
+    if not checks:
         checks.append({
-            "action": current_action,
-            "possible_result": "Không xác định",
-            "meaning": "Quan sát và đánh giá tình trạng thực tế",
-            "recommended_fix": "Xử lý theo tình trạng thực tế"
+            "action": f"Thực hiện quy trình kiểm tra và chẩn đoán lỗi {top_result.get('fault_label_vi') or top_result.get('fault_label') or 'được xác định'}",
         })
         
     return {
@@ -138,20 +162,78 @@ def estimate_step_progress(session, response):
         current += 1
     return str(current) if current > 0 else None
 
-def should_use_llm_fallback(response):
-    if response is None:
+
+def _kg_response_has_valid_question(response) -> bool:
+    return response.get("status") == "need_more_info" and next_question_has_substance(response.get("next_question"))
+
+
+def _kg_response_is_inconclusive_or_weak(response) -> bool:
+    if not response:
         return True
-    status = response.get("status")
-    if status in {"need_more_info", "collecting_context"} and next_question_has_substance(
-        response.get("next_question")
-    ):
+    if _kg_response_has_valid_question(response):
         return False
-    if status == "diagnosed":
-        return False
-    candidates = response.get("diagnoses") or response.get("current_hypotheses") or []
-    if response.get("status") in {"unknown_symptom", "no_fault_found", "llm_fallback"}:
+    if response.get("status") == "inconclusive":
         return True
-    return not candidates
+    hypotheses = response.get("current_hypotheses") or response.get("results") or response.get("diagnoses") or []
+    if not hypotheses:
+        return True
+    max_confidence = max(
+        float(item.get("final_cf") or item.get("confidence") or 0) for item in hypotheses
+    )
+    return max_confidence < 0.40
+
+
+def _should_use_llm_fallback(response, session=None) -> bool:
+    return _kg_response_is_inconclusive_or_weak(response)
+
+
+def apply_confidence_filter(response):
+    """Filter and categorize results by confidence thresholds.
+    
+    >= 65%: likely diagnosis
+    40-65%: possible cause  
+    < 40%: inconclusive / need more info
+    """
+    if not response or response.get("status") != "diagnosed":
+        return response
+    
+    results = response.get("results") or response.get("diagnoses") or []
+    if not results:
+        return response
+    
+    top = results[0]
+    confidence = float(top.get("final_cf") or top.get("confidence") or 0)
+    
+    # Low confidence (<40%): mark as inconclusive
+    if confidence < 0.40:
+        response["status"] = "inconclusive"
+        response["is_final"] = False
+        response["confidence_level"] = "low"
+        response["ui_message"] = {
+            "title": "Chưa đủ dữ kiện để kết luận",
+            "subtitle": "Hệ thống chưa đủ độ tin cậy để xác định lỗi cụ thể.",
+            "suggestions": [
+                "Mô tả thêm chi tiết về triệu chứng",
+                "Trả lời thêm câu hỏi để giúp hệ thống",
+                "Kiểm tra tổng quát để cung cấp thêm thông tin"
+            ]
+        }
+        # Don't expose inconclusive results as diagnoses
+        response["results"] = []
+        response["diagnoses"] = []
+        return response
+    
+    # Medium confidence (40-65%): mark as possible
+    if confidence < 0.65:
+        response["confidence_level"] = "medium"
+        response["confidence_label_override"] = "Có thể là"
+        for result in results:
+            result["confidence_label_override"] = "Có thể là"
+    else:
+        # High confidence (>=65%)
+        response["confidence_level"] = "high"
+    
+    return response
 
 def filter_rejected_faults(response, rejected_faults):
     rejected_faults = set(rejected_faults or [])
@@ -195,30 +277,42 @@ def _public_llm_need_more_from_candidate(
         "mode": "llm_tree",
         "type": "yes_no",
     }
-    return {
+    next_q["answer_options"] = next_q.get("answer_options") or ["Có", "Không", "Không rõ"]
+    candidate_rows = []
+    for node in nodes.values():
+        if node.get("type") == "result":
+            candidate_rows.extend(_result_node_to_diagnoses(node))
+
+    response = {
         "status": "need_more_info",
         "is_final": False,
         "source": "llm_fallback",
+        "mode": "fallback_question",
         "fallback_reason": reason,
         "next_question": next_q,
         "asked_questions": list(session.get("asked_questions", [])),
         "llm_candidate_generated": bool(candidate),
         "candidate_faults": [],
-        "current_hypotheses": [],
+        "current_hypotheses": candidate_rows,
         "diagnoses": [],
         "results": [],
     }
+    if candidate:
+        response["decision_tree"] = candidate
+        response["current_node_id"] = root_id
+        response["root_symptom"] = candidate.get("root_symptom")
+    return response
 
 
 def _strip_internal_diagnose_fields(response: dict) -> dict:
     out = dict(response)
-    for k in ("decision_tree", "llm_patch_suggestion", "candidate_id", "_llm_review_candidate", "_llm_tree_update"):
+    for k in ("decision_tree", "candidate", "llm_patch_suggestion", "candidate_id", "_llm_review_candidate", "_llm_tree_update"):
         out.pop(k, None)
     if out.get("type") == "diagnostic_decision_tree":
         out.pop("type", None)
     out.pop("current_node", None)
+    out.pop("current_node_id", None)
     return out
-
 
 def _session_has_navigable_llm_tree(session: dict | None) -> bool:
     if not session:
@@ -247,11 +341,30 @@ def _normalize_llm_tree_step_answer(step_answer) -> str:
 
 def _result_node_to_diagnoses(result_node: dict) -> list[dict]:
     fault = (result_node or {}).get("fault") or {}
+    if not isinstance(fault, dict):
+        fault = {}
+
+    def _normalize_list(value):
+        if value is None:
+            return []
+        if isinstance(value, str):
+            return [value]
+        return list(value)
+
+    def _normalize_components(components):
+        output = []
+        for component in _normalize_list(components):
+            if isinstance(component, dict):
+                output.append(component.get("name_vi") or component.get("component_id") or str(component))
+            else:
+                output.append(str(component))
+        return output
+
     cf = float(fault.get("confidence", 0) or 0)
     label = fault.get("fault_name") or fault.get("fault_label_vi") or fault.get("fault_label") or fault.get("fault_id")
     resolution = {
-        "parts": [c.get("name_vi") or c.get("component_id") for c in (result_node.get("components") or []) if c],
-        "procedure": "\n".join(result_node.get("repair_steps") or []),
+        "parts": _normalize_components(result_node.get("components")),
+        "procedure": "\n".join(_normalize_list(result_node.get("repair_steps"))),
     }
     row = {
         "fault_id": fault.get("fault_id"),
@@ -316,15 +429,16 @@ def _continue_llm_decision_tree(
         enqueue_llm_suggestion(session.get("user_input", user_input), review_candidate)
         rows = _result_node_to_diagnoses(next_node)
         return {
-            "status": "diagnosed",
+            "status": "suggested_diagnosis",
             "source": "llm_fallback",
-            "is_final": True,
+            "mode": "candidate_suggestion",
+            "is_final": False,
             "next_question": None,
-            "diagnoses": rows,
+            "diagnoses": [],
             "results": rows,
             "current_hypotheses": rows,
             "candidate_faults": [],
-            "expert_review": {"candidate_ready": False},
+            "expert_review": {"candidate_ready": True, "payload": {"candidate_id": candidate.get("candidate_id"), "selected_path": selected_path, "result_node": next_node}},
             "llm_candidate_generated": True,
             "_llm_tree_update": {
                 "current_node_id": next_node_id,
@@ -370,10 +484,12 @@ def llm_response(user_input, session=None, reason="kg_no_match", candidate=None)
             "status": "need_more_info",
             "is_final": False,
             "source": "llm_fallback",
+            "mode": "fallback_question",
             "fallback_reason": reason,
             "next_question": {
                 "question": MEANINGFUL_QUESTION_FALLBACK_VI,
-                "mode": "llm_tree",
+                "answer_options": ["Có", "Không", "Không rõ"],
+                "mode": "fallback_question",
                 "type": "yes_no",
             },
             "asked_questions": list(session.get("asked_questions", [])),
@@ -472,25 +588,32 @@ class DiagnosisService:
                 top_k=top_k,
             )
 
-        reason = "kg_no_match"
+        # Use KG/expert-system only for runtime diagnosis
         try:
             response = get_engine().diagnose(user_input, top_k=top_k)
             response = apply_response_policy(response)
             response = enrich_response(response)
             response["source"] = "knowledge_graph"
         except Exception as exc:
-            response = None
-            reason = f"staging_kg_unavailable: {exc}"
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Lỗi hệ thống chuyên gia: {str(exc)}",
+            )
 
-        if should_use_llm_fallback(response):
-            fb = diagnose_with_llm(user_input, session={})
-            cand = fb.get("candidate")
-            response = llm_response(user_input, session={}, reason=reason, candidate=cand)
+        # Apply confidence filtering before returning
+        response = apply_confidence_filter(response)
+        if _should_use_llm_fallback(response, None):
+            response = llm_response(user_input, session={}, reason="kg_inconclusive")
             response = apply_response_policy(response)
             response = self._add_response_context(response, None)
             session_id = self.sessions.create(user_input, response)
-            if cand and (cand.get("tree") or {}).get("nodes"):
-                self.sessions.attach_decision_tree(session_id, cand, session_status=response.get("status"))
+            if response.get("decision_tree"):
+                self.sessions.attach_decision_tree(
+                    session_id,
+                    response["decision_tree"],
+                    current_node_id=response.get("current_node_id"),
+                    session_status="diagnostic_decision_tree",
+                )
             response["session_id"] = session_id
             return _strip_internal_diagnose_fields(response)
 
@@ -532,23 +655,31 @@ class DiagnosisService:
 
     def _add_response_context(self, response, session):
         nq = response.get("next_question")
+        
+        # Preserve KG questions - don't replace with fallback
         if isinstance(nq, str):
-            text = nq.strip() or MEANINGFUL_QUESTION_FALLBACK_VI
-            response["next_question"] = {
-                "question": text,
-                "mode": "llm_tree",
-                "type": "yes_no",
-            }
+            text = nq.strip()
+            if text:  # Keep real KG question
+                response["next_question"] = {
+                    "question": text,
+                    "type": "yes_no",
+                }
             nq = response["next_question"]
-        elif response.get("status") in {"need_more_info", "collecting_context"} and not next_question_has_substance(nq):
-            base = nq if isinstance(nq, dict) else {}
-            response["next_question"] = {**base, "question": MEANINGFUL_QUESTION_FALLBACK_VI}
+        elif isinstance(nq, dict) and nq.get("question"):
+            # Keep KG question as-is
+            pass
+        elif response.get("status") in {"need_more_info", "collecting_context"}:
+            # Only add fallback if there's no valid question
+            if not next_question_has_substance(nq):
+                base = nq if isinstance(nq, dict) else {}
+                response["next_question"] = {**base, "question": MEANINGFUL_QUESTION_FALLBACK_VI}
+        
         next_question = response.get("next_question") or {}
         hypotheses = response.get("current_hypotheses") or response.get("diagnoses") or []
         top = hypotheses[0] if hypotheses else None
         top_rule = self._rule_for_fault(top.get("fault_id")) if top else None
         progress = estimate_step_progress(session or {}, response)
-        mode = next_question.get("mode") or "information_gain"
+        mode = response.get("mode") or next_question.get("mode") or "information_gain"
 
         response.setdefault("mode", mode)
         response.setdefault("step_context", None)
@@ -566,6 +697,10 @@ class DiagnosisService:
                 res = top_rule.get("resolution")
                 response["resolution"] = res
                 response["repair_plan"] = build_repair_plan(top, top_rule, res)
+        elif response.get("status") == "inconclusive":
+            # Low confidence: don't show results, show UI message
+            response["results"] = []
+            response["diagnoses"] = []
         else:
             response.setdefault("results", [])
 
@@ -597,29 +732,6 @@ class DiagnosisService:
         answers = dict(session.get("answers", {}))
         last_question = session.get("last_question") or {}
 
-        if _session_has_navigable_llm_tree(session):
-            if not step_answer_provided:
-                response = _llm_resume_question_response(session, user_input)
-            else:
-                response = _continue_llm_decision_tree(session_id, session, step_answer, user_input)
-                tu = response.pop("_llm_tree_update", None)
-                if tu:
-                    self.sessions.update_decision_tree_state(
-                        session_id,
-                        tu["current_node_id"],
-                        tu["selected_path"],
-                        tu.get("selected_result_node_id"),
-                    )
-            response = self._add_response_context(response, session)
-            self.sessions.update_from_response(
-                session_id,
-                response,
-                dict(session.get("answers", {})),
-                user_input=user_input,
-            )
-            response["session_id"] = session_id
-            return _strip_internal_diagnose_fields(response)
-
         if step_answer_provided:
             symptom_id = (
                 last_question.get("symptom_id")
@@ -634,6 +746,22 @@ class DiagnosisService:
                     else:
                         rejected_symptoms.add(symptom_id)
 
+        if _session_has_navigable_llm_tree(session) and step_answer_provided:
+            response = _continue_llm_decision_tree(session_id, session, step_answer, user_input)
+            update = response.pop("_llm_tree_update", None)
+            if update:
+                self.sessions.update_decision_tree_state(
+                    session_id,
+                    update.get("current_node_id"),
+                    update.get("selected_path", []),
+                    selected_result_node_id=update.get("selected_result_node_id"),
+                )
+            response = apply_response_policy(response)
+            response = self._add_response_context(response, session)
+            self.sessions.update_from_response(session_id, response, answers, user_input=user_input)
+            response["session_id"] = session_id
+            return _strip_internal_diagnose_fields(response)
+
         response = self._diagnose_with_available_engine(
             user_input,
             confirmed_symptoms,
@@ -643,17 +771,9 @@ class DiagnosisService:
             top_k=top_k,
         )
         response = apply_response_policy(response)
-
-        if should_use_llm_fallback(response):
-            session["answers"] = answers
-            session["user_input"] = user_input
-            fb = diagnose_with_llm(user_input, session=session)
-            cand = fb.get("candidate")
-            response = llm_response(user_input, session=session, reason="kg_no_match_after_answer", candidate=cand)
-            response = apply_response_policy(response)
-            if cand and (cand.get("tree") or {}).get("nodes"):
-                self.sessions.attach_decision_tree(session_id, cand, session_status=response.get("status"))
-
+        
+        # Apply confidence filtering before returning
+        response = apply_confidence_filter(response)
         response = self._add_response_context(response, session)
         self.sessions.update_from_response(session_id, response, answers, user_input=user_input)
         response["session_id"] = session_id
@@ -663,20 +783,22 @@ class DiagnosisService:
         return self.continue_session(session_id, step_answer=answer, step_answer_provided=True)
 
     def start_decision_tree(self, description, top_k=5):
-        reason = "kg_no_match"
+        """DEPRECATED: LLM-specific endpoint. Use /diagnose instead.
+        
+        This method exists for backward compatibility with offline expert review only.
+        The main diagnosis flow uses POST /diagnose which is KG/expert-system based.
+        """
         try:
             kg_response = get_engine().diagnose(description, top_k=top_k)
             kg_response = apply_response_policy(enrich_response(kg_response))
             kg_response["source"] = "knowledge_graph"
-        except Exception as exc:
-            kg_response = None
-            reason = f"staging_kg_unavailable: {exc}"
-
-        if kg_response is not None and not should_use_llm_fallback(kg_response):
+            kg_response = apply_confidence_filter(kg_response)
             kg_response = self._add_response_context(kg_response, None)
             session_id = self.sessions.create(description, kg_response)
             kg_response["session_id"] = session_id
             return kg_response
+        except Exception:
+            pass
 
         fb = diagnose_with_llm(description, session={})
         candidate = fb.get("candidate")
@@ -686,7 +808,7 @@ class DiagnosisService:
                 detail="Không tạo được cây chẩn đoán từ LLM fallback.",
             )
 
-        fallback_response = llm_response(description, session={}, reason=reason, candidate=candidate)
+        fallback_response = llm_response(description, session={}, reason="kg_down", candidate=candidate)
         fallback_response = apply_response_policy(fallback_response)
         fallback_response = self._add_response_context(fallback_response, None)
         session_id = self.sessions.create(description, fallback_response)
@@ -708,6 +830,11 @@ class DiagnosisService:
         }
 
     def answer_decision_tree(self, session_id, node_id, answer):
+        """DEPRECATED: LLM-specific endpoint. Use /diagnose instead.
+        
+        This method exists for backward compatibility with offline expert review only.
+        The main diagnosis flow uses POST /diagnose which is KG/expert-system based.
+        """
         session = self.sessions.get(session_id)
         if session is None:
             raise HTTPException(

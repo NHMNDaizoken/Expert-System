@@ -1,0 +1,887 @@
+{
+  "active_fault_path": [],
+  "candidate_faults": [
+    {
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "fault_id": "FLT_068",
+      "fault_label": "Dây curoa cam",
+      "fault_name": "timing_belt",
+      "final_cf": 1.0,
+      "system": "SYS_ENGINE"
+    },
+    {
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_042",
+      "fault_label": "Nắp bộ chia điện",
+      "fault_name": "ignition_distributor_cap",
+      "final_cf": 0.0,
+      "system": "SYS_ELECTRICAL"
+    },
+    {
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_043",
+      "fault_label": "Dây cao áp",
+      "fault_name": "ignition_wire_set",
+      "final_cf": 0.0,
+      "system": "SYS_ELECTRICAL"
+    },
+    {
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu",
+      "fault_name": "diesel_injection_pump",
+      "final_cf": 0.0,
+      "system": "SYS_ENGINE"
+    },
+    {
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "fault_id": "FLT_062",
+      "fault_label": "Xu-páp xả",
+      "fault_name": "exhaust_valve",
+      "final_cf": 0.0,
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "confirmed_context": [],
+  "confirmed_symptoms": [
+    "SYM_ENGINE_WON_T_START"
+  ],
+  "current_hypotheses": [
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 1.0,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_WON_T_START"
+        }
+      ],
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "decision": "accepted",
+      "fault_id": "FLT_068",
+      "fault_label": "Dây curoa cam",
+      "fault_name": "timing_belt",
+      "final_cf": 1.0,
+      "matched_rules": [
+        {
+          "cf": 1.0,
+          "priority": 2,
+          "symptom_id": "SYM_ENGINE_WON_T_START",
+          "symptom_label": "Động cơ không nổ máy",
+          "symptom_name": "SYM_ENGINE_WON_T_START"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây curoa cam",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây curoa cam",
+          "repair_id": "REP_068",
+          "repair_name": "diagnose_timing_belt",
+          "steps": [
+            "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam",
+            "Kết quả có thể: Dây curoa bị mòn/hỏng",
+            "Kết quả có thể: Dây curoa còn tốt",
+            "Kiểm tra dấu cam",
+            "Kết quả có thể: Dấu cam bị lệch",
+            "Kết quả có thể: Dấu căn chỉnh đúng"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây curoa cam"
+        ],
+        "procedure": "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam. Kết quả có thể: Dây curoa bị mòn/hỏng. Kết quả có thể: Dây curoa còn tốt. Kiểm tra dấu cam. Kết quả có thể: Dấu cam bị lệch. Kết quả có thể: Dấu căn chỉnh đúng",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 1.0,
+      "score_breakdown": {
+        "cf_confidence": 1.0,
+        "confidence": 1.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_042",
+      "fault_label": "Nắp bộ chia điện",
+      "fault_name": "ignition_distributor_cap",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Nắp bộ chia điện",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Nắp bộ chia điện",
+          "repair_id": "REP_042",
+          "repair_name": "diagnose_ignition_distributor_cap",
+          "steps": [
+            "Kiểm tra nứt hoặc vệt than nắp bộ chia điện",
+            "Kết quả có thể: Nắp bị nứt/hỏng",
+            "Kết quả có thể: Nắp đậy còn tốt",
+            "Kiểm tra độ mòn con quay chia điện",
+            "Kết quả có thể: Đĩa phanh bị mòn",
+            "Kết quả có thể: Đĩa phanh tốt"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Nắp bộ chia điện"
+        ],
+        "procedure": "Kiểm tra nứt hoặc vệt than nắp bộ chia điện. Kết quả có thể: Nắp bị nứt/hỏng. Kết quả có thể: Nắp đậy còn tốt. Kiểm tra độ mòn con quay chia điện. Kết quả có thể: Đĩa phanh bị mòn. Kết quả có thể: Đĩa phanh tốt",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_STARTING",
+      "system": "SYS_ELECTRICAL"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_043",
+      "fault_label": "Dây cao áp",
+      "fault_name": "ignition_wire_set",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây cao áp",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây cao áp",
+          "repair_id": "REP_043",
+          "repair_name": "diagnose_ignition_wire_set",
+          "steps": [
+            "Kiểm tra thông mạch dây cao áp",
+            "Kết quả có thể: Đứt dây điện",
+            "Kết quả có thể: Dây điện bình thường",
+            "Kiểm tra hư hỏng chụp bugi",
+            "Kết quả có thể: Cao su chắn bụi bị hỏng",
+            "Kết quả có thể: Chụp bụi nguyên vẹn"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây cao áp"
+        ],
+        "procedure": "Kiểm tra thông mạch dây cao áp. Kết quả có thể: Đứt dây điện. Kết quả có thể: Dây điện bình thường. Kiểm tra hư hỏng chụp bugi. Kết quả có thể: Cao su chắn bụi bị hỏng. Kết quả có thể: Chụp bụi nguyên vẹn",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_STARTING",
+      "system": "SYS_ELECTRICAL"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu",
+      "fault_name": "diesel_injection_pump",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Bơm cao áp dầu",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Bơm cao áp dầu",
+          "repair_id": "REP_059",
+          "repair_name": "diagnose_diesel_injection_pump",
+          "steps": [
+            "Kiểm tra áp suất bơm cao áp",
+            "Kết quả có thể: Áp suất thấp",
+            "Kết quả có thể: Áp suất bình thường",
+            "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu",
+            "Kết quả có thể: Các kim phun rò rỉ/tắc",
+            "Kết quả có thể: Các kim phun sạch/đúng tiêu chuẩn"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Bơm cao áp dầu"
+        ],
+        "procedure": "Kiểm tra áp suất bơm cao áp. Kết quả có thể: Áp suất thấp. Kết quả có thể: Áp suất bình thường. Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu. Kết quả có thể: Các kim phun rò rỉ/tắc. Kết quả có thể: Các kim phun sạch/đúng tiêu chuẩn",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_062",
+      "fault_label": "Xu-páp xả",
+      "fault_name": "exhaust_valve",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Xu-páp xả",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Xu-páp xả",
+          "repair_id": "REP_062",
+          "repair_name": "diagnose_exhaust_valve",
+          "steps": [
+            "Kiểm tra muội than xupap xả",
+            "Kết quả có thể: Muội than bám trên xupap",
+            "Kết quả có thể: Vệ sinh van",
+            "Kiểm tra khe hở nhiệt xupap",
+            "Kết quả có thể: Khe hở không đúng",
+            "Kết quả có thể: Khe hở đúng tiêu chuẩn"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Xu-páp xả"
+        ],
+        "procedure": "Kiểm tra muội than xupap xả. Kết quả có thể: Muội than bám trên xupap. Kết quả có thể: Vệ sinh van. Kiểm tra khe hở nhiệt xupap. Kết quả có thể: Khe hở không đúng. Kết quả có thể: Khe hở đúng tiêu chuẩn",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "detected_systems": [
+    "SYS_ENGINE"
+  ],
+  "diagnoses": [
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [
+        {
+          "cf": 1.0,
+          "direction": "confirmed",
+          "symptom": "SYM_ENGINE_WON_T_START"
+        }
+      ],
+      "confidence": 1.0,
+      "confidence_label": "Rất có khả năng",
+      "decision": "accepted",
+      "fault_id": "FLT_068",
+      "fault_label": "Dây curoa cam",
+      "fault_name": "timing_belt",
+      "final_cf": 1.0,
+      "matched_rules": [
+        {
+          "cf": 1.0,
+          "priority": 2,
+          "symptom_id": "SYM_ENGINE_WON_T_START",
+          "symptom_label": "Động cơ không nổ máy",
+          "symptom_name": "SYM_ENGINE_WON_T_START"
+        }
+      ],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây curoa cam",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây curoa cam",
+          "repair_id": "REP_068",
+          "repair_name": "diagnose_timing_belt",
+          "steps": [
+            "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam",
+            "Kết quả có thể: Dây curoa bị mòn/hỏng",
+            "Kết quả có thể: Dây curoa còn tốt",
+            "Kiểm tra dấu cam",
+            "Kết quả có thể: Dấu cam bị lệch",
+            "Kết quả có thể: Dấu căn chỉnh đúng"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây curoa cam"
+        ],
+        "procedure": "Kiểm tra độ mòn hoặc hư hỏng dây curoa cam. Kết quả có thể: Dây curoa bị mòn/hỏng. Kết quả có thể: Dây curoa còn tốt. Kiểm tra dấu cam. Kết quả có thể: Dấu cam bị lệch. Kết quả có thể: Dấu căn chỉnh đúng",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 1.0,
+      "score_breakdown": {
+        "cf_confidence": 1.0,
+        "confidence": 1.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_042",
+      "fault_label": "Nắp bộ chia điện",
+      "fault_name": "ignition_distributor_cap",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Nắp bộ chia điện",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Nắp bộ chia điện",
+          "repair_id": "REP_042",
+          "repair_name": "diagnose_ignition_distributor_cap",
+          "steps": [
+            "Kiểm tra nứt hoặc vệt than nắp bộ chia điện",
+            "Kết quả có thể: Nắp bị nứt/hỏng",
+            "Kết quả có thể: Nắp đậy còn tốt",
+            "Kiểm tra độ mòn con quay chia điện",
+            "Kết quả có thể: Đĩa phanh bị mòn",
+            "Kết quả có thể: Đĩa phanh tốt"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Nắp bộ chia điện"
+        ],
+        "procedure": "Kiểm tra nứt hoặc vệt than nắp bộ chia điện. Kết quả có thể: Nắp bị nứt/hỏng. Kết quả có thể: Nắp đậy còn tốt. Kiểm tra độ mòn con quay chia điện. Kết quả có thể: Đĩa phanh bị mòn. Kết quả có thể: Đĩa phanh tốt",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_STARTING",
+      "system": "SYS_ELECTRICAL"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_043",
+      "fault_label": "Dây cao áp",
+      "fault_name": "ignition_wire_set",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Dây cao áp",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Dây cao áp",
+          "repair_id": "REP_043",
+          "repair_name": "diagnose_ignition_wire_set",
+          "steps": [
+            "Kiểm tra thông mạch dây cao áp",
+            "Kết quả có thể: Đứt dây điện",
+            "Kết quả có thể: Dây điện bình thường",
+            "Kiểm tra hư hỏng chụp bugi",
+            "Kết quả có thể: Cao su chắn bụi bị hỏng",
+            "Kết quả có thể: Chụp bụi nguyên vẹn"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Dây cao áp"
+        ],
+        "procedure": "Kiểm tra thông mạch dây cao áp. Kết quả có thể: Đứt dây điện. Kết quả có thể: Dây điện bình thường. Kiểm tra hư hỏng chụp bugi. Kết quả có thể: Cao su chắn bụi bị hỏng. Kết quả có thể: Chụp bụi nguyên vẹn",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_STARTING",
+      "system": "SYS_ELECTRICAL"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_059",
+      "fault_label": "Bơm cao áp dầu",
+      "fault_name": "diesel_injection_pump",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Bơm cao áp dầu",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Bơm cao áp dầu",
+          "repair_id": "REP_059",
+          "repair_name": "diagnose_diesel_injection_pump",
+          "steps": [
+            "Kiểm tra áp suất bơm cao áp",
+            "Kết quả có thể: Áp suất thấp",
+            "Kết quả có thể: Áp suất bình thường",
+            "Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu",
+            "Kết quả có thể: Các kim phun rò rỉ/tắc",
+            "Kết quả có thể: Các kim phun sạch/đúng tiêu chuẩn"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Bơm cao áp dầu"
+        ],
+        "procedure": "Kiểm tra áp suất bơm cao áp. Kết quả có thể: Áp suất thấp. Kết quả có thể: Áp suất bình thường. Kiểm tra rò rỉ hoặc tắc nghẽn kim phun dầu. Kết quả có thể: Các kim phun rò rỉ/tắc. Kết quả có thể: Các kim phun sạch/đúng tiêu chuẩn",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    },
+    {
+      "candidate_reason": "primary_symptom_candidate_set",
+      "cf_breakdown": [],
+      "confidence": 0.0,
+      "confidence_label": "Chưa chắc chắn",
+      "decision": "uncertain",
+      "fault_id": "FLT_062",
+      "fault_label": "Xu-páp xả",
+      "fault_name": "exhaust_valve",
+      "final_cf": 0.0,
+      "matched_rules": [],
+      "repairs": [
+        {
+          "display_name": "Quy trình kiểm tra/sửa chữa: Xu-páp xả",
+          "label_vi": "Quy trình kiểm tra/sửa chữa: Xu-páp xả",
+          "repair_id": "REP_062",
+          "repair_name": "diagnose_exhaust_valve",
+          "steps": [
+            "Kiểm tra muội than xupap xả",
+            "Kết quả có thể: Muội than bám trên xupap",
+            "Kết quả có thể: Vệ sinh van",
+            "Kiểm tra khe hở nhiệt xupap",
+            "Kết quả có thể: Khe hở không đúng",
+            "Kết quả có thể: Khe hở đúng tiêu chuẩn"
+          ]
+        }
+      ],
+      "resolution": {
+        "difficulty": "intermediate",
+        "labor_hours": 6,
+        "parts": [
+          "Xu-páp xả"
+        ],
+        "procedure": "Kiểm tra muội than xupap xả. Kết quả có thể: Muội than bám trên xupap. Kết quả có thể: Vệ sinh van. Kiểm tra khe hở nhiệt xupap. Kết quả có thể: Khe hở không đúng. Kết quả có thể: Khe hở đúng tiêu chuẩn",
+        "tools": [
+          "Máy quét OBD",
+          "Đồng hồ vạn năng"
+        ]
+      },
+      "score": 0.0,
+      "score_breakdown": {
+        "cf_confidence": 0.0,
+        "confidence": 0.0,
+        "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+      },
+      "subsystem": "SUB_ENGINE_MECHANICAL",
+      "system": "SYS_ENGINE"
+    }
+  ],
+  "explanation_summary": "Động cơ > Động cơ không nổ máy > Dây curoa cam với CF 1.0. Trạng thái: need_more_info.",
+  "is_final": false,
+  "matched_symptoms": [
+    {
+      "confidence": 0.8889,
+      "display_name": "Động cơ không nổ máy",
+      "match_score": 88.89,
+      "matched_text": "động cơ không nổ máy",
+      "name": "engine_won_t_start",
+      "source": "symptom_aliases",
+      "symptom_id": "SYM_ENGINE_WON_T_START"
+    }
+  ],
+  "next_question": {
+    "explanation": "Được chọn từ quy trình kiểm tra của giả thuyết lỗi mạnh nhất hiện tại.",
+    "fault_preview": {
+      "confidence": 1.0,
+      "fault_id": "FLT_068",
+      "fault_name": "timing_belt",
+      "final_cf": 1.0,
+      "score": 1.0
+    },
+    "label": "Động cơ bỏ máy",
+    "mode": "procedure_tree",
+    "question": "Xe có dấu hiệu động cơ bỏ máy không?",
+    "results": [],
+    "step_id": "flt_068_symptom_1",
+    "symptom": "SYM_ENGINE_MISFIRES",
+    "symptom_id": "SYM_ENGINE_MISFIRES"
+  },
+  "primary_symptom": "SYM_ENGINE_WON_T_START",
+  "procedure_terminal": null,
+  "reasoning_trace": {
+    "backward_chaining": [
+      {
+        "fault_id": "FLT_068",
+        "if": [
+          {
+            "cf": 1.0,
+            "priority": 2,
+            "symptom_id": "SYM_ENGINE_WON_T_START",
+            "symptom_label": "Động cơ không nổ máy"
+          }
+        ],
+        "rule_text": "NẾU Động cơ không nổ máy THÌ Dây curoa cam",
+        "then": "Dây curoa cam"
+      },
+      {
+        "fault_id": "FLT_042",
+        "if": [],
+        "rule_text": "NẾU chưa có triệu chứng khớp THÌ Nắp bộ chia điện",
+        "then": "Nắp bộ chia điện"
+      },
+      {
+        "fault_id": "FLT_043",
+        "if": [],
+        "rule_text": "NẾU chưa có triệu chứng khớp THÌ Dây cao áp",
+        "then": "Dây cao áp"
+      },
+      {
+        "fault_id": "FLT_059",
+        "if": [],
+        "rule_text": "NẾU chưa có triệu chứng khớp THÌ Bơm cao áp dầu",
+        "then": "Bơm cao áp dầu"
+      },
+      {
+        "fault_id": "FLT_062",
+        "if": [],
+        "rule_text": "NẾU chưa có triệu chứng khớp THÌ Xu-páp xả",
+        "then": "Xu-páp xả"
+      }
+    ],
+    "cf_calculation_steps": [
+      {
+        "evidence_cf": 1.0,
+        "explanation": "Triệu chứng đã xác nhận làm tăng độ tin cậy của lỗi theo hệ số chắc chắn trong luật.",
+        "fault_id": "FLT_068",
+        "fault_label": "Dây curoa cam",
+        "formula": "cf_kết_hợp = cf_cũ + cf_bằng_chứng * (1 - cf_cũ)",
+        "priority": 2,
+        "symptom_id": "SYM_ENGINE_WON_T_START",
+        "symptom_label": "Động cơ không nổ máy"
+      },
+      {
+        "cf_trace": {
+          "contributions": [
+            {
+              "cf": 1.0,
+              "symptom_id": "SYM_ENGINE_WON_T_START"
+            }
+          ],
+          "fault_id": "FLT_068",
+          "final_cf": 1.0,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_068",
+        "fault_label": "Dây curoa cam",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 1.0,
+          "confidence": 1.0,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "cf_trace": {
+          "contributions": [],
+          "fault_id": "FLT_042",
+          "final_cf": 0.0,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_042",
+        "fault_label": "Nắp bộ chia điện",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.0,
+          "confidence": 0.0,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "cf_trace": {
+          "contributions": [],
+          "fault_id": "FLT_043",
+          "final_cf": 0.0,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_043",
+        "fault_label": "Dây cao áp",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.0,
+          "confidence": 0.0,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "cf_trace": {
+          "contributions": [],
+          "fault_id": "FLT_059",
+          "final_cf": 0.0,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_059",
+        "fault_label": "Bơm cao áp dầu",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.0,
+          "confidence": 0.0,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      },
+      {
+        "cf_trace": {
+          "contributions": [],
+          "fault_id": "FLT_062",
+          "final_cf": 0.0,
+          "initial_cf": 0.0
+        },
+        "fault_id": "FLT_062",
+        "fault_label": "Xu-páp xả",
+        "formula": "cf_cuối là điểm tin cậy có giới hạn, không phải xác suất Bayes.",
+        "score_breakdown": {
+          "cf_confidence": 0.0,
+          "confidence": 0.0,
+          "note": "Điểm tin cậy Certainty Factor, không phải xác suất Bayes."
+        }
+      }
+    ],
+    "final_decision": {
+      "status": "need_more_info",
+      "top_fault": {
+        "confidence": 1.0,
+        "decision": "accepted",
+        "fault_id": "FLT_068",
+        "fault_label": "Dây curoa cam"
+      }
+    },
+    "hypothesis_generation": [
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_068",
+        "fault_label": "Dây curoa cam",
+        "fault_name": "timing_belt",
+        "matched_rule_count": 1,
+        "system": "SYS_ENGINE",
+        "triggered_by": [
+          "SYM_ENGINE_WON_T_START"
+        ]
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_042",
+        "fault_label": "Nắp bộ chia điện",
+        "fault_name": "ignition_distributor_cap",
+        "matched_rule_count": 0,
+        "system": "SYS_ELECTRICAL",
+        "triggered_by": []
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_043",
+        "fault_label": "Dây cao áp",
+        "fault_name": "ignition_wire_set",
+        "matched_rule_count": 0,
+        "system": "SYS_ELECTRICAL",
+        "triggered_by": []
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_059",
+        "fault_label": "Bơm cao áp dầu",
+        "fault_name": "diesel_injection_pump",
+        "matched_rule_count": 0,
+        "system": "SYS_ENGINE",
+        "triggered_by": []
+      },
+      {
+        "explanation": "Lỗi này là ứng viên vì triệu chứng đã xác nhận khớp với luật trong cơ sở tri thức.",
+        "fault_id": "FLT_062",
+        "fault_label": "Xu-páp xả",
+        "fault_name": "exhaust_valve",
+        "matched_rule_count": 0,
+        "system": "SYS_ENGINE",
+        "triggered_by": []
+      }
+    ],
+    "input": "xe không nổ máy",
+    "normalization": {
+      "confirmed_symptoms": [
+        "SYM_ENGINE_WON_T_START"
+      ],
+      "fuzzy_trace": {
+        "input_text": "xe không nổ máy",
+        "matched_symptoms": [
+          {
+            "confidence": 0.8889,
+            "display_name": "Động cơ không nổ máy",
+            "match_score": 88.89,
+            "matched_text": "động cơ không nổ máy",
+            "name": "engine_won_t_start",
+            "source": "symptom_aliases",
+            "symptom_id": "SYM_ENGINE_WON_T_START"
+          }
+        ]
+      },
+      "rejected_symptoms": [],
+      "status": "matched"
+    },
+    "primary_symptom": "SYM_ENGINE_WON_T_START",
+    "question_selection": {
+      "explanation": "Được chọn từ quy trình kiểm tra của giả thuyết lỗi mạnh nhất hiện tại.",
+      "fault_preview": {
+        "confidence": 1.0,
+        "fault_id": "FLT_068",
+        "fault_name": "timing_belt",
+        "final_cf": 1.0,
+        "score": 1.0
+      },
+      "information_gain": null,
+      "mode": "procedure_tree",
+      "question": "Xe có dấu hiệu động cơ bỏ máy không?",
+      "selected_label": "Động cơ bỏ máy",
+      "selected_symptom": "SYM_ENGINE_MISFIRES",
+      "status": "selected",
+      "trace": {
+        "mode": "procedure_tree",
+        "question_id": "SYM_ENGINE_MISFIRES",
+        "score": 0.0
+      }
+    },
+    "ranking": [
+      {
+        "confidence": 1.0,
+        "fault_id": "FLT_068",
+        "matched_symptom_count": 1,
+        "score": 1.0
+      },
+      {
+        "confidence": 0.0,
+        "fault_id": "FLT_042",
+        "matched_symptom_count": 0,
+        "score": 0.0
+      },
+      {
+        "confidence": 0.0,
+        "fault_id": "FLT_043",
+        "matched_symptom_count": 0,
+        "score": 0.0
+      },
+      {
+        "confidence": 0.0,
+        "fault_id": "FLT_059",
+        "matched_symptom_count": 0,
+        "score": 0.0
+      },
+      {
+        "confidence": 0.0,
+        "fault_id": "FLT_062",
+        "matched_symptom_count": 0,
+        "score": 0.0
+      }
+    ],
+    "rejected_candidates": [],
+    "system_selection": {
+      "detected_systems": [
+        "SYS_ENGINE"
+      ],
+      "explanation": "Hệ thống được chọn từ các luật liên kết với triệu chứng đã khớp và đã xác nhận."
+    }
+  },
+  "rejected_context": [],
+  "rejected_faults": [],
+  "rejected_symptoms": [],
+  "results": [],
+  "source": "staging_files_kg",
+  "status": "need_more_info",
+  "tree_level": "procedure"
+}

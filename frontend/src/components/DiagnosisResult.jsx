@@ -30,7 +30,41 @@ export default function DiagnosisResult({
     normalized._raw?.source === "knowledge_graph" ||
     normalized._raw?.source === "staging_files_kg";
   const isReviewNeeded = normalized.expert_review?.candidate_ready || normalized._raw?.status === "review_needed";
+  const isInconclusive = normalized.status === "inconclusive" || normalized.confidence_level === "low";
   const navigate = useNavigate();
+
+  // Handle inconclusive/low-confidence results
+  if (isInconclusive && normalized.ui_message) {
+    const msg = normalized.ui_message;
+    return (
+      <section className="result-section">
+        <div className="primary-result-card inconclusive-card glass-panel">
+          <span className="result-badge">Chưa đủ dữ kiện</span>
+          <h2>{msg.title}</h2>
+          <p className="muted">{msg.subtitle}</p>
+          {msg.suggestions && msg.suggestions.length > 0 && (
+            <div className="repair-section">
+              <h3>
+                <TriangleAlert size={18} /> Gợi ý tiếp theo
+              </h3>
+              <ul>
+                {msg.suggestions.map((suggestion, idx) => (
+                  <li key={idx}>{suggestion}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="action-row action-row-between">
+            <button className="primary-btn" onClick={onRestart}>
+              <RefreshCw size={18} />
+              Chẩn đoán lại
+            </button>
+          </div>
+        </div>
+        <TechnicalPayloadPanel title="Chi tiết kỹ thuật" payload={data?.debug || data} />
+      </section>
+    );
+  }
 
   if (isReviewNeeded) {
     const question = normalized?.current_question?.question || normalized._raw?.next_question?.question || "Vui lòng cung cấp thêm thông tin để chuyên gia kiểm duyệt.";
@@ -77,6 +111,8 @@ export default function DiagnosisResult({
 
   const [top, ...others] = results.slice(0, 3);
   const confidence = Math.round(scoreOf(top) * 100);
+  const isMediumConfidence = confidence >= 40 && confidence < 65;
+  const isHighConfidence = confidence >= 65;
 
   return (
     <section className="result-section">
@@ -84,7 +120,21 @@ export default function DiagnosisResult({
         <span className="result-badge">
           {isKgSource ? "Từ cây tri thức" : mode === "llm_fallback" ? "LLM đề xuất - cần chuyên gia duyệt" : "Kết hợp KG + LLM"}
         </span>
-        <h2>{top.fault_label_vi || top.fault_label || top.fault_name}</h2>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {!isHighConfidence && (
+            <span style={{
+              backgroundColor: "rgba(255, 193, 7, 0.2)",
+              color: "var(--warning-light)",
+              padding: "4px 12px",
+              borderRadius: "4px",
+              fontSize: "0.85rem",
+              fontWeight: "600"
+            }}>
+              Có thể là
+            </span>
+          )}
+          <h2 style={{ margin: 0 }}>{top.fault_label_vi || top.fault_label || top.fault_name}</h2>
+        </div>
 
         <div className="confidence-row">
           <div className="confidence-track">

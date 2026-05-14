@@ -2,7 +2,7 @@ import json
 
 from fastapi.testclient import TestClient
 
-from backend.config import settings
+from backend.core.config import settings
 from backend.main import app
 from backend.routes import expert_review as expert_review_route
 

@@ -8,7 +8,7 @@ except ImportError:  # optional: file-backed graph still works for API/tests
     GraphDatabase = None  # type: ignore[misc, assignment]
 
 from backend.core.config import settings
-from backend.services.diagnosis_service import confidence_label
+from src.expert_system.utils.scoring import confidence_label
 from src.expert_system.utils.text import slugify
 
 

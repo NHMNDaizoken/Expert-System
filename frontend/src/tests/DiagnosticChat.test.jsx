@@ -36,6 +36,18 @@ const diagnosedResponse = {
   },
 };
 
+const inconclusiveResponse = {
+  session_id: "s1",
+  status: "inconclusive",
+  confidence_level: "low",
+  ui_message: {
+    title: "Chưa đủ dữ kiện để kết luận",
+    subtitle: "Hệ thống chưa đủ độ tin cậy để xác định lỗi cụ thể.",
+    suggestions: ["Mô tả thêm chi tiết"],
+  },
+  results: [],
+};
+
 describe("Luồng DiagnosticChat", () => {
   beforeEach(() => {
     mockFetch.mockReset();
@@ -106,6 +118,18 @@ describe("Luồng DiagnosticChat", () => {
     expect(screen.getByText(/Ắc quy 12V/i)).toBeInTheDocument();
     expect(screen.getByText(/Kẹp cọc ắc quy/i)).toBeInTheDocument();
     expect(screen.getByText(/Đo điện áp ắc quy/i)).toBeInTheDocument();
+  });
+
+  test("hiển thị màn inconclusive khi API trả inconclusive", async () => {
+    mockFetch.mockResolvedValueOnce({ ok: true, json: async () => inconclusiveResponse });
+    renderWithRouter(<DiagnosticChat />);
+    fireEvent.change(screen.getByLabelText(/mô tả hiện tượng đang xảy ra với xe/i), {
+      target: { value: "xe có âm thanh lạ" },
+    });
+    fireEvent.click(screen.getByText(/bắt đầu chẩn đoán/i));
+
+    await waitFor(() => expect(screen.getByRole("heading", { level: 2, name: /Chưa đủ dữ kiện để kết luận/i })).toBeInTheDocument());
+    expect(screen.queryByText(/Không thể tìm thấy triệu chứng này/i)).not.toBeInTheDocument();
   });
 
   test("nút chẩn đoán lại quay về màn nhập", () => {
